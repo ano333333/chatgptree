@@ -20,7 +20,8 @@
       "src/**/*.tsx",
       "src/**/*.css",
       "src/**/*.json",
-      "tests/**/*.test.ts",
+      "tests/**/*.ts",
+      "tests/**/*.tsx",
       "vite.config.ts"
     ]
   },

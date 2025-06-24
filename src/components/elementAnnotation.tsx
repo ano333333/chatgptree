@@ -1,4 +1,4 @@
-import { useRef, useState, type FC } from "react";
+import { useRef, useState, type FC, type ReactNode } from "react";
 import { Info } from "lucide-react";
 
 interface ElementAnnotationProps {
@@ -9,6 +9,7 @@ interface ElementAnnotationProps {
     y: number;
   };
   text: string;
+  children?: ReactNode;
 }
 
 /**
@@ -37,6 +38,7 @@ interface ElementAnnotationProps {
  */
 export const ElementAnnotation: FC<ElementAnnotationProps> = (props) => {
   const [toggleButtonPos, setToggleButtonPos] = useState({ x: 0, y: 0 });
+  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
 
   const calcToggleButtonCenter = () => {
     const rect = props.objectRef?.getBoundingClientRect();
@@ -72,6 +74,12 @@ export const ElementAnnotation: FC<ElementAnnotationProps> = (props) => {
     prevObjectRef.current = props.objectRef;
   }
 
+  const onToggleButtonClick = () => {
+    if (props.children) {
+      setIsDescriptionVisible(!isDescriptionVisible);
+    }
+  };
+
   const calcToggleButtonContainerClassname = () => {
     const classNames = [
       "fixed",
@@ -91,6 +99,22 @@ export const ElementAnnotation: FC<ElementAnnotationProps> = (props) => {
     }
     return classNames.join(" ");
   };
+  const calcDescriptionContainerClassname = () => {
+    const classNames = [
+      "fixed",
+      "z-10",
+      "bg-white",
+      "rounded-md",
+      "p-2",
+      "border-gray-300",
+      "border",
+      "shadow-md",
+    ];
+    if (!props.objectRef) {
+      classNames.push("hidden");
+    }
+    return classNames.join(" ");
+  };
 
   const calcToggleButtonClassname = () => {
     const classNames = ["stroke-blue-400", "inline"];
@@ -99,16 +123,35 @@ export const ElementAnnotation: FC<ElementAnnotationProps> = (props) => {
 
   return (
     <>
-      <div
-        className={`${calcToggleButtonContainerClassname()} ${props.className}`}
-        style={{
-          left: `${Math.floor(toggleButtonPos.x)}px`,
-          top: `${Math.floor(toggleButtonPos.y)}px`,
-        }}
-      >
-        <Info className={calcToggleButtonClassname()} />
-        <p className="text-sm">{props.text}</p>
-      </div>
+      {isDescriptionVisible ? (
+        <div
+          className={`${calcDescriptionContainerClassname()} ${props.className}`}
+          style={{
+            left: `${Math.floor(toggleButtonPos.x)}px`,
+            top: `${Math.floor(toggleButtonPos.y)}px`,
+          }}
+        >
+          <Info
+            className={calcToggleButtonClassname()}
+            onClick={onToggleButtonClick}
+          />
+          <div>{props.children}</div>
+        </div>
+      ) : (
+        <div
+          className={`${calcToggleButtonContainerClassname()} ${props.className}`}
+          style={{
+            left: `${Math.floor(toggleButtonPos.x)}px`,
+            top: `${Math.floor(toggleButtonPos.y)}px`,
+          }}
+        >
+          <Info
+            className={calcToggleButtonClassname()}
+            onClick={onToggleButtonClick}
+          />
+          <p className="text-sm">{props.text}</p>
+        </div>
+      )}
     </>
   );
 };

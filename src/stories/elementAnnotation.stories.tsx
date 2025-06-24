@@ -29,9 +29,12 @@ export const Display: Story = {
         </button>
         <ElementAnnotation
           objectRef={button}
-          toggleBtnPosDiff={{ x: -70, y: 0 }}
+          toggleBtnPosDiff={{ x: 100, y: 0 }}
           text="1"
-        />
+        >
+          <h1 className="text-lg font-bold underline">description</h1>
+          <p className="text-sm">ここに説明を書きます</p>
+        </ElementAnnotation>
       </>
     );
   },

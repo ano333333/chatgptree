@@ -9,11 +9,24 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu, PanelLeft } from "lucide-react";
 
+interface HeaderProps {
+  onClickLoad?: () => void;
+  onClickSave?: () => void;
+  onClickSetting?: () => void;
+  onClickHelp?: () => void;
+}
+
 /**
  * SPAの共通ヘッダ
+ *
+ * @param props.onClickLoad - ヘッダー読み込みボタンクリック時のコールバック
+ * @param props.onClickSave - ヘッダー保存ボタンクリック時のコールバック
+ * @param props.onClickSetting - ヘッダー設定ボタンクリック時のコールバック
+ * @param props.onClickHelp - ヘッダーヘルプボタンクリック時のコールバック
  */
-export default function Header() {
+export default function Header(props: HeaderProps) {
   const { open } = useSidebar();
+  const { onClickLoad, onClickSave, onClickSetting, onClickHelp } = props;
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b px-4 transition-all duration-200">
@@ -43,11 +56,19 @@ export default function Header() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuItem role="menuitem">読み込み</DropdownMenuItem>
-          <DropdownMenuItem role="menuitem">保存</DropdownMenuItem>
+          <DropdownMenuItem onClick={onClickLoad} role="menuitem">
+            読み込み
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={onClickSave} role="menuitem">
+            保存
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem role="menuitem">設定</DropdownMenuItem>
-          <DropdownMenuItem role="menuitem">ヘルプ</DropdownMenuItem>
+          <DropdownMenuItem onClick={onClickSetting} role="menuitem">
+            設定
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={onClickHelp} role="menuitem">
+            ヘルプ
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

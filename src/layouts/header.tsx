@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Menu, PanelLeft } from "lucide-react";
+import { useState } from "react";
 
 interface HeaderProps {
   onClickLoad?: () => void;
@@ -27,6 +28,7 @@ interface HeaderProps {
 export default function Header(props: HeaderProps) {
   const { open } = useSidebar();
   const { onClickLoad, onClickSave, onClickSetting, onClickHelp } = props;
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b px-4 transition-all duration-200">
@@ -43,13 +45,13 @@ export default function Header(props: HeaderProps) {
         <span className="text-lg font-semibold">ChatGPTree</span>
       </div>
 
-      <DropdownMenu>
+      <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
         <DropdownMenuTrigger asChild={true}>
           <Button
             variant="ghost"
             size="icon"
             aria-haspopup="true"
-            aria-expanded="false"
+            aria-expanded={isDropdownOpen}
           >
             <Menu className="size-4" />
             <span className="sr-only">メニューを開く</span>

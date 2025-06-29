@@ -14,25 +14,34 @@ import {
 import type { KeyboardEvent } from "react";
 
 interface SidebarProps {
-  chatTitles: string[];
-  selectedChatIndex: number;
+  chats: {
+    id: string;
+    title: string;
+  }[];
+  selectedChatId: string;
   onClickNewChat?: () => void;
-  onClickChat?: (index: number) => void;
+  onClickChat?: (id: string) => void;
 }
 
 /**
  * サイドメニュー
- * @param props.chatTitles - サイドバーチャットの配列
- * @param props.selectedChatIndex - 選択中のサイドバーチャットのインデックス(0-indexed)
+ * @param props.chats - サイドバーチャットの配列
+ * @param props.chats[].id - サイドバーチャットのid。idは一意であること
+ * @param props.chats[].title - サイドバーチャットのタイトル
+ * @param props.selectedChatId - 選択中のサイドバーチャットのid
  * @param props.onClickNewChat - サイドバーチャット作成ボタンをクリックしたときのコールバック
  * @param props.onClickChat - サイドバーチャットの1つをクリックしたときのコールバック
  */
 export function Sidebar(props: SidebarProps) {
-  const { chatTitles, selectedChatIndex, onClickNewChat, onClickChat } = props;
+  const { chats, selectedChatId, onClickNewChat, onClickChat } = props;
 
-  const onKeyDownSidemenuBarItem = (e: KeyboardEvent, index: number) => {
+  const onClickSidemenuBarItem = (id: string) => {
+    onClickChat?.(id);
+  };
+
+  const onKeyDownSidemenuBarItem = (e: KeyboardEvent, id: string) => {
     if (e.key === "Enter") {
-      onClickChat?.(index);
+      onClickChat?.(id);
     }
   };
 
@@ -59,21 +68,19 @@ export function Sidebar(props: SidebarProps) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {chatTitles.map((chatTitle, index) => (
+              {chats.map((chat) => (
                 <SidebarMenuItem
-                  key={chatTitle}
-                  onClick={() => {
-                    onClickChat?.(index);
-                  }}
-                  onKeyDown={(e) => onKeyDownSidemenuBarItem(e, index)}
+                  key={chat.id}
+                  onClick={() => onClickSidemenuBarItem(chat.id)}
+                  onKeyDown={(e) => onKeyDownSidemenuBarItem(e, chat.id)}
                   tabIndex={0}
                 >
                   <SidebarMenuButton
                     asChild={true}
                     className="w-full justify-start"
-                    isActive={index === selectedChatIndex}
+                    isActive={chat.id === selectedChatId}
                   >
-                    <p>{chatTitle}</p>
+                    <p>{chat.title}</p>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

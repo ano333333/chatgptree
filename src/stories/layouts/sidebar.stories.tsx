@@ -21,8 +21,12 @@ export const SidebarStory: Story = {
       <SidebarProvider>
         <SidebarInset>
           <Sidebar
-            chatTitles={["chat1", "chat2", "chat3"]}
-            selectedChatIndex={0}
+            chats={[
+              { id: "chat1", title: "chat1" },
+              { id: "chat2", title: "chat2" },
+              { id: "chat3", title: "chat3" },
+            ]}
+            selectedChatId="chat1"
             onClickNewChat={action("onClickNewChat")}
             onClickChat={action("onClickChat")}
           />
@@ -39,8 +43,11 @@ export const SidebarWithManyItemsStory: Story = {
         <SidebarProvider>
           <SidebarInset>
             <Sidebar
-              chatTitles={Array.from({ length: 20 }, (_, i) => `chat${i + 1}`)}
-              selectedChatIndex={0}
+              chats={Array.from({ length: 20 }, (_, i) => ({
+                id: `chat${i + 1}`,
+                title: `chat${i + 1}`,
+              }))}
+              selectedChatId="chat1"
             />
           </SidebarInset>
         </SidebarProvider>

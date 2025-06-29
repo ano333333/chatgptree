@@ -8,8 +8,12 @@ function App() {
     <>
       <SidebarProvider defaultOpen={false}>
         <Sidebar
-          chatTitles={["chat1", "chat2", "chat3"]}
-          selectedChatIndex={0}
+          chats={[
+            { id: "chat1", title: "chat1" },
+            { id: "chat2", title: "chat2" },
+            { id: "chat3", title: "chat3" },
+          ]}
+          selectedChatId="chat1"
         />
         <SidebarInset>
           <Header />

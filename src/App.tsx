@@ -2,6 +2,7 @@ import "./App.css";
 import { SidebarInset, SidebarProvider } from "./components/ui/sidebar";
 import { Sidebar } from "./layouts/sidebar";
 import Header from "./layouts/header";
+import Body from "./layouts/body";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         />
         <SidebarInset>
           <Header />
+          <Body />
         </SidebarInset>
       </SidebarProvider>
     </>

@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: 24.3.0
           cache: 'pnpm'
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
       - run: pnpm run test
   build:
     runs-on: ubuntu-24.04
@@ -37,5 +37,5 @@ jobs:
         with:
           node-version: 24.3.0
           cache: 'pnpm'
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
       - run: pnpm run build

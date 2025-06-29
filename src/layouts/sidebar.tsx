@@ -11,7 +11,7 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { type KeyboardEvent, useState } from "react";
+import type { KeyboardEvent } from "react";
 
 interface SidebarProps {
   chatTitles: string[];
@@ -29,12 +29,9 @@ interface SidebarProps {
  */
 export function Sidebar(props: SidebarProps) {
   const { chatTitles, selectedChatIndex, onClickNewChat, onClickChat } = props;
-  const [selectedChatIndexState, setSelectedChatIndexState] =
-    useState(selectedChatIndex);
 
   const onKeyDownSidemenuBarItem = (e: KeyboardEvent, index: number) => {
     if (e.key === "Enter") {
-      setSelectedChatIndexState(index);
       onClickChat?.(index);
     }
   };
@@ -66,7 +63,6 @@ export function Sidebar(props: SidebarProps) {
                 <SidebarMenuItem
                   key={chatTitle}
                   onClick={() => {
-                    setSelectedChatIndexState(index);
                     onClickChat?.(index);
                   }}
                   onKeyDown={(e) => onKeyDownSidemenuBarItem(e, index)}
@@ -75,7 +71,7 @@ export function Sidebar(props: SidebarProps) {
                   <SidebarMenuButton
                     asChild={true}
                     className="w-full justify-start"
-                    isActive={index === selectedChatIndexState}
+                    isActive={index === selectedChatIndex}
                   >
                     <p>{chatTitle}</p>
                   </SidebarMenuButton>

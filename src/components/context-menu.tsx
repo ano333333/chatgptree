@@ -29,6 +29,7 @@ export function ContextMenu(props: ContextMenuProps) {
       }}
       ref={props.ref}
       data-component-name="context-menu"
+      role="menu"
     >
       {props.children}
     </div>
@@ -52,6 +53,7 @@ export function ContextMenuItem(props: ContextMenuItemProps) {
       type="button"
       onClick={props.onClick}
       onKeyDown={props.onKeyDown}
+      role="menuitem"
     >
       {props.children}
     </button>
@@ -129,6 +131,7 @@ export function ContextMenuSubMenu(props: ContextMenuSubMenuProps) {
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         aria-label="context-menu-sub-menu"
+        role="menu"
       >
         {props.children}
       </div>

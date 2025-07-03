@@ -53,8 +53,7 @@ export const ContextMenuItemInvokeHandlerWhenClicked: Story = {
 
     // Assert
     await expect(datas.test2Spy).toHaveBeenCalledTimes(1);
-    // await expect(datas.test1Spy).not.toHaveBeenCalled();
-    await expect(datas.test1Spy).toHaveBeenCalledTimes(1);
+    await expect(datas.test1Spy).not.toHaveBeenCalled();
     await expect(datas.test3Spy).not.toHaveBeenCalled();
   },
 };

@@ -19,6 +19,11 @@ interface ContextMenuProps {
   className?: string;
 }
 
+/**
+ * コンテキストメニューのルート要素
+ * @param props.screenPosition コンテキストメニューのスクリーン座標位置
+ * @param props.children (ContextMenuItem|ContextMenuSeparator|ContextMenuSubMenuRoot)[]
+ */
 export function ContextMenu(props: ContextMenuProps) {
   return (
     <div
@@ -37,13 +42,19 @@ export function ContextMenu(props: ContextMenuProps) {
 }
 
 interface ContextMenuItemProps {
-  children?: ReactNode;
-  className?: string;
-  ref?: RefObject<HTMLButtonElement>;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
+  ref?: RefObject<HTMLButtonElement>;
+  children?: ReactNode;
+  className?: string;
 }
 
+/**
+ * コンテキストメニュー/サブメニューの項目を表す要素
+ * @param props.onClick クリック時のハンドラ
+ * @param props.onKeyDown キー押下時のハンドラ
+ * @param props.children string
+ */
 export function ContextMenuItem(props: ContextMenuItemProps) {
   return (
     <button
@@ -60,6 +71,9 @@ export function ContextMenuItem(props: ContextMenuItemProps) {
   );
 }
 
+/**
+ * コンテキストメニュー/サブメニューの区切り線を表す要素
+ */
 export function ContextMenuSeparator() {
   return (
     <div
@@ -88,11 +102,27 @@ const submenuStateSetterContext = createContext<{
 });
 
 interface ContextMenuSubMenuRootProps {
+  ref?: RefObject<HTMLDivElement>;
   children?: ReactNode;
   className?: string;
-  ref?: RefObject<HTMLDivElement>;
 }
 
+/**
+ * サブメニューのルート要素
+ * @param props.children (ContextMenuSubMenuTrigger|ContextMenuSubMenu)[]
+ * @example
+ * ```tsx
+ * <ContextMenu>
+ * <ContextMenuSubMenuRoot>
+ *   <ContextMenuSubMenuTrigger>submenu open trigger item</ContextMenuSubMenuTrigger>
+ *   <ContextMenuSubMenu>
+ *     <ContextMenuItem>submenu item 1</ContextMenuItem>
+ *     <ContextMenuItem>submenu item 2</ContextMenuItem>
+ *   </ContextMenuSubMenu>
+ * </ContextMenuSubMenuRoot>
+ * </ContextMenu>
+ * ```
+ */
 export function ContextMenuSubMenuRoot(props: ContextMenuSubMenuRootProps) {
   const [state, setState] = useState<SubmenuState>("closed");
 
@@ -106,11 +136,15 @@ export function ContextMenuSubMenuRoot(props: ContextMenuSubMenuRootProps) {
 }
 
 interface ContextMenuSubMenuProps {
+  ref?: RefObject<HTMLDivElement>;
   children?: ReactNode;
   className?: string;
-  ref?: RefObject<HTMLDivElement>;
 }
 
+/**
+ * 親メニューの右に表示するサブメニューのアイテムのコンテナ
+ * @param props.children (ContextMenuItem|ContextMenuSeparator|ContextMenuSubMenuRoot)[]
+ */
 export function ContextMenuSubMenu(props: ContextMenuSubMenuProps) {
   const submenuState = useContext(submenuStateContext);
   const submenuStateSetter = useContext(submenuStateSetterContext);
@@ -140,11 +174,15 @@ export function ContextMenuSubMenu(props: ContextMenuSubMenuProps) {
 }
 
 interface ContextMenuSubMenuTriggerProps {
+  ref?: RefObject<HTMLButtonElement>;
   children?: ReactNode;
   className?: string;
-  ref?: RefObject<HTMLDivElement>;
 }
 
+/**
+ * ホバーでサブメニューを開く、コンテキストメニューアイテム
+ * @param props.children string
+ */
 export function ContextMenuSubMenuTrigger(
   props: ContextMenuSubMenuTriggerProps,
 ) {

@@ -47,17 +47,13 @@ export const BodyContextMenuItemsInvokeHandlers: Story = {
     datas.containerOnclickSpy.mockClear();
 
     // Act
-    const createButton = canvas.queryByText("作成");
-    if (!createButton) {
-      throw new Error("作成ボタンが見つかりません");
-    }
-    await user.hover(createButton);
+    await user.hover(canvas.getByText("作成"));
     const createUserPromptButton = canvas.getByText("ユーザープロンプト");
     await user.click(createUserPromptButton);
 
     // Assert
     await expect(datas.createUserPromptHandlerSpy).toHaveBeenCalled();
     await expect(datas.containerOnclickSpy).not.toHaveBeenCalled();
-    await expect(canvas.getByText("作成")).not.toBeInTheDocument();
+    await expect(canvas.queryByText("作成")).not.toBeInTheDocument();
   },
 };

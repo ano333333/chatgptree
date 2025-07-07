@@ -15,6 +15,15 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useState, type MouseEvent } from "react";
 
+/**
+ * ボディ
+ * @param props.initialContextMenuState - ボディコンテキストメニューの初期状態(主にテスト時に使用)
+ * @param props.onClickCreateUserPrompt - ボディコンテキストメニューのユーザープロンプト作成ボタンのハンドラー
+ * @param props.onClickCreateSystemPrompt - ボディコンテキストメニューのシステムプロンプト作成ボタンのハンドラー
+ * @param props.onClickUndo - ボディコンテキストメニューのUndoボタンのハンドラー
+ * @param props.onClickRedo - ボディコンテキストメニューのRedoボタンのハンドラー
+ * @param props.onClickPaste - ボディコンテキストメニューのペーストボタンのハンドラー
+ */
 interface BodyProps {
   // NOTE(#12): Storybook上での左クリックが`render()`した要素に届いていなかったので、
   // Storybookでは最初からボディコンテキストメニューを開いておく。

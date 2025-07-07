@@ -73,6 +73,7 @@ export default function Body({
           onClickUndo={onClickUndo}
           onClickRedo={onClickRedo}
           onClickPaste={onClickPaste}
+          closeContextMenu={() => setContextMenuState({ status: "close" })}
         />
       )}
       <ReactFlowProvider>
@@ -102,6 +103,7 @@ interface BodyContextMenuProps {
   onClickUndo?: () => void;
   onClickRedo?: () => void;
   onClickPaste?: () => void;
+  closeContextMenu: () => void;
 }
 
 function BodyContextMenu({
@@ -111,11 +113,13 @@ function BodyContextMenu({
   onClickUndo,
   onClickRedo,
   onClickPaste,
+  closeContextMenu,
 }: BodyContextMenuProps) {
   const stopPropagationAndInvoke = (handler?: () => void) => {
     return (e: MouseEvent) => {
       e.stopPropagation();
       handler?.();
+      closeContextMenu();
     };
   };
 

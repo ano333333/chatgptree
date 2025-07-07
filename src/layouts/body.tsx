@@ -13,7 +13,7 @@ import {
   ReactFlowProvider,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 
 interface BodyProps {
   // NOTE(#12): Storybook上での左クリックが`render()`した要素に届いていなかったので、
@@ -112,24 +112,41 @@ function BodyContextMenu({
   onClickRedo,
   onClickPaste,
 }: BodyContextMenuProps) {
+  const stopPropagationAndInvoke = (handler?: () => void) => {
+    return (e: MouseEvent) => {
+      e.stopPropagation();
+      handler?.();
+    };
+  };
+
   return (
     <ContextMenu screenPosition={screenPosition}>
       <ContextMenuSubMenuRoot>
         <ContextMenuSubMenuTrigger>作成</ContextMenuSubMenuTrigger>
         <ContextMenuSubMenu>
-          <ContextMenuItem onClick={onClickCreateUserPrompt}>
+          <ContextMenuItem
+            onClick={stopPropagationAndInvoke(onClickCreateUserPrompt)}
+          >
             ユーザープロンプト
           </ContextMenuItem>
-          <ContextMenuItem onClick={onClickCreateSystemPrompt}>
+          <ContextMenuItem
+            onClick={stopPropagationAndInvoke(onClickCreateSystemPrompt)}
+          >
             システムプロンプト
           </ContextMenuItem>
         </ContextMenuSubMenu>
       </ContextMenuSubMenuRoot>
       <ContextMenuSeparator />
-      <ContextMenuItem onClick={onClickUndo}>Undo</ContextMenuItem>
-      <ContextMenuItem onClick={onClickRedo}>Redo</ContextMenuItem>
+      <ContextMenuItem onClick={stopPropagationAndInvoke(onClickUndo)}>
+        Undo
+      </ContextMenuItem>
+      <ContextMenuItem onClick={stopPropagationAndInvoke(onClickRedo)}>
+        Redo
+      </ContextMenuItem>
       <ContextMenuSeparator />
-      <ContextMenuItem onClick={onClickPaste}>ペースト</ContextMenuItem>
+      <ContextMenuItem onClick={stopPropagationAndInvoke(onClickPaste)}>
+        ペースト
+      </ContextMenuItem>
     </ContextMenu>
   );
 }

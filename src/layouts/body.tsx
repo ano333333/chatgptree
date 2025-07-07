@@ -16,6 +16,9 @@ import "@xyflow/react/dist/style.css";
 import { useState } from "react";
 
 interface BodyProps {
+  // NOTE(#12): Storybook上での左クリックが`render()`した要素に届いていなかったので、
+  // Storybookでは最初からボディコンテキストメニューを開いておく。
+  initialContextMenuState?: ContextMenuState;
   onClickCreateUserPrompt?: () => void;
   onClickCreateSystemPrompt?: () => void;
   onClickUndo?: () => void;
@@ -33,15 +36,16 @@ type ContextMenuState =
     };
 
 export default function Body({
+  initialContextMenuState,
   onClickCreateUserPrompt,
   onClickCreateSystemPrompt,
   onClickUndo,
   onClickRedo,
   onClickPaste,
 }: BodyProps) {
-  const [contextMenuState, setContextMenuState] = useState<ContextMenuState>({
-    status: "close",
-  });
+  const [contextMenuState, setContextMenuState] = useState<ContextMenuState>(
+    initialContextMenuState ?? { status: "close" },
+  );
 
   const onPaneContextMenu = ({
     clientX,

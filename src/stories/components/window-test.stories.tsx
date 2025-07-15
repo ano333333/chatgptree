@@ -58,7 +58,7 @@ export const OpenedWindowUpdateContentsOnPropsUpdate: Story = {
     }, [setWindowState]);
     return (
       <WindowContext dispatcher={stateDispatcher}>
-        <Window key="window1" title={title}>
+        <Window windowKey="window1" title={title}>
           <div>{message}</div>
         </Window>
       </WindowContext>
@@ -110,7 +110,7 @@ export const ClosedWindowUpdateContentsOnPropsUpdate: Story = {
     datas.setWindowMessage = (message: string) => setMessage(message);
     return (
       <WindowContext dispatcher={stateDispatcher}>
-        <Window key="window1" title={title}>
+        <Window windowKey="window1" title={title}>
           <div>{message}</div>
         </Window>
       </WindowContext>
@@ -172,7 +172,7 @@ export const HeaderDragsAndCancelsOnEscapeKey: Story = {
     };
     return (
       <WindowContext dispatcher={stateDispatcher}>
-        <Window key="window1" title="title" />
+        <Window windowKey="window1" title="title" />
       </WindowContext>
     );
   },
@@ -275,7 +275,7 @@ export const ResizeHandleDragsAndCancelsOnEscapeKey: Story = {
     };
     return (
       <WindowContext dispatcher={stateDispatcher}>
-        <Window key="window1" title="title" />
+        <Window windowKey="window1" title="title" />
       </WindowContext>
     );
   },
@@ -372,7 +372,7 @@ export const ResizeHandlePreventsBelowMinimum: Story = {
         width-min={50}
         height-min={50}
       >
-        <Window key="window1" title="title" />
+        <Window windowKey="window1" title="title" />
       </WindowContext>
     );
   },
@@ -442,7 +442,7 @@ export const CloseButtonClosesWindow: Story = {
     };
     return (
       <WindowContext dispatcher={stateDispatcher}>
-        <Window key="window1" title="title" />
+        <Window windowKey="window1" title="title" />
       </WindowContext>
     );
   },
@@ -508,9 +508,9 @@ export const WindowMaintainsFocusAndPreservesInputFocus: Story = {
 
     return (
       <WindowContext dispatcher={stateDispatcher}>
-        <Window key="window1" title="Window 1" />
-        <Window key="window2" title="Window 2" />
-        <Window key="window3" title="Window 3">
+        <Window windowKey="window1" title="Window 1" />
+        <Window windowKey="window2" title="Window 2" />
+        <Window windowKey="window3" title="Window 3">
           <input data-testid="test-input" />
         </Window>
       </WindowContext>
@@ -561,6 +561,66 @@ export const WindowMaintainsFocusAndPreservesInputFocus: Story = {
   },
 };
 
+const WindowPreservesDragStateOnReopenDatas = {
+  isDragging: () => false,
+};
+
+export const WindowPreservesDragStateOnReopen: Story = {
+  render: () => {
+    const datas = WindowPreservesDragStateOnReopenDatas;
+    const { setWindowState, stateDispatcher } = useWindow();
+
+    // 3つのウィンドウを開く
+    openWindow(setWindowState, "window1", 100, 100, 200, 200);
+    openWindow(setWindowState, "window2", 150, 150, 200, 200);
+    openWindow(setWindowState, "window3", 200, 200, 200, 200);
+
+    datas.isDragging = () => {
+      // ドラッグ状態の確認（実装に依存）
+      return false;
+    };
+
+    return (
+      <WindowContext dispatcher={stateDispatcher}>
+        <Window windowKey="window1" title="Window 1" />
+        <Window windowKey="window2" title="Window 2" />
+        <Window windowKey="window3" title="Window 3" />
+      </WindowContext>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    // 3つのウィンドウを開く。最前面ウィンドウのドラッグ中に、
+    // 最前面ウィンドウをsetWindowStateで再度開いてもドラッグが中断されない。
+    // Arrange
+    const canvas = within(canvasElement);
+    const datas = WindowPreservesDragStateOnReopenDatas;
+    const { setWindowState } = useWindow();
+    const window3 = canvas.getByText("Window 3");
+
+    // Act - ドラッグ開始
+    const dragStartX = window3.getBoundingClientRect().x + 5;
+    const dragStartY = window3.getBoundingClientRect().y + 5;
+    window3.dispatchEvent(
+      new MouseEvent("mousedown", {
+        clientX: dragStartX,
+        clientY: dragStartY,
+        button: 0,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    await wait();
+    expect(datas.isDragging()).toBe(true);
+
+    // Act - ドラッグ中にsetWindowStateを呼び出し
+    setWindowState("window3", { open: true });
+    await wait();
+
+    // Assert - ドラッグが継続される
+    expect(datas.isDragging()).toBe(true);
+  },
+};
+
 const WindowPreventsEventPropagationToParentDatas = {
   parentClickCount: 0,
   childClickCount: 0,
@@ -587,7 +647,7 @@ export const WindowPreventsEventPropagationToParent: Story = {
         style={{ position: "relative", zIndex: 1 }}
       >
         <WindowContext dispatcher={stateDispatcher}>
-          <Window key="window1" title="Window 1">
+          <Window windowKey="window1" title="Window 1">
             <div
               data-testid="window-content"
               onClick={() => {

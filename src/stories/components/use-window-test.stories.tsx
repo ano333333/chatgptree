@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import Window from "@/components/window";
-import WindowContext from "@/components/window-context";
+import { Window, WindowContext } from "@/components/window";
 import useWindow from "@/hooks/use-window";
 import { expect, within } from "@storybook/test";
 import { wait } from "../utils/wait";
@@ -69,9 +68,21 @@ export const WindowMovesToFrontWhenSetWindowStateCalled: Story = {
 
     return (
       <WindowContext dispatcher={stateDispatcher}>
-        <Window windowKey="window1" title="window1" />
-        <Window windowKey="window2" title="window2" />
-        <Window windowKey="window3" title="window3" />
+        <Window
+          windowKey="window1"
+          title="Window 1"
+          data-window-key="window1"
+        />
+        <Window
+          windowKey="window2"
+          title="Window 2"
+          data-window-key="window2"
+        />
+        <Window
+          windowKey="window3"
+          title="Window 3"
+          data-window-key="window3"
+        />
       </WindowContext>
     );
   },
@@ -120,9 +131,21 @@ export const FocusTransfersToPreviousWindowWhenFrontWindowCloses: Story = {
 
     return (
       <WindowContext dispatcher={stateDispatcher}>
-        <Window windowKey="window1" title="window1" />
-        <Window windowKey="window2" title="window2" />
-        <Window windowKey="window3" title="window3" />
+        <Window
+          windowKey="window1"
+          title="Window 1"
+          data-window-key="window1"
+        />
+        <Window
+          windowKey="window2"
+          title="Window 2"
+          data-window-key="window2"
+        />
+        <Window
+          windowKey="window3"
+          title="Window 3"
+          data-window-key="window3"
+        />
       </WindowContext>
     );
   },
@@ -166,9 +189,21 @@ export const FocusRemainsOnFrontWindowWhenNonFrontWindowCloses: Story = {
 
     return (
       <WindowContext dispatcher={stateDispatcher}>
-        <Window windowKey="window1" title="window1" />
-        <Window windowKey="window2" title="window2" />
-        <Window windowKey="window3" title="window3" />
+        <Window
+          windowKey="window1"
+          title="Window 1"
+          data-window-key="window1"
+        />
+        <Window
+          windowKey="window2"
+          title="Window 2"
+          data-window-key="window2"
+        />
+        <Window
+          windowKey="window3"
+          title="Window 3"
+          data-window-key="window3"
+        />
       </WindowContext>
     );
   },

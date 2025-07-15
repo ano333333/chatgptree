@@ -65,9 +65,9 @@ export const Default: Story = {
           z-index-max={3}
           default-window-size={{ width: 300, height: 200 }}
         >
-          <Window key="window1" title="Window 1" />
-          <Window key="window2" title="Window 2" />
-          <Window key="window3" title="Window 3" />
+          <Window windowKey="window1" title="Window 1" />
+          <Window windowKey="window2" title="Window 2" />
+          <Window windowKey="window3" title="Window 3" />
         </WindowContext>
       </>
     );

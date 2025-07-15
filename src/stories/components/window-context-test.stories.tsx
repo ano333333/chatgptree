@@ -48,7 +48,7 @@ export const WindowUsesDefaultPositionAndSize: Story = {
         default-window-position={{ x: 150, y: 150 }}
         default-window-size={{ width: 300, height: 300 }}
       >
-        <Window key="window1" title="title" />
+        <Window windowKey="window1" title="title" />
       </WindowContext>
     );
   },
@@ -88,7 +88,7 @@ export const WindowUsesCustomPositionAndSize: Story = {
 
     return (
       <WindowContext dispatcher={stateDispatcher}>
-        <Window key="window1" title="title" />
+        <Window windowKey="window1" title="title" />
       </WindowContext>
     );
   },
@@ -132,7 +132,7 @@ export const WindowRemembersPreviousPositionAndSize: Story = {
         default-window-position={{ x: 150, y: 150 }}
         default-window-size={{ width: 300, height: 300 }}
       >
-        <Window key="window1" title="title" />
+        <Window windowKey="window1" title="title" />
       </WindowContext>
     );
   },
@@ -199,10 +199,10 @@ export const WindowClosesWhenZIndexLimitExceeded: Story = {
         z-index-min={1}
         z-index-max={3}
       >
-        <Window key="window1" title="Window 1" />
-        <Window key="window2" title="Window 2" />
-        <Window key="window3" title="Window 3" />
-        <Window key="window4" title="Window 4" />
+        <Window windowKey="window1" title="Window 1" />
+        <Window windowKey="window2" title="Window 2" />
+        <Window windowKey="window3" title="Window 3" />
+        <Window windowKey="window4" title="Window 4" />
       </WindowContext>
     );
   },
@@ -258,8 +258,8 @@ export const SingleWindowClosesWhenZIndexLimitExceeded: Story = {
         z-index-min={1}
         z-index-max={1}
       >
-        <Window key="window1" title="Window 1" />
-        <Window key="window2" title="Window 2" />
+        <Window windowKey="window1" title="Window 1" />
+        <Window windowKey="window2" title="Window 2" />
       </WindowContext>
     );
   },

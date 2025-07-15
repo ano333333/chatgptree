@@ -1,4 +1,10 @@
-import type { ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from "react";
 import type { UseWindowDispatcherType } from "@/hooks/use-window";
 import { Layers, ListFilter, X } from "lucide-react";
 
@@ -6,20 +12,25 @@ const WINDOW_HEADER_HEIGHT = 32;
 const RESIZE_HANDLE_HEIGHT = 16;
 
 interface WindowProps {
-  key: string; // 各ウィンドウに対し一意のstring
+  windowKey: string; // 各ウィンドウに対し一意のstring
   title?: string;
   children?: ReactNode;
 }
 
-export function Window({ key, title, children }: WindowProps) {
-  const position = {
-    x: 100,
-    y: 100,
-  };
-  const size = {
-    width: 300,
-    height: 200,
-  };
+const innerWindowContext = createContext<{
+  getWindowState: UseWindowDispatcherType["getWindowState"];
+}>({
+  getWindowState: () => {
+    throw new Error("getWindowState is not implemented");
+  },
+});
+
+export function Window({ windowKey, title, children }: WindowProps) {
+  const keyRef = useRef(windowKey);
+  const { getWindowState } = useContext(innerWindowContext);
+
+  const { open, position, size } = getWindowState(keyRef.current);
+
   const zIndex = 100;
 
   const windowStyle = {
@@ -33,33 +44,38 @@ export function Window({ key, title, children }: WindowProps) {
   const bodyContainerStyle = {
     height: size.height - WINDOW_HEADER_HEIGHT - RESIZE_HANDLE_HEIGHT,
   };
+  // TODO: getWindowState(keyRef.current)の結果とchildrenをdependentsとするuseMemoを使う
   return (
-    <div
-      key={key}
-      style={windowStyle}
-      className="bg-white border border-gray-300 rounded-lg shadow-2xl overflow-hidden"
-    >
-      {/* ヘッダー */}
-      <div
-        className={`window-header bg-gray-100 border-b border-gray-200 pl-2 pr-1 py-2 h-[${WINDOW_HEADER_HEIGHT}px] flex items-center justify-between cursor-move`}
-      >
-        <Layers size={16} />
-        <h3 className="text-sm font-semibold">{title}</h3>
-        {/* 閉じるボタン */}
-        <button
-          type="button"
-          className="p-1 ml-auto hover:bg-red-100 hover:text-red-600 rounded transition-colors"
+    <>
+      {open && (
+        <div
+          key={windowKey}
+          style={windowStyle}
+          className="bg-white border border-gray-300 rounded-lg shadow-2xl overflow-hidden"
         >
-          <X size={16} />
-        </button>
-      </div>
-      <div style={bodyContainerStyle}>{children}</div>
-      {/* リサイズハンドル */}
-      <ListFilter
-        size={RESIZE_HANDLE_HEIGHT}
-        className="transform -rotate-45 absolute -bottom-1 -right-1"
-      />
-    </div>
+          {/* ヘッダー */}
+          <div
+            className={`window-header bg-gray-100 border-b border-gray-200 pl-2 pr-1 py-2 h-[${WINDOW_HEADER_HEIGHT}px] flex items-center justify-between cursor-move`}
+          >
+            {isFocused && <Layers size={16} />}
+            <h3 className="text-sm font-semibold">{title}</h3>
+            {/* 閉じるボタン */}
+            <button
+              type="button"
+              className="p-1 ml-auto hover:bg-red-100 hover:text-red-600 rounded transition-colors"
+            >
+              <X size={16} />
+            </button>
+          </div>
+          <div style={bodyContainerStyle}>{children}</div>
+          {/* リサイズハンドル */}
+          <ListFilter
+            size={RESIZE_HANDLE_HEIGHT}
+            className="transform -rotate-45 absolute -bottom-1 -right-1"
+          />
+        </div>
+      )}
+    </>
   );
 }
 
@@ -80,6 +96,40 @@ interface WindowContextProps {
   children?: ReactNode;
 }
 
-export function WindowContext({ children }: WindowContextProps) {
-  return <>{children}</>;
+/**
+ * 各Windowの状態とその操作はuseWindowで持つ。
+ * WindowContextはuseWindowからWindowへ状態のゲッターとイベントハンドラを渡す。
+ */
+export function WindowContext({
+  dispatcher,
+  "default-window-position": defaultWindowPosition,
+  "default-window-size": defaultWindowSize,
+  children,
+}: WindowContextProps) {
+  const {
+    setZIndexMin,
+    setZIndexMax,
+    setDefaultWindowPosition,
+    setDefaultWindowSize,
+    getWindowState,
+  } = dispatcher;
+  const setZIndexMinRef = useRef(setZIndexMin);
+  const setZIndexMaxRef = useRef(setZIndexMax);
+  const setDefaultWindowPositionRef = useRef(setDefaultWindowPosition);
+  const setDefaultWindowSizeRef = useRef(setDefaultWindowSize);
+
+  useEffect(() => {
+    if (defaultWindowPosition) {
+      setDefaultWindowPositionRef.current(defaultWindowPosition);
+    }
+    if (defaultWindowSize) {
+      setDefaultWindowSizeRef.current(defaultWindowSize);
+    }
+  }, [defaultWindowPosition, defaultWindowSize]);
+
+  return (
+    <innerWindowContext.Provider value={{ getWindowState }}>
+      {children}
+    </innerWindowContext.Provider>
+  );
 }

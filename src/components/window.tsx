@@ -56,6 +56,12 @@ export function Window({ windowKey, title, children }: WindowProps) {
           key={windowKey}
           style={windowStyle}
           className="bg-white border border-gray-300 rounded-lg shadow-2xl overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+          onMouseUp={(e) => e.stopPropagation()}
+          onMouseMove={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+          onKeyUp={(e) => e.stopPropagation()}
         >
           {/* ヘッダー */}
           <div

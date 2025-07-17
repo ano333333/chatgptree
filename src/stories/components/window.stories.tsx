@@ -1,6 +1,7 @@
 import { Window, WindowContext } from "@/components/window";
 import useWindow from "@/hooks/use-window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { action } from "storybook/actions";
 
 const meta: Meta<typeof Window> = {
   title: "Components/Window",
@@ -69,7 +70,12 @@ export const Default: Story = {
     };
     const windowKeys = [1, 2, 3, 4].map((i) => `window${i}`);
     return (
-      <>
+      <div
+        className="w-[800px] h-[800px]"
+        onClick={action("background")}
+        onKeyDown={action("background")}
+        onKeyUp={action("background")}
+      >
         <div className="flex flex-col gap-2 m-2">
           <div className="flex flex-row gap-2 m-2">
             {windowKeys.map((key) => (
@@ -103,7 +109,7 @@ export const Default: Story = {
           <Window windowKey="window3" title="Window 3" />
           <Window windowKey="window4" title="Window 4" />
         </WindowContext>
-      </>
+      </div>
     );
   },
 };

@@ -29,9 +29,13 @@ export function Window({ windowKey, title, children }: WindowProps) {
   const keyRef = useRef(windowKey);
   const { getWindowState } = useContext(innerWindowContext);
 
-  const { open, position, size } = getWindowState(keyRef.current);
-
-  const zIndex = 100;
+  const prevState = useRef(getWindowState(keyRef.current));
+  if (prevState.current !== getWindowState(keyRef.current)) {
+    prevState.current = getWindowState(keyRef.current);
+  }
+  const { open, zIndex, isFocused, position, size } = getWindowState(
+    keyRef.current,
+  );
 
   const windowStyle = {
     position: "fixed" as const,
@@ -58,7 +62,7 @@ export function Window({ windowKey, title, children }: WindowProps) {
             className={`window-header bg-gray-100 border-b border-gray-200 pl-2 pr-1 py-2 h-[${WINDOW_HEADER_HEIGHT}px] flex items-center justify-between cursor-move`}
           >
             {isFocused && <Layers size={16} />}
-            <h3 className="text-sm font-semibold">{title}</h3>
+            <h3 className="text-sm font-semibold"> {title}</h3>
             {/* 閉じるボタン */}
             <button
               type="button"
@@ -102,10 +106,13 @@ interface WindowContextProps {
  */
 export function WindowContext({
   dispatcher,
+  "z-index-min": zIndexMin,
+  "z-index-max": zIndexMax,
   "default-window-position": defaultWindowPosition,
   "default-window-size": defaultWindowSize,
   children,
 }: WindowContextProps) {
+  console.info("WindowContext");
   const {
     setZIndexMin,
     setZIndexMax,
@@ -118,14 +125,25 @@ export function WindowContext({
   const setDefaultWindowPositionRef = useRef(setDefaultWindowPosition);
   const setDefaultWindowSizeRef = useRef(setDefaultWindowSize);
 
+  const initialZIndexMin = useRef(zIndexMin);
+  const initialZIndexMax = useRef(zIndexMax);
+  const initialDefaultWindowPosition = useRef(defaultWindowPosition);
+  const initialDefaultWindowSize = useRef(defaultWindowSize);
+
   useEffect(() => {
-    if (defaultWindowPosition) {
-      setDefaultWindowPositionRef.current(defaultWindowPosition);
+    if (initialZIndexMin.current) {
+      setZIndexMinRef.current(initialZIndexMin.current);
     }
-    if (defaultWindowSize) {
-      setDefaultWindowSizeRef.current(defaultWindowSize);
+    if (initialZIndexMax.current) {
+      setZIndexMaxRef.current(initialZIndexMax.current);
     }
-  }, [defaultWindowPosition, defaultWindowSize]);
+    if (initialDefaultWindowPosition.current) {
+      setDefaultWindowPositionRef.current(initialDefaultWindowPosition.current);
+    }
+    if (initialDefaultWindowSize.current) {
+      setDefaultWindowSizeRef.current(initialDefaultWindowSize.current);
+    }
+  }, []);
 
   return (
     <innerWindowContext.Provider value={{ getWindowState }}>

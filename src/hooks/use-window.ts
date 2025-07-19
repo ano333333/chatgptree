@@ -6,6 +6,7 @@ export type UseWindowDispatcherType = {
   setDefaultWindowPosition: (position: { x: number; y: number }) => void;
   setDefaultWindowSize: (size: { width: number; height: number }) => void;
   getWindowState: (key: string) => WindowState;
+  setWindowState: (key: string, state: SetWindowStateArgsType) => void;
 };
 
 type WindowState = {
@@ -127,6 +128,22 @@ const useWindow = () => {
           );
         },
         [windowStates],
+      ),
+      setWindowState: useCallback(
+        (key: string, state: SetWindowStateArgsType) => {
+          setWindowStates((ps) =>
+            setWindowStateLogic(
+              key,
+              state,
+              ps,
+              zIndexMin.current,
+              zIndexMax.current,
+              defaultWindowPosition.current,
+              defaultWindowSize.current,
+            ),
+          );
+        },
+        [],
       ),
     },
   };

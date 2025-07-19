@@ -19,15 +19,19 @@ interface WindowProps {
 
 const innerWindowContext = createContext<{
   getWindowState: UseWindowDispatcherType["getWindowState"];
+  setWindowState: UseWindowDispatcherType["setWindowState"];
 }>({
   getWindowState: () => {
     throw new Error("getWindowState is not implemented");
+  },
+  setWindowState: () => {
+    throw new Error("setWindowState is not implemented");
   },
 });
 
 export function Window({ windowKey, title, children }: WindowProps) {
   const keyRef = useRef(windowKey);
-  const { getWindowState } = useContext(innerWindowContext);
+  const { getWindowState, setWindowState } = useContext(innerWindowContext);
 
   const prevState = useRef(getWindowState(keyRef.current));
   if (prevState.current !== getWindowState(keyRef.current)) {
@@ -48,6 +52,13 @@ export function Window({ windowKey, title, children }: WindowProps) {
   const bodyContainerStyle = {
     height: size.height - WINDOW_HEADER_HEIGHT - RESIZE_HANDLE_HEIGHT,
   };
+
+  const closeButtonOnClick = () => {
+    setWindowState(keyRef.current, {
+      open: false,
+    });
+  };
+
   // TODO: getWindowState(keyRef.current)の結果とchildrenをdependentsとするuseMemoを使う
   return (
     <>
@@ -72,6 +83,8 @@ export function Window({ windowKey, title, children }: WindowProps) {
             {/* 閉じるボタン */}
             <button
               type="button"
+              aria-label="close-window"
+              onClick={closeButtonOnClick}
               className="p-1 ml-auto hover:bg-red-100 hover:text-red-600 rounded transition-colors"
             >
               <X size={16} />
@@ -125,6 +138,7 @@ export function WindowContext({
     setDefaultWindowPosition,
     setDefaultWindowSize,
     getWindowState,
+    setWindowState,
   } = dispatcher;
   const setZIndexMinRef = useRef(setZIndexMin);
   const setZIndexMaxRef = useRef(setZIndexMax);
@@ -152,7 +166,7 @@ export function WindowContext({
   }, []);
 
   return (
-    <innerWindowContext.Provider value={{ getWindowState }}>
+    <innerWindowContext.Provider value={{ getWindowState, setWindowState }}>
       {children}
     </innerWindowContext.Provider>
   );

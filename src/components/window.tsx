@@ -3,6 +3,7 @@ import {
   useContext,
   useEffect,
   useRef,
+  type MouseEvent,
   type ReactNode,
 } from "react";
 import type { UseWindowDispatcherType } from "@/hooks/use-window";
@@ -53,10 +54,18 @@ export function Window({ windowKey, title, children }: WindowProps) {
     height: size.height - WINDOW_HEADER_HEIGHT - RESIZE_HANDLE_HEIGHT,
   };
 
-  const closeButtonOnClick = () => {
+  const windowOnClick = (e: MouseEvent<HTMLDivElement>) => {
+    setWindowState(keyRef.current, {
+      open: true,
+    });
+    e.stopPropagation();
+  };
+
+  const closeButtonOnClick = (e: MouseEvent<HTMLButtonElement>) => {
     setWindowState(keyRef.current, {
       open: false,
     });
+    e.stopPropagation();
   };
 
   // TODO: getWindowState(keyRef.current)の結果とchildrenをdependentsとするuseMemoを使う
@@ -67,7 +76,7 @@ export function Window({ windowKey, title, children }: WindowProps) {
           key={windowKey}
           style={windowStyle}
           className="bg-white border border-gray-300 rounded-lg shadow-2xl overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
+          onClick={windowOnClick}
           onMouseDown={(e) => e.stopPropagation()}
           onMouseUp={(e) => e.stopPropagation()}
           onMouseMove={(e) => e.stopPropagation()}

@@ -331,11 +331,7 @@ function reopenWindowLogic(
   zIndexMin: number,
   zIndexMax: number,
 ) {
-  // 既に最前面にいる(isFocusedがtrue)場合は何もしない
   const state = prevStates[key];
-  if (state.isFocused) {
-    return prevStates;
-  }
   const zIndexWindowKeyPairs = constructZIndexWindowKeyPairs(prevStates);
   const returnStates = { ...prevStates };
   // 一番手前のwindowのisFocusedをfalseにする

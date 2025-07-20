@@ -4,6 +4,7 @@ import {
   useEffect,
   useRef,
   type MouseEvent,
+  type DragEvent,
   type ReactNode,
 } from "react";
 import type { UseWindowDispatcherType } from "@/hooks/use-window";
@@ -33,6 +34,19 @@ const innerWindowContext = createContext<{
 export function Window({ windowKey, title, children }: WindowProps) {
   const keyRef = useRef(windowKey);
   const { getWindowState, setWindowState } = useContext(innerWindowContext);
+  /** ドラッグの状況 */
+  const headerDraggingState = useRef<{
+    /** ドラッグ開始時にクリックした点の座標(ページ座標) */
+    initialClickedPoint: {
+      x: number;
+      y: number;
+    };
+    /** ドラッグ開始時のウィンドウの座標 */
+    initialWindowPosition: {
+      x: number;
+      y: number;
+    };
+  } | null>(null);
 
   const prevState = useRef(getWindowState(keyRef.current));
   if (prevState.current !== getWindowState(keyRef.current)) {
@@ -61,6 +75,44 @@ export function Window({ windowKey, title, children }: WindowProps) {
     e.stopPropagation();
   };
 
+  const headerOnDragStart = (e: DragEvent<HTMLDivElement>) => {
+    if (headerDraggingState.current) {
+      return;
+    }
+    const state = getWindowState(keyRef.current);
+    headerDraggingState.current = {
+      initialClickedPoint: {
+        x: e.pageX,
+        y: e.pageY,
+      },
+      initialWindowPosition: {
+        x: state.position.x,
+        y: state.position.y,
+      },
+    };
+  };
+  const updateWindowPositionOnHeaderDrag = (e: DragEvent<HTMLDivElement>) => {
+    if (!headerDraggingState.current) {
+      return;
+    }
+    const deltaX = e.pageX - headerDraggingState.current.initialClickedPoint.x;
+    const deltaY = e.pageY - headerDraggingState.current.initialClickedPoint.y;
+    setWindowState(keyRef.current, {
+      open: true,
+      position: {
+        x: headerDraggingState.current.initialWindowPosition.x + deltaX,
+        y: headerDraggingState.current.initialWindowPosition.y + deltaY,
+      },
+    });
+  };
+  const headerOnDrag = (e: DragEvent<HTMLDivElement>) => {
+    updateWindowPositionOnHeaderDrag(e);
+  };
+  const headerOnDragEnd = (e: DragEvent<HTMLDivElement>) => {
+    updateWindowPositionOnHeaderDrag(e);
+    headerDraggingState.current = null;
+  };
+
   const closeButtonOnClick = (e: MouseEvent<HTMLButtonElement>) => {
     setWindowState(keyRef.current, {
       open: false,
@@ -85,6 +137,13 @@ export function Window({ windowKey, title, children }: WindowProps) {
         >
           {/* ヘッダー */}
           <div
+            onMouseDown={() => {
+              console.info("headerOnMouseDown");
+            }}
+            draggable={true}
+            onDragStart={headerOnDragStart}
+            onDrag={headerOnDrag}
+            onDragEnd={headerOnDragEnd}
             className={`window-header bg-gray-100 border-b border-gray-200 pl-2 pr-1 py-2 h-[${WINDOW_HEADER_HEIGHT}px] flex items-center justify-between cursor-move`}
           >
             {isFocused && <Layers size={16} />}

@@ -1,14 +1,15 @@
 import {
-  createContext,
-  useContext,
   useEffect,
   useRef,
   type MouseEvent,
   type DragEvent,
   type ReactNode,
+  useMemo,
+  useCallback,
 } from "react";
 import type { UseWindowDispatcherType } from "@/hooks/use-window";
 import { Layers, ListFilter, X } from "lucide-react";
+import { createContext, useContextSelector } from "use-context-selector";
 
 const WINDOW_HEADER_HEIGHT = 32;
 const RESIZE_HANDLE_HEIGHT = 16;
@@ -36,67 +37,77 @@ const innerWindowContext = createContext<{
 
 export function Window({ windowKey, title, children }: WindowProps) {
   const keyRef = useRef(windowKey);
-  const { getWindowState, setWindowState } = useContext(innerWindowContext);
-
-  const prevState = useRef(getWindowState(keyRef.current));
-  if (prevState.current !== getWindowState(keyRef.current)) {
-    prevState.current = getWindowState(keyRef.current);
-  }
-  const { open, zIndex, position, size } = getWindowState(keyRef.current);
-
-  const windowStyle = {
-    position: "fixed" as const,
-    top: position.y,
-    left: position.x,
-    width: size.width,
-    height: size.height,
-    zIndex,
-  };
-  const bodyContainerStyle = {
-    height: size.height - WINDOW_HEADER_HEIGHT - RESIZE_HANDLE_HEIGHT,
-  };
-
-  const windowOnClick = (e: MouseEvent<HTMLDivElement>) => {
-    setWindowState(keyRef.current, {
-      open: true,
-    });
-    e.stopPropagation();
-  };
-
-  // TODO: getWindowState(keyRef.current)の結果とchildrenをdependentsとするuseMemoを使う
-  return (
-    <>
-      {open && (
-        <div
-          key={windowKey}
-          style={windowStyle}
-          className="bg-white border border-gray-300 rounded-lg shadow-2xl overflow-hidden"
-          onClick={windowOnClick}
-          onMouseDown={(e) => e.stopPropagation()}
-          onMouseUp={(e) => e.stopPropagation()}
-          onMouseMove={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
-          onKeyUp={(e) => e.stopPropagation()}
-        >
-          {/* ヘッダー */}
-          <WindowHeader
-            title={title ?? ""}
-            windowKey={windowKey}
-            getWindowState={getWindowState}
-            setWindowState={setWindowState}
-          />
-          {/* リサイズハンドル */}
-          <ResizeHandle
-            windowKey={windowKey}
-            getWindowState={getWindowState}
-            setWindowState={setWindowState}
-          />
-          {/* ウィンドウ内容 */}
-          <div style={bodyContainerStyle}>{children}</div>
-        </div>
-      )}
-    </>
+  const { windowState, setWindowState } = useContextSelector(
+    innerWindowContext,
+    (ctx) => ({
+      windowState: ctx.getWindowState(windowKey),
+      setWindowState: ctx.setWindowState,
+    }),
   );
+
+  const prevState = useRef(windowState);
+  if (prevState.current !== windowState) {
+    prevState.current = windowState;
+  }
+
+  const windowStyle = useMemo(() => {
+    return {
+      position: "fixed" as const,
+      top: windowState.position.y,
+      left: windowState.position.x,
+      width: windowState.size.width,
+      height: windowState.size.height,
+      zIndex: windowState.zIndex,
+    };
+  }, [windowState]);
+  const bodyContainerStyle = useMemo(() => {
+    return {
+      height:
+        windowState.size.height - WINDOW_HEADER_HEIGHT - RESIZE_HANDLE_HEIGHT,
+    };
+  }, [windowState]);
+
+  const windowOnClick = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => {
+      setWindowState(keyRef.current, {
+        open: true,
+      });
+      e.stopPropagation();
+    },
+    [setWindowState],
+  );
+
+  const element = useMemo(() => {
+    return (
+      <div
+        key={windowKey}
+        style={windowStyle}
+        className="bg-white border border-gray-300 rounded-lg shadow-2xl overflow-hidden"
+        onClick={windowOnClick}
+        onMouseDown={(e) => e.stopPropagation()}
+        onMouseUp={(e) => e.stopPropagation()}
+        onMouseMove={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+        onKeyUp={(e) => e.stopPropagation()}
+      >
+        {/* ヘッダー */}
+        <WindowHeader title={title ?? ""} windowKey={windowKey} />
+        {/* リサイズハンドル */}
+        <ResizeHandle windowKey={windowKey} />
+        {/* ウィンドウ内容 */}
+        <div style={bodyContainerStyle}>{children}</div>
+      </div>
+    );
+  }, [
+    windowKey,
+    windowStyle,
+    bodyContainerStyle,
+    children,
+    windowOnClick,
+    title,
+  ]);
+
+  return <>{windowState.open && element}</>;
 }
 
 interface WindowContextProps {
@@ -172,18 +183,18 @@ export function WindowContext({
 interface WindowHeaderProps {
   title: string;
   windowKey: string;
-  getWindowState: UseWindowDispatcherType["getWindowState"];
-  setWindowState: UseWindowDispatcherType["setWindowState"];
 }
 
-function WindowHeader({
-  title,
-  windowKey,
-  getWindowState,
-  setWindowState,
-}: WindowHeaderProps) {
+function WindowHeader({ title, windowKey }: WindowHeaderProps) {
+  const { windowState, setWindowState } = useContextSelector(
+    innerWindowContext,
+    (ctx) => ({
+      windowState: ctx.getWindowState(windowKey),
+      setWindowState: ctx.setWindowState,
+    }),
+  );
   const keyRef = useRef(windowKey);
-  const { isFocused } = getWindowState(keyRef.current);
+  const { isFocused } = windowState;
 
   /** ドラッグの状況 */
   const headerDraggingState = useRef<{
@@ -203,15 +214,14 @@ function WindowHeader({
     if (headerDraggingState.current) {
       return;
     }
-    const state = getWindowState(keyRef.current);
     headerDraggingState.current = {
       initialClickedPoint: {
         x: e.pageX,
         y: e.pageY,
       },
       initialWindowPosition: {
-        x: state.position.x,
-        y: state.position.y,
+        x: windowState.position.x,
+        y: windowState.position.y,
       },
     };
   };
@@ -272,15 +282,16 @@ function WindowHeader({
 
 interface ResizeHandleProps {
   windowKey: string;
-  getWindowState: UseWindowDispatcherType["getWindowState"];
-  setWindowState: UseWindowDispatcherType["setWindowState"];
 }
 
-function ResizeHandle({
-  windowKey,
-  getWindowState,
-  setWindowState,
-}: ResizeHandleProps) {
+function ResizeHandle({ windowKey }: ResizeHandleProps) {
+  const { windowState, setWindowState } = useContextSelector(
+    innerWindowContext,
+    (ctx) => ({
+      windowState: ctx.getWindowState(windowKey),
+      setWindowState: ctx.setWindowState,
+    }),
+  );
   const keyRef = useRef(windowKey);
   const resizeDraggingState = useRef<{
     /** ドラッグ開始時にクリックした点の座標(クライアント座標) */
@@ -305,7 +316,7 @@ function ResizeHandle({
         x: e.clientX,
         y: e.clientY,
       },
-      initialWindowSize: getWindowState(keyRef.current).size,
+      initialWindowSize: windowState.size,
     };
   };
   const updateWindowSizeOnResizeDrag = (e: DragEvent<HTMLDivElement>) => {

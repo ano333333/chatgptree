@@ -13,6 +13,9 @@ import { Layers, ListFilter, X } from "lucide-react";
 const WINDOW_HEADER_HEIGHT = 32;
 const RESIZE_HANDLE_HEIGHT = 16;
 
+const WINDOW_WIDTH_MIN = 50;
+const WINDOW_HEIGHT_MIN = 50;
+
 interface WindowProps {
   windowKey: string; // 各ウィンドウに対し一意のstring
   title?: string;
@@ -45,6 +48,19 @@ export function Window({ windowKey, title, children }: WindowProps) {
     initialWindowPosition: {
       x: number;
       y: number;
+    };
+  } | null>(null);
+  const resizeDraggingState = useRef<{
+    /** ドラッグ開始時にクリックした点の座標(クライアント座標) */
+    // NOTE: テスト(drag.ts、excape-cancel.ts)でevent detailのpageX、pageYを設定しても、受け取り側ではpageX、pageYがそれぞれclientX、clientYになっている。差分計算はpageとclientどちらでも良いため、clientを使う。
+    initialClickedPoint: {
+      x: number;
+      y: number;
+    };
+    /** ドラッグ開始時のウィンドウのサイズ */
+    initialWindowSize: {
+      width: number;
+      height: number;
     };
   } | null>(null);
 
@@ -113,6 +129,49 @@ export function Window({ windowKey, title, children }: WindowProps) {
     headerDraggingState.current = null;
   };
 
+  const resizeOnDragStart = (e: DragEvent<HTMLDivElement>) => {
+    if (resizeDraggingState.current) {
+      return;
+    }
+    resizeDraggingState.current = {
+      initialClickedPoint: {
+        x: e.clientX,
+        y: e.clientY,
+      },
+      initialWindowSize: getWindowState(keyRef.current).size,
+    };
+  };
+  const updateWindowSizeOnResizeDrag = (e: DragEvent<HTMLDivElement>) => {
+    if (!resizeDraggingState.current) {
+      return;
+    }
+    const deltaX =
+      e.clientX - resizeDraggingState.current.initialClickedPoint.x;
+    const deltaY =
+      e.clientY - resizeDraggingState.current.initialClickedPoint.y;
+    const windowState = {
+      open: true,
+      size: {
+        width: resizeDraggingState.current.initialWindowSize.width + deltaX,
+        height: resizeDraggingState.current.initialWindowSize.height + deltaY,
+      },
+    };
+    if (windowState.size.width < WINDOW_WIDTH_MIN) {
+      windowState.size.width = WINDOW_WIDTH_MIN;
+    }
+    if (windowState.size.height < WINDOW_HEIGHT_MIN) {
+      windowState.size.height = WINDOW_HEIGHT_MIN;
+    }
+    setWindowState(keyRef.current, windowState);
+  };
+  const resizeOnDrag = (e: DragEvent<HTMLDivElement>) => {
+    updateWindowSizeOnResizeDrag(e);
+  };
+  const resizeOnDragEnd = (e: DragEvent<HTMLDivElement>) => {
+    updateWindowSizeOnResizeDrag(e);
+    resizeDraggingState.current = null;
+  };
+
   const closeButtonOnClick = (e: MouseEvent<HTMLButtonElement>) => {
     setWindowState(keyRef.current, {
       open: false,
@@ -158,12 +217,21 @@ export function Window({ windowKey, title, children }: WindowProps) {
               <X size={16} />
             </button>
           </div>
-          <div style={bodyContainerStyle}>{children}</div>
           {/* リサイズハンドル */}
-          <ListFilter
-            size={RESIZE_HANDLE_HEIGHT}
-            className="transform -rotate-45 absolute -bottom-1 -right-1"
-          />
+          <div
+            className="absolute -bottom-1 -right-1 cursor-se-resize"
+            draggable={true}
+            onDragStart={resizeOnDragStart}
+            onDrag={resizeOnDrag}
+            onDragEnd={resizeOnDragEnd}
+            aria-label="resize-window"
+          >
+            <ListFilter
+              size={RESIZE_HANDLE_HEIGHT}
+              className="transform -rotate-45"
+            />
+          </div>
+          <div style={bodyContainerStyle}>{children}</div>
         </div>
       )}
     </>

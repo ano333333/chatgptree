@@ -62,12 +62,12 @@ const useWindow = () => {
   const zIndexMin = useRef<number>(1024);
   const zIndexMax = useRef<number>(2047);
   const defaultWindowPosition = useRef<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
+    x: 100,
+    y: 100,
   });
   const defaultWindowSize = useRef<{ width: number; height: number }>({
-    width: 0,
-    height: 0,
+    width: 200,
+    height: 200,
   });
 
   return {

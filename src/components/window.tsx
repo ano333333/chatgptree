@@ -6,8 +6,8 @@ import {
   type ReactNode,
   useMemo,
   useCallback,
+  type RefObject,
 } from "react";
-import type { UseWindowDispatcherType } from "@/hooks/use-window";
 import { Layers, ListFilter, X } from "lucide-react";
 import { createContext, useContextSelector } from "use-context-selector";
 
@@ -17,10 +17,31 @@ const RESIZE_HANDLE_HEIGHT = 16;
 const WINDOW_WIDTH_MIN = 50;
 const WINDOW_HEIGHT_MIN = 50;
 
+type SetWindowStateArgsType =
+  | {
+      open: false;
+    }
+  | {
+      open: true;
+      position?: {
+        x: number;
+        y: number;
+      };
+      size?: {
+        width: number;
+        height: number;
+      };
+    };
+export type WindowElement = {
+  style: CSSStyleDeclaration | undefined;
+  className: string | undefined;
+  setWindowState: (state: SetWindowStateArgsType) => void;
+};
 interface WindowProps {
   windowKey: string; // 各ウィンドウに対し一意のstring
   title?: string;
   children?: ReactNode;
+  ref?: RefObject<WindowElement | null>;
 }
 
 const innerWindowContext = createContext<{
@@ -35,7 +56,7 @@ const innerWindowContext = createContext<{
   },
 });
 
-export function Window({ windowKey, title, children }: WindowProps) {
+export function Window({ windowKey, title, children, ref }: WindowProps) {
   const keyRef = useRef(windowKey);
   const { windowState, setWindowState } = useContextSelector(
     innerWindowContext,
@@ -111,7 +132,6 @@ export function Window({ windowKey, title, children }: WindowProps) {
 }
 
 interface WindowContextProps {
-  dispatcher: UseWindowDispatcherType;
   "z-index-min"?: number;
   "z-index-max"?: number;
   "default-window-position"?: {
@@ -132,7 +152,6 @@ interface WindowContextProps {
  * WindowContextはuseWindowからWindowへ状態のゲッターとイベントハンドラを渡す。
  */
 export function WindowContext({
-  dispatcher,
   "z-index-min": zIndexMin,
   "z-index-max": zIndexMax,
   "default-window-position": defaultWindowPosition,

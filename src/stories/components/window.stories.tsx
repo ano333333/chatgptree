@@ -1,6 +1,6 @@
-import { Window, WindowContext } from "@/components/window";
-import useWindow from "@/hooks/use-window";
+import { Window, WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useRef, type RefObject } from "react";
 import { action } from "storybook/actions";
 
 const meta: Meta<typeof Window> = {
@@ -34,31 +34,43 @@ function WindowButton({
   );
 }
 
+function WindowBody({ windowKey }: { windowKey: string }) {
+  console.info(`${windowKey} re-rendered`);
+  return <div>{windowKey}</div>;
+}
+
 export const Default: Story = {
   render: () => {
-    const { getWindowState, setWindowState, stateDispatcher } = useWindow();
+    console.info("Default re-rendered");
+    const windowKeys = [1, 2, 3, 4].map((i) => `window${i}`);
+    const windowRefs = useRef<
+      Record<(typeof windowKeys)[number], RefObject<WindowElement | null>>
+    >(
+      windowKeys.reduce(
+        (acc, key) => {
+          acc[key] = useRef<WindowElement>(null);
+          return acc;
+        },
+        {} as Record<
+          (typeof windowKeys)[number],
+          RefObject<WindowElement | null>
+        >,
+      ),
+    );
     const toggleButtonOnClick = (
       key: string,
       position: { x: number; y: number },
     ) => {
-      const windowState = getWindowState(key);
-      if (windowState.open) {
-        setWindowState(key, {
-          open: false,
-        });
-      } else {
-        setWindowState(key, {
-          open: true,
-          position,
-        });
-      }
+      windowRefs.current[key]?.current?.setWindowState({
+        open: true,
+        position,
+      });
     };
     const toggleButtonMessage = (key: string) => {
-      const windowState = getWindowState(key);
-      return `${windowState.open ? "Close" : "Open"} ${key}`;
+      return `Open ${key}`;
     };
     const reopenButtonOnClick = (key: string) => {
-      setWindowState(key, {
+      windowRefs.current[key]?.current?.setWindowState({
         open: true,
       });
     };
@@ -68,7 +80,6 @@ export const Default: Story = {
       window3: { x: 200, y: 200 },
       window4: { x: 250, y: 250 },
     };
-    const windowKeys = [1, 2, 3, 4].map((i) => `window${i}`);
     return (
       <div
         className="w-[800px] h-[800px]"
@@ -93,21 +104,26 @@ export const Default: Story = {
                 key={key}
                 message={`reopen ${key}`}
                 onClick={() => reopenButtonOnClick(key)}
-                disabled={!getWindowState(key).open}
+                disabled={false}
               />
             ))}
           </div>
         </div>
         <WindowContext
-          dispatcher={stateDispatcher}
           z-index-min={1}
           z-index-max={3}
           default-window-size={{ width: 300, height: 200 }}
         >
-          <Window windowKey="window1" title="Window 1" />
-          <Window windowKey="window2" title="Window 2" />
-          <Window windowKey="window3" title="Window 3" />
-          <Window windowKey="window4" title="Window 4" />
+          {windowKeys.map((key: (typeof windowKeys)[number]) => (
+            <Window
+              key={key}
+              windowKey={key}
+              title={`Window ${key}`}
+              ref={windowRefs.current[key]}
+            >
+              <WindowBody windowKey={key} />
+            </Window>
+          ))}
         </WindowContext>
       </div>
     );

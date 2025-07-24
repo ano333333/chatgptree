@@ -38,13 +38,6 @@ const windowStatesContext = createContext<
 });
 
 export function Window({ windowKey, title, children, ref }: WindowProps) {
-  const prevState = useRef<WindowState>({
-    open: false,
-    zIndex: 0,
-    isFocused: false,
-    position: { x: 0, y: 0 },
-    size: { width: 0, height: 0 },
-  });
   const { windowState, setWindowState } = useContextSelector(
     windowStatesContext,
     (ctx) => ctx(windowKey),
@@ -56,10 +49,6 @@ export function Window({ windowKey, title, children, ref }: WindowProps) {
     className: divRef.current?.className,
     setWindowState,
   }));
-
-  if (prevState.current !== windowState) {
-    prevState.current = windowState;
-  }
 
   const windowStyle = useMemo(() => {
     return {

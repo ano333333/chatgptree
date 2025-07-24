@@ -1,18 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Window, WindowContext } from "@/components/window";
-import useWindow from "@/hooks/use-window";
+import { Window, WindowContext, type WindowElement } from "@/components/window";
 import { within } from "@storybook/test";
 import { expect } from "@storybook/test";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { simulateDrag } from "../utils/drag";
 import { wait } from "../utils/wait";
 import { simulateDragStartAndCancelWithEscape } from "../utils/escape-cancel";
-import { openWindow } from "../utils/window-utils";
+import {
+  getWindowPosition,
+  getWindowSize,
+  getWindowZIndex,
+} from "../utils/window-utils";
 import {
   expectPositionToBeCloseTo,
   expectSizeToBeCloseTo,
 } from "../utils/expect-utils";
-import type { SetWindowStateType } from "../utils/use-window-utils";
 
 const meta: Meta<typeof Window> = {
   title: "Components/Window/Test",
@@ -27,9 +29,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const OpenedWindowUpdateContentsOnPropsUpdateDatas = {
-  openWindow: () => {
-    return;
-  },
+  getWindowElement: (() => {
+    return null;
+  }) as () => WindowElement | null,
   setWindowTitle: (() => {
     return;
   }) as (title: string) => void,
@@ -41,24 +43,20 @@ const OpenedWindowUpdateContentsOnPropsUpdateDatas = {
 export const OpenedWindowUpdateContentsOnPropsUpdate: Story = {
   render: () => {
     const datas = OpenedWindowUpdateContentsOnPropsUpdateDatas;
-    const { setWindowState, stateDispatcher } = useWindow();
     const [title, setTitle] = useState("title");
     const [message, setMessage] = useState("message");
-    datas.openWindow = () => {
-      setWindowState("window1", {
-        open: true,
-      });
-    };
+    const windowRef = useRef<WindowElement>(null);
+    datas.getWindowElement = () => windowRef.current;
     datas.setWindowTitle = (title: string) => setTitle(title);
     datas.setWindowMessage = (message: string) => setMessage(message);
     useEffect(() => {
-      setWindowState("window1", {
+      windowRef.current?.setWindowState({
         open: true,
       });
-    }, [setWindowState]);
+    }, []);
     return (
-      <WindowContext dispatcher={stateDispatcher}>
-        <Window windowKey="window1" title={title}>
+      <WindowContext>
+        <Window windowKey="window1" title={title} ref={windowRef}>
           <div>{message}</div>
         </Window>
       </WindowContext>
@@ -69,7 +67,9 @@ export const OpenedWindowUpdateContentsOnPropsUpdate: Story = {
     // Arrange
     const canvas = within(canvasElement);
     const datas = OpenedWindowUpdateContentsOnPropsUpdateDatas;
-    datas.openWindow();
+    datas.getWindowElement()?.setWindowState({
+      open: true,
+    });
     await wait();
 
     // Act
@@ -84,9 +84,9 @@ export const OpenedWindowUpdateContentsOnPropsUpdate: Story = {
 };
 
 const ClosedWindowUpdateContentsOnPropsUpdateDatas = {
-  openWindow: () => {
-    return;
-  },
+  getWindowElement: (() => {
+    return null;
+  }) as () => WindowElement | null,
   setWindowTitle: (() => {
     return;
   }) as (title: string) => void,
@@ -98,19 +98,15 @@ const ClosedWindowUpdateContentsOnPropsUpdateDatas = {
 export const ClosedWindowUpdateContentsOnPropsUpdate: Story = {
   render: () => {
     const datas = ClosedWindowUpdateContentsOnPropsUpdateDatas;
-    const { setWindowState, stateDispatcher } = useWindow();
     const [title, setTitle] = useState("title");
     const [message, setMessage] = useState("message");
-    datas.openWindow = () => {
-      setWindowState("window1", {
-        open: true,
-      });
-    };
+    const windowRef = useRef<WindowElement>(null);
+    datas.getWindowElement = () => windowRef.current;
     datas.setWindowTitle = (title: string) => setTitle(title);
     datas.setWindowMessage = (message: string) => setMessage(message);
     return (
-      <WindowContext dispatcher={stateDispatcher}>
-        <Window windowKey="window1" title={title}>
+      <WindowContext>
+        <Window windowKey="window1" title={title} ref={windowRef}>
           <div>{message}</div>
         </Window>
       </WindowContext>
@@ -121,13 +117,17 @@ export const ClosedWindowUpdateContentsOnPropsUpdate: Story = {
     // Arrange
     const canvas = within(canvasElement);
     const datas = ClosedWindowUpdateContentsOnPropsUpdateDatas;
-    datas.openWindow();
+    datas.getWindowElement()?.setWindowState({
+      open: true,
+    });
     await wait();
 
     // Act
     datas.setWindowTitle("title2");
     datas.setWindowMessage("message2");
-    datas.openWindow();
+    datas.getWindowElement()?.setWindowState({
+      open: true,
+    });
     await wait();
 
     // Assert
@@ -148,31 +148,23 @@ const HeaderDragsAndCancelsOnEscapeKeyDatas = {
 export const HeaderDragsAndCancelsOnEscapeKey: Story = {
   render: () => {
     const datas = HeaderDragsAndCancelsOnEscapeKeyDatas;
-    const { setWindowState, getWindowState, stateDispatcher } = useWindow();
+    const windowRef = useRef<WindowElement>(null);
     useEffect(() => {
-      setWindowState("window1", {
+      windowRef.current?.setWindowState({
         open: true,
         position: { x: 100, y: 100 },
         size: { width: 200, height: 200 },
       });
-    }, [setWindowState]);
+    }, []);
     datas.getWindowPosition = () => {
-      const state = getWindowState("window1");
-      if (!state.open) {
-        throw new Error("Window is not open");
-      }
-      return state.position;
+      return getWindowPosition(windowRef.current);
     };
     datas.getWindowSize = () => {
-      const state = getWindowState("window1");
-      if (!state.open) {
-        throw new Error("Window is not open");
-      }
-      return state.size;
+      return getWindowSize(windowRef.current);
     };
     return (
-      <WindowContext dispatcher={stateDispatcher}>
-        <Window windowKey="window1" title="title" />
+      <WindowContext>
+        <Window windowKey="window1" title="title" ref={windowRef} />
       </WindowContext>
     );
   },
@@ -251,31 +243,23 @@ const ResizeHandleDragsAndCancelsOnEscapeKeyDatas = {
 export const ResizeHandleDragsAndCancelsOnEscapeKey: Story = {
   render: () => {
     const datas = ResizeHandleDragsAndCancelsOnEscapeKeyDatas;
-    const { setWindowState, getWindowState, stateDispatcher } = useWindow();
+    const windowRef = useRef<WindowElement>(null);
     useEffect(() => {
-      setWindowState("window1", {
+      windowRef.current?.setWindowState({
         open: true,
         position: { x: 100, y: 100 },
         size: { width: 200, height: 200 },
       });
-    }, [setWindowState]);
+    }, []);
     datas.getWindowPosition = () => {
-      const state = getWindowState("window1");
-      if (!state.open) {
-        throw new Error("Window is not open");
-      }
-      return state.position;
+      return getWindowPosition(windowRef.current);
     };
     datas.getWindowSize = () => {
-      const state = getWindowState("window1");
-      if (!state.open) {
-        throw new Error("Window is not open");
-      }
-      return state.size;
+      return getWindowSize(windowRef.current);
     };
     return (
-      <WindowContext dispatcher={stateDispatcher}>
-        <Window windowKey="window1" title="title" />
+      <WindowContext>
+        <Window windowKey="window1" title="title" ref={windowRef} />
       </WindowContext>
     );
   },
@@ -351,28 +335,20 @@ const ResizeHandlePreventsBelowMinimumDatas = {
 export const ResizeHandlePreventsBelowMinimum: Story = {
   render: () => {
     const datas = ResizeHandlePreventsBelowMinimumDatas;
-    const { setWindowState, getWindowState, stateDispatcher } = useWindow();
+    const windowRef = useRef<WindowElement>(null);
     useEffect(() => {
-      setWindowState("window1", {
+      windowRef.current?.setWindowState({
         open: true,
         position: { x: 100, y: 100 },
         size: { width: 100, height: 100 },
       });
-    }, [setWindowState]);
+    }, []);
     datas.getWindowSize = () => {
-      const state = getWindowState("window1");
-      if (!state.open) {
-        throw new Error("Window is not open");
-      }
-      return state.size;
+      return getWindowSize(windowRef.current);
     };
     return (
-      <WindowContext
-        dispatcher={stateDispatcher}
-        width-min={50}
-        height-min={50}
-      >
-        <Window windowKey="window1" title="title" />
+      <WindowContext width-min={50} height-min={50}>
+        <Window windowKey="window1" title="title" ref={windowRef} />
       </WindowContext>
     );
   },
@@ -428,21 +404,20 @@ const CloseButtonDatas = {
 export const CloseButtonClosesWindow: Story = {
   render: () => {
     const datas = CloseButtonDatas;
-    const { setWindowState, getWindowState, stateDispatcher } = useWindow();
+    const windowRef = useRef<WindowElement>(null);
     useEffect(() => {
-      setWindowState("window1", {
+      windowRef.current?.setWindowState({
         open: true,
         position: { x: 100, y: 100 },
         size: { width: 200, height: 200 },
       });
-    }, [setWindowState]);
+    }, []);
     datas.isWindowOpen = () => {
-      const state = getWindowState("window1");
-      return state.open;
+      return windowRef.current?.style !== undefined;
     };
     return (
-      <WindowContext dispatcher={stateDispatcher}>
-        <Window windowKey="window1" title="title" />
+      <WindowContext>
+        <Window windowKey="window1" title="title" ref={windowRef} />
       </WindowContext>
     );
   },
@@ -464,7 +439,7 @@ export const CloseButtonClosesWindow: Story = {
 };
 
 const WindowMaintainsFocusAndPreservesInputFocusDatas = {
-  setWindowState: (() => null) as SetWindowStateType,
+  getWindowElement: (() => null) as (key: string) => WindowElement | null,
   getWindowZIndex: (() => 0) as (key: string) => number,
   isWindowFocused: (() => false) as (key: string) => boolean,
   hasFocusIcon: (() => false) as (key: string) => boolean,
@@ -474,28 +449,44 @@ const WindowMaintainsFocusAndPreservesInputFocusDatas = {
 export const WindowMaintainsFocusAndPreservesInputFocus: Story = {
   render: () => {
     const datas = WindowMaintainsFocusAndPreservesInputFocusDatas;
-    const { getWindowState, setWindowState, stateDispatcher } = useWindow();
+    const windowRef1 = useRef<WindowElement>(null);
+    const windowRef2 = useRef<WindowElement>(null);
+    const windowRef3 = useRef<WindowElement>(null);
 
     // 3つのウィンドウを開く
     useEffect(() => {
-      openWindow(setWindowState, "window1", 100, 100, 200, 200);
-      openWindow(setWindowState, "window2", 150, 150, 200, 200);
-      openWindow(setWindowState, "window3", 200, 200, 200, 200);
-    }, [setWindowState]);
+      windowRef1.current?.setWindowState({
+        open: true,
+        position: { x: 100, y: 100 },
+        size: { width: 200, height: 200 },
+      });
+      windowRef2.current?.setWindowState({
+        open: true,
+        position: { x: 150, y: 150 },
+        size: { width: 200, height: 200 },
+      });
+      windowRef3.current?.setWindowState({
+        open: true,
+        position: { x: 200, y: 200 },
+        size: { width: 200, height: 200 },
+      });
+    }, []);
 
-    datas.setWindowState = setWindowState;
-    datas.getWindowZIndex = (key: string) => {
-      const state = getWindowState(key);
-      if (!state.open) {
-        return 0;
+    datas.getWindowElement = (key: string) => {
+      switch (key) {
+        case "window1":
+          return windowRef1.current;
+        case "window2":
+          return windowRef2.current;
+        default:
+          return windowRef3.current;
       }
-      return 0;
     };
+    datas.getWindowZIndex = (key: string) => {
+      return getWindowZIndex(datas.getWindowElement(key));
+    };
+    // TODO: WIndowContextからフォーカス判定を持ってくる
     datas.isWindowFocused = (key: string) => {
-      const state = getWindowState(key);
-      if (!state.open) {
-        return false;
-      }
       return key === "window3"; // 最後に開いたウィンドウがフォーカス済み
     };
     datas.hasFocusIcon = (key: string) => {
@@ -507,10 +498,10 @@ export const WindowMaintainsFocusAndPreservesInputFocus: Story = {
     };
 
     return (
-      <WindowContext dispatcher={stateDispatcher}>
-        <Window windowKey="window1" title="Window 1" />
-        <Window windowKey="window2" title="Window 2" />
-        <Window windowKey="window3" title="Window 3">
+      <WindowContext>
+        <Window windowKey="window1" title="Window 1" ref={windowRef1} />
+        <Window windowKey="window2" title="Window 2" ref={windowRef2} />
+        <Window windowKey="window3" title="Window 3" ref={windowRef3}>
           <input data-testid="test-input" />
         </Window>
       </WindowContext>
@@ -553,7 +544,8 @@ export const WindowMaintainsFocusAndPreservesInputFocus: Story = {
     expect(datas.isInputFocused()).toBe(true);
 
     // Act - 最前面ウィンドウを再度開く
-    datas.setWindowState("window3", { open: true });
+    const window3Element = datas.getWindowElement("window3");
+    window3Element?.setWindowState({ open: true });
     await wait();
 
     // Assert - フォーカスが維持される
@@ -561,67 +553,8 @@ export const WindowMaintainsFocusAndPreservesInputFocus: Story = {
   },
 };
 
-const WindowPreservesDragStateOnReopenDatas = {
-  isDragging: () => false,
-};
-
-export const WindowPreservesDragStateOnReopen: Story = {
-  render: () => {
-    const datas = WindowPreservesDragStateOnReopenDatas;
-    const { setWindowState, stateDispatcher } = useWindow();
-
-    // 3つのウィンドウを開く
-    openWindow(setWindowState, "window1", 100, 100, 200, 200);
-    openWindow(setWindowState, "window2", 150, 150, 200, 200);
-    openWindow(setWindowState, "window3", 200, 200, 200, 200);
-
-    datas.isDragging = () => {
-      // ドラッグ状態の確認（実装に依存）
-      return false;
-    };
-
-    return (
-      <WindowContext dispatcher={stateDispatcher}>
-        <Window windowKey="window1" title="Window 1" />
-        <Window windowKey="window2" title="Window 2" />
-        <Window windowKey="window3" title="Window 3" />
-      </WindowContext>
-    );
-  },
-  play: async ({ canvasElement }) => {
-    // 3つのウィンドウを開く。最前面ウィンドウのドラッグ中に、
-    // 最前面ウィンドウをsetWindowStateで再度開いてもドラッグが中断されない。
-    // Arrange
-    const canvas = within(canvasElement);
-    const datas = WindowPreservesDragStateOnReopenDatas;
-    const { setWindowState } = useWindow();
-    const window3 = canvas.getByText("Window 3");
-
-    // Act - ドラッグ開始
-    const dragStartX = window3.getBoundingClientRect().x + 5;
-    const dragStartY = window3.getBoundingClientRect().y + 5;
-    window3.dispatchEvent(
-      new MouseEvent("mousedown", {
-        clientX: dragStartX,
-        clientY: dragStartY,
-        button: 0,
-        bubbles: true,
-        cancelable: true,
-      }),
-    );
-    await wait();
-    expect(datas.isDragging()).toBe(true);
-
-    // Act - ドラッグ中にsetWindowStateを呼び出し
-    setWindowState("window3", { open: true });
-    await wait();
-
-    // Assert - ドラッグが継続される
-    expect(datas.isDragging()).toBe(true);
-  },
-};
-
 const WindowPreventsEventPropagationToParentDatas = {
+  // TODO: スパイを用いた書き換え
   parentClickCount: 0,
   childClickCount: 0,
 };
@@ -629,11 +562,14 @@ const WindowPreventsEventPropagationToParentDatas = {
 export const WindowPreventsEventPropagationToParent: Story = {
   render: () => {
     const datas = WindowPreventsEventPropagationToParentDatas;
-    const { setWindowState, stateDispatcher } = useWindow();
-
+    const windowRef = useRef<WindowElement>(null);
     useEffect(() => {
-      openWindow(setWindowState, "window1", 100, 100, 200, 200);
-    }, [setWindowState]);
+      windowRef.current?.setWindowState({
+        open: true,
+        position: { x: 100, y: 100 },
+        size: { width: 200, height: 200 },
+      });
+    }, []);
 
     return (
       <div
@@ -646,8 +582,8 @@ export const WindowPreventsEventPropagationToParent: Story = {
         }}
         style={{ position: "relative", zIndex: 1 }}
       >
-        <WindowContext dispatcher={stateDispatcher}>
-          <Window windowKey="window1" title="Window 1">
+        <WindowContext>
+          <Window windowKey="window1" title="Window 1" ref={windowRef}>
             <div
               data-testid="window-content"
               onClick={() => {

@@ -9,7 +9,12 @@ import {
   useState,
 } from "react";
 import { createContext, useContextSelector } from "use-context-selector";
-import { WINDOW_HEADER_HEIGHT, RESIZE_HANDLE_HEIGHT } from "./window/constants";
+import {
+  WINDOW_HEADER_HEIGHT,
+  RESIZE_HANDLE_HEIGHT,
+  DEFAULT_WINDOW_WIDTH_MIN,
+  DEFAULT_WINDOW_HEIGHT_MIN,
+} from "./window/constants";
 import type { SetWindowStateArgsType, WindowState } from "./window/types";
 import { getWindowStateLogic } from "./window/logics/get-window-state-logic";
 import { setWindowStateLogic } from "./window/logics/set-window-state-logic";
@@ -31,6 +36,10 @@ interface WindowProps {
 const windowStatesContext = createContext<
   (key: string) => {
     windowState: WindowState;
+    minimumSize: {
+      width: number;
+      height: number;
+    };
     setWindowState: (state: SetWindowStateArgsType) => void;
   }
 >(() => {
@@ -45,7 +54,7 @@ const windowStatesContext = createContext<
  * @param ref
  */
 export function Window({ windowKey, title, children, ref }: WindowProps) {
-  const { windowState, setWindowState } = useContextSelector(
+  const { windowState, minimumSize, setWindowState } = useContextSelector(
     windowStatesContext,
     (ctx) => ctx(windowKey),
   );
@@ -114,6 +123,7 @@ export function Window({ windowKey, title, children, ref }: WindowProps) {
         }
         <ResizeHandle
           windowState={windowState}
+          minimumSize={minimumSize}
           setWindowState={setWindowState}
         />
         {/* ウィンドウ内容 */}
@@ -128,6 +138,7 @@ export function Window({ windowKey, title, children, ref }: WindowProps) {
     windowOnClick,
     title,
     windowState,
+    minimumSize,
     setWindowState,
   ]);
 
@@ -145,8 +156,10 @@ interface WindowContextProps {
     width: number;
     height: number;
   };
-  widthMin?: number;
-  heightMin?: number;
+  minimumSize?: {
+    width: number;
+    height: number;
+  };
   children?: ReactNode;
 }
 
@@ -157,6 +170,7 @@ interface WindowContextProps {
  * @param zIndexMax ウィンドウのz-indexの最大値
  * @param defaultWindowPosition ウィンドウの初期位置
  * @param defaultWindowSize ウィンドウの初期サイズ
+ * @param minimumSize ウィンドウの最小サイズ これ以下の幅/高さにはリサイズできない
  * @param children 子ウィンドウ
  */
 export function WindowContext({
@@ -164,6 +178,7 @@ export function WindowContext({
   zIndexMax,
   defaultWindowPosition,
   defaultWindowSize,
+  minimumSize,
   children,
 }: WindowContextProps) {
   const zIndexMinRef = useRef(zIndexMin ?? 1024);
@@ -173,6 +188,12 @@ export function WindowContext({
   );
   const defaultWindowSizeRef = useRef(
     defaultWindowSize ?? { width: 200, height: 200 },
+  );
+  const minimumSizeRef = useRef(
+    minimumSize ?? {
+      width: DEFAULT_WINDOW_WIDTH_MIN,
+      height: DEFAULT_WINDOW_HEIGHT_MIN,
+    },
   );
   const [windowStates, setWindowStates] = useState<Record<string, WindowState>>(
     {},
@@ -187,6 +208,7 @@ export function WindowContext({
         defaultWindowPositionRef.current,
         defaultWindowSizeRef.current,
       );
+      const minimumSize = minimumSizeRef.current;
       const setWindowState = (state: SetWindowStateArgsType) => {
         setWindowStates((prevStates) =>
           setWindowStateLogic(
@@ -200,7 +222,7 @@ export function WindowContext({
           ),
         );
       };
-      return { windowState, setWindowState };
+      return { windowState, minimumSize, setWindowState };
     },
     [windowStates],
   );

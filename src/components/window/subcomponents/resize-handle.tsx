@@ -1,25 +1,27 @@
 import type { WindowState } from "@/components/window/types";
 import type { SetWindowStateArgsType } from "@/components/window/types";
 import { useRef, type DragEvent } from "react";
-import {
-  WINDOW_WIDTH_MIN,
-  WINDOW_HEIGHT_MIN,
-  RESIZE_HANDLE_HEIGHT,
-} from "../constants";
+import { RESIZE_HANDLE_HEIGHT } from "../constants";
 import { ListFilter } from "lucide-react";
 
 interface ResizeHandleProps {
   windowState: WindowState;
+  minimumSize: {
+    width: number;
+    height: number;
+  };
   setWindowState: (state: SetWindowStateArgsType) => void;
 }
 
 /**
  * ウィンドウ右下のリサイズハンドル
  * @param windowState
+ * @param minimumSize
  * @param setWindowState
  */
 export function ResizeHandle({
   windowState,
+  minimumSize,
   setWindowState,
 }: ResizeHandleProps) {
   const resizeDraggingState = useRef<{
@@ -63,11 +65,11 @@ export function ResizeHandle({
         height: resizeDraggingState.current.initialWindowSize.height + deltaY,
       },
     };
-    if (windowState.size.width < WINDOW_WIDTH_MIN) {
-      windowState.size.width = WINDOW_WIDTH_MIN;
+    if (windowState.size.width < minimumSize.width) {
+      windowState.size.width = minimumSize.width;
     }
-    if (windowState.size.height < WINDOW_HEIGHT_MIN) {
-      windowState.size.height = WINDOW_HEIGHT_MIN;
+    if (windowState.size.height < minimumSize.height) {
+      windowState.size.height = minimumSize.height;
     }
     setWindowState(windowState);
   };

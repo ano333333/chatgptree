@@ -347,13 +347,13 @@ export const ResizeHandlePreventsBelowMinimum: Story = {
       return getWindowSize(windowRef.current);
     };
     return (
-      <WindowContext width-min={50} height-min={50}>
+      <WindowContext minimumSize={{ width: 75, height: 75 }}>
         <Window windowKey="window1" title="title" ref={windowRef} />
       </WindowContext>
     );
   },
   play: async ({ canvasElement }) => {
-    // 右下のアイコンをドラッグし左に移動し続ける。横幅が50px未満になるタイミングで、ドラッグがキャンセルされる。
+    // 右下のアイコンをドラッグし左に移動し続ける。横幅が75px未満になるタイミングで、ドラッグがキャンセルされる。
     // Arrange
     const canvas = within(canvasElement);
     const datas = ResizeHandlePreventsBelowMinimumDatas;
@@ -363,7 +363,7 @@ export const ResizeHandlePreventsBelowMinimum: Story = {
     // Act - 最小幅を下回るドラッグ
     const dragStartX = resizeHandleRect.x + 5;
     const dragStartY = resizeHandleRect.y + 5;
-    const dragDeltaX = -60; // 100px - 60px = 40px < 50px
+    const dragDeltaX = -60; // 100px - 60px = 40px < 75px
     const dragDeltaY = 0;
     await simulateDragStartAndCancelWithEscape(
       resizeHandle,
@@ -375,14 +375,14 @@ export const ResizeHandlePreventsBelowMinimum: Story = {
 
     // Assert
     const windowSize1 = datas.getWindowSize();
-    expect(windowSize1.width).toBeCloseTo(50);
+    expect(windowSize1.width).toBeCloseTo(75);
 
-    // 右下のアイコンをドラッグし上に移動し続ける。縦幅が50px未満になるタイミングで、ドラッグがキャンセルされる。
+    // 右下のアイコンをドラッグし上に移動し続ける。縦幅が75px未満になるタイミングで、ドラッグがキャンセルされる。
     // Act - 最小高さを下回るドラッグ
     const dragStartX2 = resizeHandleRect.x + 5;
     const dragStartY2 = resizeHandleRect.y + 5;
     const dragDeltaX2 = 0;
-    const dragDeltaY2 = -60; // 100px - 60px = 40px < 50px
+    const dragDeltaY2 = -60; // 100px - 60px = 40px < 75px
     await simulateDragStartAndCancelWithEscape(
       resizeHandle,
       dragStartX2,
@@ -393,7 +393,7 @@ export const ResizeHandlePreventsBelowMinimum: Story = {
 
     // Assert
     const windowSize3 = datas.getWindowSize();
-    expect(windowSize3.height).toBeCloseTo(50);
+    expect(windowSize3.height).toBeCloseTo(75);
   },
 };
 

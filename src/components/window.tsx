@@ -13,7 +13,7 @@ import { WINDOW_HEADER_HEIGHT, RESIZE_HANDLE_HEIGHT } from "./window/constants";
 import type { SetWindowStateArgsType, WindowState } from "./window/types";
 import { getWindowStateLogic } from "./window/logics/get-window-state-logic";
 import { setWindowStateLogic } from "./window/logics/set-window-state-logic";
-import { WindowHeader } from "./window/subcomponents/window-header";
+import { Header } from "./window/subcomponents/header";
 import { ResizeHandle } from "./window/subcomponents/resize-handle";
 
 export type WindowElement = {
@@ -94,16 +94,16 @@ export function Window({ windowKey, title, children, ref }: WindowProps) {
         {
           /* ヘッダー */
           // NOTE: windowStatesContextとWindow, WindowContextを3つのファイルに分割するとStoryBookが壊れるため、
-          // NOTE: この3つは1つのファイルにまとめ、WindowHeaderはwindowStatesContextではなくWindowからwindowState, setWindowStateを受け取るようにしている。
+          // NOTE: この3つは1つのファイルにまとめ、HeaderはwindowStatesContextではなくWindowからwindowState, setWindowStateを受け取るようにしている。
         }
-        <WindowHeader
+        <Header
           title={title ?? ""}
           windowState={windowState}
           setWindowState={setWindowState}
         />
         {
           /* リサイズハンドル */
-          // NOTE: WindowHeaderのNOTE参照
+          // NOTE: HeaderのNOTE参照
         }
         <ResizeHandle
           windowState={windowState}

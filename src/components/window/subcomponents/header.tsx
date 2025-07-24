@@ -11,17 +11,13 @@ import { useRef, type DragEvent } from "react";
 import { WINDOW_HEADER_HEIGHT } from "../constants";
 import { Layers, X } from "lucide-react";
 
-interface WindowHeaderProps {
+interface HeaderProps {
   windowState: WindowState;
   setWindowState: (state: SetWindowStateArgsType) => void;
   title: string;
 }
 
-export function WindowHeader({
-  windowState,
-  setWindowState,
-  title,
-}: WindowHeaderProps) {
+export function Header({ windowState, setWindowState, title }: HeaderProps) {
   const { isFocused } = windowState;
 
   /** ドラッグの状況 */

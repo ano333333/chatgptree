@@ -135,18 +135,18 @@ export function Window({ windowKey, title, children, ref }: WindowProps) {
 }
 
 interface WindowContextProps {
-  "z-index-min"?: number;
-  "z-index-max"?: number;
-  "default-window-position"?: {
+  zIndexMin?: number;
+  zIndexMax?: number;
+  defaultWindowPosition?: {
     x: number;
     y: number;
   };
-  "default-window-size"?: {
+  defaultWindowSize?: {
     width: number;
     height: number;
   };
-  "width-min"?: number;
-  "height-min"?: number;
+  widthMin?: number;
+  heightMin?: number;
   children?: ReactNode;
 }
 
@@ -160,10 +160,10 @@ interface WindowContextProps {
  * @param children 子ウィンドウ
  */
 export function WindowContext({
-  "z-index-min": zIndexMin,
-  "z-index-max": zIndexMax,
-  "default-window-position": defaultWindowPosition,
-  "default-window-size": defaultWindowSize,
+  zIndexMin,
+  zIndexMax,
+  defaultWindowPosition,
+  defaultWindowSize,
   children,
 }: WindowContextProps) {
   const zIndexMinRef = useRef(zIndexMin ?? 1024);

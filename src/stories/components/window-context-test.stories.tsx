@@ -43,8 +43,8 @@ export const WindowUsesDefaultPositionAndSize: Story = {
     }, []);
     return (
       <WindowContext
-        default-window-position={{ x: 150, y: 150 }}
-        default-window-size={{ width: 300, height: 300 }}
+        defaultWindowPosition={{ x: 150, y: 150 }}
+        defaultWindowSize={{ width: 300, height: 300 }}
       >
         <Window windowKey="window1" title="title" ref={windowRef} />
       </WindowContext>
@@ -132,8 +132,8 @@ export const WindowRemembersPreviousPositionAndSize: Story = {
     datas.getWindowSize = () => getWindowSize(windowRef.current);
     return (
       <WindowContext
-        default-window-position={{ x: 150, y: 150 }}
-        default-window-size={{ width: 300, height: 300 }}
+        defaultWindowPosition={{ x: 150, y: 150 }}
+        defaultWindowSize={{ width: 300, height: 300 }}
       >
         <Window windowKey="window1" title="title" ref={windowRef} />
       </WindowContext>
@@ -207,7 +207,7 @@ export const WindowClosesWhenZIndexLimitExceeded: Story = {
       return !!ref?.style;
     };
     return (
-      <WindowContext z-index-min={1} z-index-max={3}>
+      <WindowContext zIndexMin={1} zIndexMax={3}>
         <Window windowKey="window1" title="Window 1" ref={window1Ref} />
         <Window windowKey="window2" title="Window 2" ref={window2Ref} />
         <Window windowKey="window3" title="Window 3" ref={window3Ref} />
@@ -216,7 +216,7 @@ export const WindowClosesWhenZIndexLimitExceeded: Story = {
     );
   },
   play: async () => {
-    // WindowContextのz-index-minに1を、z-index-maxに3を指定する。
+    // WindowContextのzIndexMinに1を、zIndexMaxに3を指定する。
     // 3つのウィンドウを開いている状態でさらにもう1つウィンドウを開くと、1つ目のウィンドウが閉じる。
     // Arrange
     const datas = WindowClosesWhenZIndexLimitExceededDatas;
@@ -282,14 +282,14 @@ export const SingleWindowClosesWhenZIndexLimitExceeded: Story = {
       return !!ref?.style;
     };
     return (
-      <WindowContext z-index-min={1} z-index-max={1}>
+      <WindowContext zIndexMin={1} zIndexMax={1}>
         <Window windowKey="window1" title="Window 1" ref={window1Ref} />
         <Window windowKey="window2" title="Window 2" ref={window2Ref} />
       </WindowContext>
     );
   },
   play: async () => {
-    // WindowContextのz-index-minとz-index-maxに1を指定する。
+    // WindowContextのzIndexMinとzIndexMaxに1を指定する。
     // 1つウィンドウを開いている状態でさらにもう1つウィンドウを開くと、最初のウィンドウが閉じる。
     // Arrange
     const datas = SingleWindowClosesWhenZIndexLimitExceededDatas;

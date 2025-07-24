@@ -110,9 +110,9 @@ export const Default: Story = {
           </div>
         </div>
         <WindowContext
-          z-index-min={1}
-          z-index-max={3}
-          default-window-size={{ width: 300, height: 200 }}
+          zIndexMin={1}
+          zIndexMax={3}
+          defaultWindowSize={{ width: 300, height: 200 }}
         >
           {windowKeys.map((key: (typeof windowKeys)[number]) => (
             <Window

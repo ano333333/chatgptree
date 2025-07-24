@@ -1,15 +1,11 @@
-<<<<<<< ef78fdd626081779f96e68f860076c3998fe41df:src/components/window/subcomponents/window-header.tsx
-import type { SetWindowStateArgsType, WindowState } from "@/components/types";
-import { useRef, type DragEvent, type MouseEvent } from "react";
-=======
 import type {
   SetWindowStateArgsType,
   WindowState,
 } from "@/components/window/types";
 import { useRef, type DragEvent } from "react";
->>>>>>> a:src/components/window/subcomponents/header.tsx
 import { WINDOW_HEADER_HEIGHT } from "../constants";
-import { Layers, X } from "lucide-react";
+import { Layers } from "lucide-react";
+import { CloseButton } from "./close-button";
 
 interface HeaderProps {
   windowState: WindowState;
@@ -71,13 +67,6 @@ export function Header({ windowState, setWindowState, title }: HeaderProps) {
     headerDraggingState.current = null;
   };
 
-  const closeButtonOnClick = (e: MouseEvent<HTMLButtonElement>) => {
-    setWindowState({
-      open: false,
-    });
-    e.stopPropagation();
-  };
-
   return (
     <div
       draggable={true}
@@ -89,14 +78,7 @@ export function Header({ windowState, setWindowState, title }: HeaderProps) {
       {isFocused && <Layers size={16} />}
       <h3 className="text-sm font-semibold">{title}</h3>
       {/* 閉じるボタン */}
-      <button
-        type="button"
-        aria-label="close-window"
-        onClick={closeButtonOnClick}
-        className="p-1 ml-auto hover:bg-red-100 hover:text-red-600 rounded transition-colors"
-      >
-        <X size={16} />
-      </button>
+      <CloseButton setWindowState={setWindowState} />
     </div>
   );
 }

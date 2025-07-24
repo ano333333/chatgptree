@@ -37,6 +37,13 @@ const windowStatesContext = createContext<
   throw new Error("windowStatesContext is not initialized");
 });
 
+/**
+ * ウィンドウを表示するコンポーネント
+ * @param windowKey 各ウィンドウのキー 所属するWindowContextに同じキーを持つWindowがあってはならない
+ * @param title ヘッダーに表示するタイトル
+ * @param children
+ * @param ref
+ */
 export function Window({ windowKey, title, children, ref }: WindowProps) {
   const { windowState, setWindowState } = useContextSelector(
     windowStatesContext,
@@ -144,8 +151,13 @@ interface WindowContextProps {
 }
 
 /**
- * 全Windowの状態と操作をWindowContextで管理する。
- * Windowは自身の状態と操作関数をuseContextSelectorでWindowContextから取得する。
+ * 所属WIndowの状態を管理する
+ * Windowは1つのWindowContextの子でなければならない
+ * @param zIndexMin ウィンドウのz-indexの最小値
+ * @param zIndexMax ウィンドウのz-indexの最大値
+ * @param defaultWindowPosition ウィンドウの初期位置
+ * @param defaultWindowSize ウィンドウの初期サイズ
+ * @param children 子ウィンドウ
  */
 export function WindowContext({
   "z-index-min": zIndexMin,

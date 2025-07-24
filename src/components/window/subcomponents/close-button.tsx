@@ -6,6 +6,10 @@ interface CloseButtonProps {
   setWindowState: (state: SetWindowStateArgsType) => void;
 }
 
+/**
+ * ウィンドウを閉じるボタン
+ * @param setWindowState
+ */
 export function CloseButton({ setWindowState }: CloseButtonProps) {
   const closeButtonOnClick = (e: MouseEvent<HTMLButtonElement>) => {
     setWindowState({

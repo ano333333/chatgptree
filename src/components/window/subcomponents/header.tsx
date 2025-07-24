@@ -13,6 +13,12 @@ interface HeaderProps {
   title: string;
 }
 
+/**
+ * ウィンドウのヘッダー
+ * @param windowState
+ * @param setWindowState
+ * @param title
+ */
 export function Header({ windowState, setWindowState, title }: HeaderProps) {
   const { isFocused } = windowState;
 

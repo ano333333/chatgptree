@@ -1,3 +1,7 @@
+/**
+ * @abstract WindowContextのwindowStatesから[z-index, windowKey]の配列を構築し、
+ * イベント時のz-indexの計算に使用する。
+ */
 import type { WindowState } from "@/components/window/types";
 
 /**

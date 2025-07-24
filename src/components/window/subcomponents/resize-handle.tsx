@@ -13,6 +13,11 @@ interface ResizeHandleProps {
   setWindowState: (state: SetWindowStateArgsType) => void;
 }
 
+/**
+ * ウィンドウ右下のリサイズハンドル
+ * @param windowState
+ * @param setWindowState
+ */
 export function ResizeHandle({
   windowState,
   setWindowState,

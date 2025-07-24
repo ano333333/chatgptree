@@ -9,6 +9,17 @@ import {
   updateWindowStatesWithZIndexWindowKeyPairs,
 } from "./zindex-window-key-pairs";
 
+/**
+ * 指定したWindowの状態を更新する(setWindowStatesの引数として使用する純関数)
+ * @param key
+ * @param newState 更新後の状態
+ * @param prevStates 更新前の全Windowの状態
+ * @param zIndexMin
+ * @param zIndexMax
+ * @param defaultWindowPosition
+ * @param defaultWindowSize
+ * @returns 更新後の全Windowの状態
+ */
 export function setWindowStateLogic(
   key: string,
   newState: SetWindowStateArgsType,
@@ -56,7 +67,7 @@ export function setWindowStateLogic(
 }
 
 /**
- * 閉じているwindowを開く。新規に開く場合もこの関数を使用する。
+ * 閉じているwindowを開く。新規に開く場合もこの関数を使用する。(setWindowStateLogic内部で使用)
  * @param key
  * @param newState
  * @param prevStates
@@ -64,7 +75,7 @@ export function setWindowStateLogic(
  * @param zIndexMax
  * @param defaultWindowPosition
  * @param defaultWindowSize
- * @returns 更新後のwindowStates
+ * @returns 更新後の全Windowの状態
  */
 function openWindowLogic(
   key: string,
@@ -124,10 +135,10 @@ function openWindowLogic(
 }
 
 /**
- * 開いているwindowを閉じる。
+ * 開いているwindowを閉じる。(setWindowStateLogic内部で使用)
  * @param key
  * @param prevStates
- * @returns 更新後のwindowStates
+ * @returns 更新後の全Windowの状態
  */
 function closeWindowLogic(
   key: string,
@@ -160,9 +171,13 @@ function closeWindowLogic(
 }
 
 /**
- * 既に開いているwindowを再度開き最前面にする
+ * 既に開いているwindowを再度開き最前面にする(setWindowStateLogic内部で使用)
  * @param key
  * @param prevStates
+ * @param newState
+ * @param zIndexMin
+ * @param zIndexMax
+ * @returns 更新後の全Windowの状態
  */
 function reopenWindowLogic(
   key: string,

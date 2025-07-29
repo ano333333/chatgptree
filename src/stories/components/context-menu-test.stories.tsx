@@ -5,10 +5,13 @@ import {
   ContextMenuSubMenu,
   ContextMenuSubMenuRoot,
   ContextMenuSubMenuTrigger,
+  type ContextMenuElement,
 } from "@/components/context-menu";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent } from "@storybook/test";
 import { within, expect } from "@storybook/test";
+import { useRef } from "react";
+import { wait } from "../utils/wait";
 
 const meta: Meta<typeof ContextMenu> = {
   title: "Components/ContextMenu/Test",
@@ -185,5 +188,172 @@ export const ContextMenuSubMenuItemInvokeHandlerWhenClicked: Story = {
     // Assert
     await expect(datas.subMenuItem1Spy).toHaveBeenCalledTimes(1);
     await expect(datas.subMenuItem2Spy).not.toHaveBeenCalled();
+  },
+};
+
+const ContextMenuClosesWhenAnotherOpensDatas = {
+  getNewContextMenuElement: (() => null) as () => ContextMenuElement | null,
+};
+
+export const ContextMenuClosesWhenAnotherOpens: Story = {
+  render: () => {
+    const datas = ContextMenuClosesWhenAnotherOpensDatas;
+    const newContextMenuElementRef = useRef<ContextMenuElement>(null);
+    datas.getNewContextMenuElement = () => newContextMenuElementRef.current;
+    return (
+      <ContextMenuContext>
+        <ContextMenu initialPosition={{ x: 0, y: 0 }}>
+          <ContextMenuItem>contextMenuOld</ContextMenuItem>
+        </ContextMenu>
+        <ContextMenu ref={newContextMenuElementRef}>
+          <ContextMenuItem>contextMenuNew</ContextMenuItem>
+        </ContextMenu>
+      </ContextMenuContext>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    // 新しいContextMenuが開くと既に開いていたContextMenuが閉じる
+    // Arrange
+    const canvas = within(canvasElement);
+    const datas = ContextMenuClosesWhenAnotherOpensDatas;
+
+    // Act
+    datas.getNewContextMenuElement()?.setContextMenuState({
+      status: "open",
+      position: { x: 0, y: 0 },
+    });
+    await wait();
+
+    // Assert
+    const newContextMenuItem = canvas.getByText("contextMenuNew");
+    await expect(newContextMenuItem).toBeInTheDocument();
+    const oldContextMenuItem = canvas.queryByText("contextMenuOld");
+    await expect(oldContextMenuItem).toBeNull();
+  },
+};
+
+export const ContextMenuClosesWhenOutsideClicked: Story = {
+  render: () => {
+    return (
+      <>
+        <div className="w-full h-full bg-red-500" id="container" />
+        <ContextMenuContext>
+          <ContextMenu initialPosition={{ x: 0, y: 0 }}>
+            <ContextMenuItem>contextMenu</ContextMenuItem>
+          </ContextMenu>
+        </ContextMenuContext>
+      </>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    // コンテキストメニューの外側がクリックされるとコンテキストメニューが閉じる
+    // Arrange
+    const canvas = within(canvasElement);
+
+    // Act
+    const container = document.getElementById("container");
+    if (!container) {
+      throw new Error("container element not found");
+    }
+    // (200, 200)の座標をクリックするイベントを発火させる
+    const clickEvent = new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      clientX: 200,
+      clientY: 200,
+    });
+    container.dispatchEvent(clickEvent);
+    await wait();
+
+    // Assert
+    const contextMenu = canvas.queryByText("contextMenu");
+    await expect(contextMenu).toBeNull();
+  },
+};
+
+const ContextMenuOpensWithElementRefDatas = {
+  getContextMenuElement: (() => null) as () => ContextMenuElement | null,
+};
+
+export const ContextMenuOpensWithElementRef: Story = {
+  render: () => {
+    const datas = ContextMenuOpensWithElementRefDatas;
+    const contextMenuElementRef = useRef<ContextMenuElement>(null);
+    datas.getContextMenuElement = () => contextMenuElementRef.current;
+    return (
+      <ContextMenuContext>
+        <ContextMenu
+          initialPosition={{ x: 0, y: 0 }}
+          ref={contextMenuElementRef}
+        >
+          <ContextMenuItem>contextMenu</ContextMenuItem>
+        </ContextMenu>
+      </ContextMenuContext>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    // コンテキストメニューのrefのsetContextMenuStateが呼ばれるとコンテキストメニューが開く
+    // Arrange
+    const canvas = within(canvasElement);
+    const datas = ContextMenuOpensWithElementRefDatas;
+    const element = datas.getContextMenuElement();
+    if (!element) {
+      throw new Error("contextMenu element not found");
+    }
+
+    // Act
+    element.setContextMenuState({
+      status: "open",
+      position: { x: 100, y: 100 },
+    });
+    await wait();
+
+    // Assert
+    const contextMenu = canvas.getByText("contextMenu");
+    await expect(contextMenu).toBeInTheDocument();
+    const position = {
+      x: Number.parseFloat(element.style?.left ?? "NaN"),
+      y: Number.parseFloat(element.style?.top ?? "NaN"),
+    };
+    await expect(position.x).toBeCloseTo(100, 1);
+    await expect(position.y).toBeCloseTo(100, 1);
+  },
+};
+
+const ContextMenuClosesWithElementRefDatas = {
+  getContextMenuElement: (() => null) as () => ContextMenuElement | null,
+};
+
+export const ContextMenuClosesWithElementRef: Story = {
+  render: () => {
+    const datas = ContextMenuClosesWithElementRefDatas;
+    const contextMenuElementRef = useRef<ContextMenuElement>(null);
+    datas.getContextMenuElement = () => contextMenuElementRef.current;
+    return (
+      <ContextMenuContext>
+        <ContextMenu
+          initialPosition={{ x: 0, y: 0 }}
+          ref={contextMenuElementRef}
+        >
+          <ContextMenuItem>contextMenu</ContextMenuItem>
+        </ContextMenu>
+      </ContextMenuContext>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    // コンテキストメニューのrefのsetContextMenuStateが呼ばれるとコンテキストメニューが閉じる
+    // Arrange
+    const canvas = within(canvasElement);
+    const datas = ContextMenuClosesWithElementRefDatas;
+
+    // Act
+    datas.getContextMenuElement()?.setContextMenuState({
+      status: "close",
+    });
+    await wait();
+
+    // Assert
+    const contextMenu = canvas.queryByText("contextMenu");
+    await expect(contextMenu).toBeNull();
   },
 };

@@ -9,12 +9,35 @@ import {
   type RefObject,
 } from "react";
 
+interface ContextMenuContextProps {
+  children: ReactNode;
+}
+
+export function ContextMenuContext(props: ContextMenuContextProps) {
+  return <>{props.children}</>;
+}
+
+type ContextMenuState =
+  | {
+      status: "open";
+      position: { x: number; y: number };
+    }
+  | {
+      status: "close";
+    };
+
+export type ContextMenuElement = {
+  style: CSSStyleDeclaration | undefined;
+  className: string | undefined;
+  setContextMenuState: (state: ContextMenuState) => void;
+};
+
 interface ContextMenuProps {
-  screenPosition: {
+  ref?: RefObject<ContextMenuElement | null>;
+  initialPosition?: {
     x: number;
     y: number;
   };
-  ref?: RefObject<HTMLDivElement>;
   children?: ReactNode;
   className?: string;
 }

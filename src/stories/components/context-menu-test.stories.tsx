@@ -1,5 +1,6 @@
 import {
   ContextMenu,
+  ContextMenuContext,
   ContextMenuItem,
   ContextMenuSubMenu,
   ContextMenuSubMenuRoot,
@@ -30,11 +31,13 @@ export const ContextMenuItemInvokeHandlerWhenClicked: Story = {
   render: () => {
     const datas = ContextMenuItemInvokeHandlerWhenClickedDatas;
     return (
-      <ContextMenu screenPosition={{ x: 0, y: 0 }}>
-        <ContextMenuItem onClick={datas.test1Spy}>test1</ContextMenuItem>
-        <ContextMenuItem onClick={datas.test2Spy}>test2</ContextMenuItem>
-        <ContextMenuItem onClick={datas.test3Spy}>test3</ContextMenuItem>
-      </ContextMenu>
+      <ContextMenuContext>
+        <ContextMenu initialPosition={{ x: 0, y: 0 }}>
+          <ContextMenuItem onClick={datas.test1Spy}>test1</ContextMenuItem>
+          <ContextMenuItem onClick={datas.test2Spy}>test2</ContextMenuItem>
+          <ContextMenuItem onClick={datas.test3Spy}>test3</ContextMenuItem>
+        </ContextMenu>
+      </ContextMenuContext>
     );
   },
   play: async ({ canvasElement }) => {
@@ -61,15 +64,17 @@ export const ContextMenuItemInvokeHandlerWhenClicked: Story = {
 export const ContextMenuSubMenuTriggerItemContainsChevronRightDatas: Story = {
   render: () => {
     return (
-      <ContextMenu screenPosition={{ x: 0, y: 0 }}>
-        <ContextMenuSubMenuRoot>
-          <ContextMenuSubMenuTrigger>submenu</ContextMenuSubMenuTrigger>
-          <ContextMenuSubMenu>
-            <ContextMenuItem>submenu item 1</ContextMenuItem>
-            <ContextMenuItem>submenu item 2</ContextMenuItem>
-          </ContextMenuSubMenu>
-        </ContextMenuSubMenuRoot>
-      </ContextMenu>
+      <ContextMenuContext>
+        <ContextMenu initialPosition={{ x: 0, y: 0 }}>
+          <ContextMenuSubMenuRoot>
+            <ContextMenuSubMenuTrigger>submenu</ContextMenuSubMenuTrigger>
+            <ContextMenuSubMenu>
+              <ContextMenuItem>submenu item 1</ContextMenuItem>
+              <ContextMenuItem>submenu item 2</ContextMenuItem>
+            </ContextMenuSubMenu>
+          </ContextMenuSubMenuRoot>
+        </ContextMenu>
+      </ContextMenuContext>
     );
   },
   play: async ({ canvasElement }) => {
@@ -88,15 +93,17 @@ export const ContextMenuSubMenuOpensOnlyWhenSubMenuTriggerAndSubMenuItemHovered:
   {
     render: () => {
       return (
-        <ContextMenu screenPosition={{ x: 0, y: 0 }}>
-          <ContextMenuSubMenuRoot>
-            <ContextMenuSubMenuTrigger>submenu</ContextMenuSubMenuTrigger>
-            <ContextMenuSubMenu>
-              <ContextMenuItem>submenu item 1</ContextMenuItem>
-              <ContextMenuItem>submenu item 2</ContextMenuItem>
-            </ContextMenuSubMenu>
-          </ContextMenuSubMenuRoot>
-        </ContextMenu>
+        <ContextMenuContext>
+          <ContextMenu initialPosition={{ x: 0, y: 0 }}>
+            <ContextMenuSubMenuRoot>
+              <ContextMenuSubMenuTrigger>submenu</ContextMenuSubMenuTrigger>
+              <ContextMenuSubMenu>
+                <ContextMenuItem>submenu item 1</ContextMenuItem>
+                <ContextMenuItem>submenu item 2</ContextMenuItem>
+              </ContextMenuSubMenu>
+            </ContextMenuSubMenuRoot>
+          </ContextMenu>
+        </ContextMenuContext>
       );
     },
     play: async ({ canvasElement }) => {
@@ -143,19 +150,21 @@ export const ContextMenuSubMenuItemInvokeHandlerWhenClicked: Story = {
   render: () => {
     const datas = ContextMenuSubMenuItemInvokeHandlerWhenClickedDatas;
     return (
-      <ContextMenu screenPosition={{ x: 0, y: 0 }}>
-        <ContextMenuSubMenuRoot>
-          <ContextMenuSubMenuTrigger>submenu</ContextMenuSubMenuTrigger>
-          <ContextMenuSubMenu>
-            <ContextMenuItem onClick={datas.subMenuItem1Spy}>
-              submenu item 1
-            </ContextMenuItem>
-            <ContextMenuItem onClick={datas.subMenuItem2Spy}>
-              submenu item 2
-            </ContextMenuItem>
-          </ContextMenuSubMenu>
-        </ContextMenuSubMenuRoot>
-      </ContextMenu>
+      <ContextMenuContext>
+        <ContextMenu initialPosition={{ x: 0, y: 0 }}>
+          <ContextMenuSubMenuRoot>
+            <ContextMenuSubMenuTrigger>submenu</ContextMenuSubMenuTrigger>
+            <ContextMenuSubMenu>
+              <ContextMenuItem onClick={datas.subMenuItem1Spy}>
+                submenu item 1
+              </ContextMenuItem>
+              <ContextMenuItem onClick={datas.subMenuItem2Spy}>
+                submenu item 2
+              </ContextMenuItem>
+            </ContextMenuSubMenu>
+          </ContextMenuSubMenuRoot>
+        </ContextMenu>
+      </ContextMenuContext>
     );
   },
   play: async ({ canvasElement }) => {

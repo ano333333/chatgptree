@@ -100,7 +100,7 @@ function UserMessageNodeContextMenu({
   onContextMenuEditItemClick,
 }: UserMessageNodeContextMenuProps) {
   return (
-    <ContextMenu screenPosition={screenPosition}>
+    <ContextMenu initialPosition={screenPosition}>
       <ContextMenuItem
         key={`${nodeId}-contextmenu-copy`}
         onClick={onContextMenuCopyItemClick}

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { ElementAnnotation } from "../components/elementAnnotation";
+import { ElementAnnotation } from "../../src/components/elementAnnotation";
 import { useRef, useState } from "react";
 
 const meta: Meta<typeof ElementAnnotation> = {

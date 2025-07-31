@@ -29,5 +29,10 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "tests/**/*.browser.test.{ts,tsx}"]
+  "include": [
+    "src",
+    "tests/**/*.browser.test.{ts,tsx}",
+    "docs/stories",
+    "tests/stories/**/*.stories.tsx"
+  ]
 }

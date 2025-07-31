@@ -81,7 +81,7 @@ export function ContextMenu({
     return {
       top: position?.y,
       left: position?.x,
-      zIndex: 1 << 20,
+      zIndex: 9000,
     };
   }, [position]);
 

@@ -1,5 +1,5 @@
-import AIPromptDetailWindow from "@/components/ai-prompt-detail-window";
-import AIPromptNode from "@/components/ai-prompt-node";
+import AIMessageDetailWindow from "@/components/ai-message-detail-window";
+import AIMessageNode from "@/components/ai-message-node";
 import { WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
@@ -12,9 +12,9 @@ import {
 import { useRef, type RefObject } from "react";
 import { action } from "storybook/actions";
 
-const meta: Meta<typeof AIPromptNode> = {
+const meta: Meta<typeof AIMessageNode> = {
   title: "Components/AIPromptNode",
-  component: AIPromptNode,
+  component: AIMessageNode,
   parameters: {
     layout: "fullscreen",
   },
@@ -27,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => {
     const nodeTypes: NodeTypes = {
-      AIPromptNode: AIPromptNode,
+      AIMessageNode: AIMessageNode,
     };
     const onContextMenuCopyItemClick = (id: string) =>
       action(`onContextMenuCopyItemClick(${id})`);
@@ -40,7 +40,7 @@ export const Default: Story = {
     const nodeState = useNodesState([
       {
         id: "1",
-        type: "AIPromptNode",
+        type: "AIMessageNode",
         data: {
           nodeId: "1",
           content: "Hello, world!1",
@@ -53,7 +53,7 @@ export const Default: Story = {
       },
       {
         id: "2",
-        type: "AIPromptNode",
+        type: "AIMessageNode",
         data: {
           nodeId: "2",
           content: "Hello, world!2",
@@ -88,7 +88,7 @@ export const Default: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <AIPromptDetailWindow
+          <AIMessageDetailWindow
             nodeId="1"
             content="Hello, world!1"
             recalculating={false}
@@ -97,7 +97,7 @@ export const Default: Story = {
             onRecalculateCancelButtonClick={onRecalculateCancelButtonClick("1")}
             ref={windowRefs.current["1"]}
           />
-          <AIPromptDetailWindow
+          <AIMessageDetailWindow
             nodeId="2"
             content="Hello, world!2"
             recalculating={true}

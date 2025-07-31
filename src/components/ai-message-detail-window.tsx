@@ -1,7 +1,7 @@
 import { useState, type MouseEvent, type RefObject } from "react";
 import { Window, type WindowElement } from "./window";
 
-interface AIPromptDetailWindowProps {
+interface AIMessageDetailWindowProps {
   nodeId: string;
   content: string;
   recalculating: boolean;
@@ -11,7 +11,7 @@ interface AIPromptDetailWindowProps {
   ref: RefObject<WindowElement | null>;
 }
 
-export default function AIPromptDetailWindow({
+export default function AIMessageDetailWindow({
   nodeId,
   content,
   recalculating,
@@ -19,7 +19,7 @@ export default function AIPromptDetailWindow({
   onRecalculateButtonClick,
   onRecalculateCancelButtonClick,
   ref,
-}: AIPromptDetailWindowProps) {
+}: AIMessageDetailWindowProps) {
   const [currentContent, setCurrentContent] = useState(content);
   const onConfirmButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
     // NOTE: stopPropergationを呼ばないとWindowが閉じない(何故?)
@@ -36,8 +36,8 @@ export default function AIPromptDetailWindow({
   };
   return (
     <Window
-      windowKey={`ai-prompt-detail-window-${nodeId}`}
-      title="AIPrompt Detail"
+      windowKey={`ai-message-detail-window-${nodeId}`}
+      title="AIMessage Detail"
       ref={ref}
     >
       <div className="flex flex-col m-2">

@@ -1,6 +1,5 @@
-import { useState, type MouseEvent, type RefObject } from "react";
+import { type MouseEvent, type RefObject, useState } from "react";
 import type { WindowElement } from "./window";
-import { Hourglass } from "lucide-react";
 import { Handle, Position } from "@xyflow/react";
 import {
   ContextMenu,
@@ -8,18 +7,17 @@ import {
   ContextMenuSeparator,
 } from "./context-menu";
 
-interface AIPromptNodeProps {
+interface UserMessageNodeProps {
   data: {
     nodeId: string;
     content: string;
-    recalculating: boolean;
     onContextMenuCopyItemClick: (nodeId: string) => void;
     onContextMenuDeleteItemClick: (nodeId: string) => void;
     windowElementRef: RefObject<WindowElement | null>;
   };
 }
 
-export default function AIPromptNode({ data }: AIPromptNodeProps) {
+export default function UserMessageNode({ data }: UserMessageNodeProps) {
   const [contextMenuPosition, setContextMenuPosition] = useState<{
     x: number;
     y: number;
@@ -57,47 +55,36 @@ export default function AIPromptNode({ data }: AIPromptNodeProps) {
   return (
     <>
       <div
-        className={
-          "px-4 py-3 rounded-lg border-2 min-w-[300px] max-w-[500px] relative shadow-lg"
-        }
+        className="px-4 py-3 rounded-lg border-2 min-w-[300px] max-w-[400px] relative shadow-lg"
         style={{
-          borderColor: "#6b7280",
-          backgroundColor: "#f3f4f6",
+          borderColor: "#3b82f6",
+          backgroundColor: "#dbeafe",
         }}
         onDoubleClick={onNodeDoubleClick}
         onContextMenu={onNodeRightClick}
       >
         <Handle type="target" position={Position.Top} />
-        {/* 再計算中のオーバーレイ */}
-        {data.recalculating && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-30 rounded-lg">
-            <Hourglass
-              size={32}
-              className="text-gray-400 opacity-50 animate-pulse"
-            />
-          </div>
-        )}
-        <div
-          className={`text-sm text-gray-800 ${data.recalculating ? "opacity-30" : ""}`}
-        >
-          {data.content}
+        <div className="text-sm text-gray-800">
+          <p>{data.content}</p>
         </div>
         <Handle type="source" position={Position.Bottom} />
-        {contextMenuPosition && (
-          <AIPromptNodeContextMenu
+      </div>
+      {contextMenuPosition && (
+        <div className="static">
+          <UserMessageNodeContextMenu
             nodeId={data.nodeId}
             screenPosition={contextMenuPosition}
             onContextMenuCopyItemClick={onContextMenuCopyItemClick}
             onContextMenuDeleteItemClick={onContextMenuDeleteItemClick}
             onContextMenuEditItemClick={onContextMenuEditItemClick}
           />
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 }
 
-interface AIPromptNodeContextMenuProps {
+interface UserMessageNodeContextMenuProps {
   nodeId: string;
   screenPosition: { x: number; y: number };
   onContextMenuCopyItemClick: () => void;
@@ -105,13 +92,13 @@ interface AIPromptNodeContextMenuProps {
   onContextMenuEditItemClick: () => void;
 }
 
-function AIPromptNodeContextMenu({
+function UserMessageNodeContextMenu({
   nodeId,
   screenPosition,
   onContextMenuCopyItemClick,
   onContextMenuDeleteItemClick,
   onContextMenuEditItemClick,
-}: AIPromptNodeContextMenuProps) {
+}: UserMessageNodeContextMenuProps) {
   return (
     <ContextMenu screenPosition={screenPosition}>
       <ContextMenuItem

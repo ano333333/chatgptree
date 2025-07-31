@@ -1,5 +1,5 @@
-import UserPromptDetailWindow from "@/components/user-prompt-detail-window";
-import UserPromptNode from "@/components/user-prompt-node";
+import UserMessageDetailWindow from "@/components/user-message-detail-window";
+import UserMessageNode from "@/components/user-message-node";
 import { WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, within } from "@storybook/test";
@@ -13,9 +13,9 @@ import { useRef } from "react";
 import { action } from "storybook/actions";
 import { wait } from "../utils/wait";
 
-const meta: Meta<typeof UserPromptNode> = {
-  title: "Components/UserPromptNode/Test",
-  component: UserPromptNode,
+const meta: Meta<typeof UserMessageNode> = {
+  title: "Components/UserMessageNode/Test",
+  component: UserMessageNode,
   parameters: {
     layout: "fullscreen",
   },
@@ -25,19 +25,19 @@ const meta: Meta<typeof UserPromptNode> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const UserPromptDetailWindowOpensOnUserPromptNodeDoubleClick: Story = {
+export const UserMessageDetailWindowOpensOnUserMessageNodeDoubleClick: Story = {
   render: () => {
     const nodeTypes = {
-      UserPromptNode: UserPromptNode,
+      UserMessageNode: UserMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
-        type: "UserPromptNode",
+        type: "UserMessageNode",
         data: {
           nodeId: "1",
-          content: "UserPromptNode",
+          content: "UserMessageNode",
           onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
           onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
@@ -61,9 +61,9 @@ export const UserPromptDetailWindowOpensOnUserPromptNodeDoubleClick: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <UserPromptDetailWindow
+          <UserMessageDetailWindow
             nodeId="1"
-            content="UserPromptDetailWindow"
+            content="UserMessageDetailWindow"
             onConfirmButtonClick={action("onConfirmButtonClick")}
             ref={windowRef}
           />
@@ -77,7 +77,7 @@ export const UserPromptDetailWindowOpensOnUserPromptNodeDoubleClick: Story = {
     const canvas = within(canvasElement);
 
     // Act
-    const node = canvas.getByText("UserPromptNode");
+    const node = canvas.getByText("UserMessageNode");
     // NOTE: userEvent.dblClick(node)では、documentがnullなのにアクセスしようとしてエラーが生じる
     // NOTE: dispatchEventだとこのエラーが生じない。他のイベントも同様
     node.dispatchEvent(
@@ -89,100 +89,103 @@ export const UserPromptDetailWindowOpensOnUserPromptNodeDoubleClick: Story = {
     await wait();
 
     // Assert
-    const window = canvas.getByText("UserPromptDetailWindow");
+    const window = canvas.getByText("UserMessageDetailWindow");
     expect(window).toBeInTheDocument();
   },
 };
 
-export const UserPromptNodeContextMenuOpensOnUserPromptNodeRightClick: Story = {
-  render: () => {
-    const nodeTypes = {
-      UserPromptNode: UserPromptNode,
-    };
-    const windowRef = useRef<WindowElement>(null);
-    const nodesState = useNodesState([
-      {
-        id: "1",
-        type: "UserPromptNode",
-        data: {
-          nodeId: "1",
-          content: "UserPromptNode",
-          onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-          onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
-          windowElementRef: windowRef,
+export const UserMessageNodeContextMenuOpensOnUserMessageNodeRightClick: Story =
+  {
+    render: () => {
+      const nodeTypes = {
+        UserMessageNode: UserMessageNode,
+      };
+      const windowRef = useRef<WindowElement>(null);
+      const nodesState = useNodesState([
+        {
+          id: "1",
+          type: "UserMessageNode",
+          data: {
+            nodeId: "1",
+            content: "UserMessageNode",
+            onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
+            onContextMenuDeleteItemClick: action(
+              "onContextMenuDeleteItemClick",
+            ),
+            windowElementRef: windowRef,
+          },
+          position: { x: 100, y: 100 },
         },
-        position: { x: 100, y: 100 },
-      },
-    ]);
-    const nodes = nodesState[0];
-    const onNodesChange = nodesState[2];
-    return (
-      <div className="w-screen h-screen">
-        <ReactFlowProvider>
-          <Background gap={20} size={1} />
-          <ReactFlow
-            nodes={nodes}
-            nodeTypes={nodeTypes}
-            onPaneContextMenu={(e) => {
-              e.preventDefault();
-            }}
-            onNodesChange={onNodesChange}
-          />
-        </ReactFlowProvider>
-        <WindowContext>
-          <UserPromptDetailWindow
-            nodeId="1"
-            content="UserPromptDetailWindow"
-            onConfirmButtonClick={action("onConfirmButtonClick")}
-            ref={windowRef}
-          />
-        </WindowContext>
-      </div>
-    );
-  },
-  play: async ({ canvasElement }) => {
-    // ユーザプロンプトノードを右クリックすると、コピー、削除、編集の3つのアイテムのコンテキストメニューが表示される。
-    // Arrange
-    const canvas = within(canvasElement);
+      ]);
+      const nodes = nodesState[0];
+      const onNodesChange = nodesState[2];
+      return (
+        <div className="w-screen h-screen">
+          <ReactFlowProvider>
+            <Background gap={20} size={1} />
+            <ReactFlow
+              nodes={nodes}
+              nodeTypes={nodeTypes}
+              onPaneContextMenu={(e) => {
+                e.preventDefault();
+              }}
+              onNodesChange={onNodesChange}
+            />
+          </ReactFlowProvider>
+          <WindowContext>
+            <UserMessageDetailWindow
+              nodeId="1"
+              content="UserMessageDetailWindow"
+              onConfirmButtonClick={action("onConfirmButtonClick")}
+              ref={windowRef}
+            />
+          </WindowContext>
+        </div>
+      );
+    },
+    play: async ({ canvasElement }) => {
+      // ユーザプロンプトノードを右クリックすると、コピー、削除、編集の3つのアイテムのコンテキストメニューが表示される。
+      // Arrange
+      const canvas = within(canvasElement);
 
-    // Act
-    const node = canvas.getByText("UserPromptNode");
-    node.dispatchEvent(
-      new MouseEvent("contextmenu", {
-        bubbles: true,
-        cancelable: true,
-      }),
-    );
-    await wait();
+      // Act
+      const node = canvas.getByText("UserMessageNode");
+      node.dispatchEvent(
+        new MouseEvent("contextmenu", {
+          bubbles: true,
+          cancelable: true,
+        }),
+      );
+      await wait();
 
-    // Assert
-    const copyItemElement = canvas.getByText("コピー");
-    expect(copyItemElement).toBeInTheDocument();
-    const deleteItemElement = canvas.getByText("削除");
-    expect(deleteItemElement).toBeInTheDocument();
-    const editItemElement = canvas.getByText("編集");
-    expect(editItemElement).toBeInTheDocument();
-  },
-};
+      // Assert
+      const copyItemElement = canvas.getByText("コピー");
+      expect(copyItemElement).toBeInTheDocument();
+      const deleteItemElement = canvas.getByText("削除");
+      expect(deleteItemElement).toBeInTheDocument();
+      const editItemElement = canvas.getByText("編集");
+      expect(editItemElement).toBeInTheDocument();
+    },
+  };
 
-const UserPromptNodeContextMenuCopyItemInvokeHandlerDatas = {
+const UserMessageNodeContextMenuCopyItemInvokeHandlerDatas = {
   handler: fn(),
 };
 
-export const UserPromptNodeContextMenuCopyItemInvokeHandler: Story = {
+export const UserMessageNodeContextMenuCopyItemInvokeHandler: Story = {
   render: () => {
-    const datas = UserPromptNodeContextMenuCopyItemInvokeHandlerDatas;
+    const datas = UserMessageNodeContextMenuCopyItemInvokeHandlerDatas;
     const nodeTypes = {
-      UserPromptNode: UserPromptNode,
+      UserMessageNode: UserMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
-        type: "UserPromptNode",
+        type: "UserMessageNode",
         data: {
           nodeId: "1",
-          content: "UserPromptNode",
+          content: "UserMessageNode",
           onContextMenuCopyItemClick: datas.handler,
           onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
@@ -203,9 +206,9 @@ export const UserPromptNodeContextMenuCopyItemInvokeHandler: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <UserPromptDetailWindow
+          <UserMessageDetailWindow
             nodeId="1"
-            content="UserPromptDetailWindow"
+            content="UserMessageDetailWindow"
             onConfirmButtonClick={action("onConfirmButtonClick")}
             ref={windowRef}
           />
@@ -217,9 +220,9 @@ export const UserPromptNodeContextMenuCopyItemInvokeHandler: Story = {
     // ユーザプロンプトノードのコンテキストメニューのコピー項目をクリックすると、ハンドラーが呼ばれる。
     // Arrange
     const canvas = within(canvasElement);
-    const datas = UserPromptNodeContextMenuCopyItemInvokeHandlerDatas;
+    const datas = UserMessageNodeContextMenuCopyItemInvokeHandlerDatas;
     datas.handler.mockClear();
-    const node = canvas.getByText("UserPromptNode");
+    const node = canvas.getByText("UserMessageNode");
     node.dispatchEvent(
       new MouseEvent("contextmenu", {
         bubbles: true,
@@ -246,24 +249,24 @@ export const UserPromptNodeContextMenuCopyItemInvokeHandler: Story = {
   },
 };
 
-const UserPromptNodeContextMenuDeleteItemInvokeHandlerDatas = {
+const UserMessageNodeContextMenuDeleteItemInvokeHandlerDatas = {
   handler: fn(),
 };
 
-export const UserPromptNodeContextMenuDeleteItemInvokeHandler: Story = {
+export const UserMessageNodeContextMenuDeleteItemInvokeHandler: Story = {
   render: () => {
-    const datas = UserPromptNodeContextMenuDeleteItemInvokeHandlerDatas;
+    const datas = UserMessageNodeContextMenuDeleteItemInvokeHandlerDatas;
     const nodeTypes = {
-      UserPromptNode: UserPromptNode,
+      UserMessageNode: UserMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
-        type: "UserPromptNode",
+        type: "UserMessageNode",
         data: {
           nodeId: "1",
-          content: "UserPromptNode",
+          content: "UserMessageNode",
           onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
           onContextMenuDeleteItemClick: datas.handler,
           windowElementRef: windowRef,
@@ -284,9 +287,9 @@ export const UserPromptNodeContextMenuDeleteItemInvokeHandler: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <UserPromptDetailWindow
+          <UserMessageDetailWindow
             nodeId="1"
-            content="UserPromptDetailWindow"
+            content="UserMessageDetailWindow"
             onConfirmButtonClick={action("onConfirmButtonClick")}
             ref={windowRef}
           />
@@ -298,9 +301,9 @@ export const UserPromptNodeContextMenuDeleteItemInvokeHandler: Story = {
     // ユーザプロンプトノードのコンテキストメニューの削除項目をクリックすると、ハンドラーが呼ばれる。
     // Arrange
     const canvas = within(canvasElement);
-    const datas = UserPromptNodeContextMenuDeleteItemInvokeHandlerDatas;
+    const datas = UserMessageNodeContextMenuDeleteItemInvokeHandlerDatas;
     datas.handler.mockClear();
-    const node = canvas.getByText("UserPromptNode");
+    const node = canvas.getByText("UserMessageNode");
     node.dispatchEvent(
       new MouseEvent("contextmenu", {
         bubbles: true,
@@ -327,19 +330,19 @@ export const UserPromptNodeContextMenuDeleteItemInvokeHandler: Story = {
   },
 };
 
-export const UserPromptNodeContextMenuEditItemOpensDetailWindow: Story = {
+export const UserMessageNodeContextMenuEditItemOpensDetailWindow: Story = {
   render: () => {
     const nodeTypes = {
-      UserPromptNode: UserPromptNode,
+      UserMessageNode: UserMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
-        type: "UserPromptNode",
+        type: "UserMessageNode",
         data: {
           nodeId: "1",
-          content: "UserPromptNode",
+          content: "UserMessageNode",
           onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
           onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
@@ -360,9 +363,9 @@ export const UserPromptNodeContextMenuEditItemOpensDetailWindow: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <UserPromptDetailWindow
+          <UserMessageDetailWindow
             nodeId="1"
-            content="UserPromptDetailWindow"
+            content="UserMessageDetailWindow"
             onConfirmButtonClick={action("onConfirmButtonClick")}
             ref={windowRef}
           />
@@ -374,7 +377,7 @@ export const UserPromptNodeContextMenuEditItemOpensDetailWindow: Story = {
     // ユーザプロンプトノードのコンテキストメニューの編集項目をクリックすると、詳細ウィンドウが開く。
     // Arrange
     const canvas = within(canvasElement);
-    const node = canvas.getByText("UserPromptNode");
+    const node = canvas.getByText("UserMessageNode");
     node.dispatchEvent(
       new MouseEvent("contextmenu", {
         bubbles: true,
@@ -394,29 +397,29 @@ export const UserPromptNodeContextMenuEditItemOpensDetailWindow: Story = {
     await wait();
 
     // Assert
-    const window = canvas.getByText("UserPromptDetailWindow");
+    const window = canvas.getByText("UserMessageDetailWindow");
     expect(window).toBeInTheDocument();
   },
 };
 
-const UserPromptDetailWindowConfirmButtonInvokeHandlerDatas = {
+const UserMessageDetailWindowConfirmButtonInvokeHandlerDatas = {
   handler: fn(),
 };
 
-export const UserPromptDetailWindowConfirmButtonInvokeHandler: Story = {
+export const UserMessageDetailWindowConfirmButtonInvokeHandler: Story = {
   render: () => {
-    const datas = UserPromptDetailWindowConfirmButtonInvokeHandlerDatas;
+    const datas = UserMessageDetailWindowConfirmButtonInvokeHandlerDatas;
     const nodeTypes = {
-      UserPromptNode: UserPromptNode,
+      UserMessageNode: UserMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
-        type: "UserPromptNode",
+        type: "UserMessageNode",
         data: {
           nodeId: "1",
-          content: "UserPromptNode",
+          content: "UserMessageNode",
           onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
           onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
@@ -437,9 +440,9 @@ export const UserPromptDetailWindowConfirmButtonInvokeHandler: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <UserPromptDetailWindow
+          <UserMessageDetailWindow
             nodeId="1"
-            content="UserPromptDetailWindow"
+            content="UserMessageDetailWindow"
             onConfirmButtonClick={datas.handler}
             ref={windowRef}
           />
@@ -451,9 +454,9 @@ export const UserPromptDetailWindowConfirmButtonInvokeHandler: Story = {
     // ユーザプロンプト詳細ウィンドウのtextareaを編集後ユーザプロンプト詳細ウィンドウの確定ボタンを押すと、入力したテキストで対応するハンドラが呼び出される。
     // Arrange
     const canvas = within(canvasElement);
-    const datas = UserPromptDetailWindowConfirmButtonInvokeHandlerDatas;
+    const datas = UserMessageDetailWindowConfirmButtonInvokeHandlerDatas;
     datas.handler.mockClear();
-    const node = canvas.getByText("UserPromptNode");
+    const node = canvas.getByText("UserMessageNode");
     node.dispatchEvent(
       new MouseEvent("dblclick", {
         bubbles: true,

@@ -1,5 +1,5 @@
-import AIPromptDetailWindow from "@/components/ai-prompt-detail-window";
-import AIPromptNode from "@/components/ai-prompt-node";
+import AIMessageDetailWindow from "@/components/ai-message-detail-window";
+import AIMessageNode from "@/components/ai-message-node";
 import { WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, within } from "@storybook/test";
@@ -13,9 +13,9 @@ import { useRef } from "react";
 import { action } from "storybook/actions";
 import { wait } from "../utils/wait";
 
-const meta: Meta<typeof AIPromptNode> = {
-  title: "Components/AIPromptNode/Test",
-  component: AIPromptNode,
+const meta: Meta<typeof AIMessageNode> = {
+  title: "Components/AIMessageNode/Test",
+  component: AIMessageNode,
   parameters: {
     layout: "fullscreen",
   },
@@ -25,19 +25,19 @@ const meta: Meta<typeof AIPromptNode> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const AIPromptDetailWindowOpensOnAIPromptNodeDoubleClick: Story = {
+export const AIMessageDetailWindowOpensOnAIMessageNodeDoubleClick: Story = {
   render: () => {
     const nodeTypes = {
-      AIPromptNode: AIPromptNode,
+      AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
-        type: "AIPromptNode",
+        type: "AIMessageNode",
         data: {
           nodeId: "1",
-          content: "AIPromptNode",
+          content: "AIMessageNode",
           recalculating: false,
           onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
           onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
@@ -62,9 +62,9 @@ export const AIPromptDetailWindowOpensOnAIPromptNodeDoubleClick: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <AIPromptDetailWindow
+          <AIMessageDetailWindow
             nodeId="1"
-            content="AIPromptDetailWindow"
+            content="AIMessageDetailWindow"
             recalculating={false}
             onConfirmButtonClick={action("onConfirmButtonClick")}
             onRecalculateButtonClick={action("onRecalculateButtonClick")}
@@ -83,7 +83,7 @@ export const AIPromptDetailWindowOpensOnAIPromptNodeDoubleClick: Story = {
     const canvas = within(canvasElement);
 
     // Act
-    const node = canvas.getByText("AIPromptNode");
+    const node = canvas.getByText("AIMessageNode");
     // NOTE: userEvent.dblClick(node)では、documentがnullなのにアクセスしようとしてエラーが生じる
     // NOTE: dispatchEventだとこのエラーが生じない。他のイベントも同様
     node.dispatchEvent(
@@ -95,24 +95,24 @@ export const AIPromptDetailWindowOpensOnAIPromptNodeDoubleClick: Story = {
     await wait();
 
     // Assert
-    const window = canvas.getByText("AIPromptDetailWindow");
+    const window = canvas.getByText("AIMessageDetailWindow");
     expect(window).toBeInTheDocument();
   },
 };
 
-export const AIPromptNodeContextMenuOpensOnAIPromptNodeRightClick: Story = {
+export const AIMessageNodeContextMenuOpensOnAIMessageNodeRightClick: Story = {
   render: () => {
     const nodeTypes = {
-      AIPromptNode: AIPromptNode,
+      AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
-        type: "AIPromptNode",
+        type: "AIMessageNode",
         data: {
           nodeId: "1",
-          content: "AIPromptNode",
+          content: "AIMessageNode",
           recalculating: false,
           onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
           onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
@@ -137,9 +137,9 @@ export const AIPromptNodeContextMenuOpensOnAIPromptNodeRightClick: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <AIPromptDetailWindow
+          <AIMessageDetailWindow
             nodeId="1"
-            content="AIPromptDetailWindow"
+            content="AIMessageDetailWindow"
             recalculating={false}
             onConfirmButtonClick={action("onConfirmButtonClick")}
             onRecalculateButtonClick={action("onRecalculateButtonClick")}
@@ -158,7 +158,7 @@ export const AIPromptNodeContextMenuOpensOnAIPromptNodeRightClick: Story = {
     const canvas = within(canvasElement);
 
     // Act
-    const node = canvas.getByText("AIPromptNode");
+    const node = canvas.getByText("AIMessageNode");
     node.dispatchEvent(
       new MouseEvent("contextmenu", {
         bubbles: true,
@@ -177,24 +177,24 @@ export const AIPromptNodeContextMenuOpensOnAIPromptNodeRightClick: Story = {
   },
 };
 
-const AIPromptNodeContextMenuCopyItemInvokeHandlerDatas = {
+const AIMessageNodeContextMenuCopyItemInvokeHandlerDatas = {
   handler: fn(),
 };
 
-export const AIPromptNodeContextMenuCopyItemInvokeHandler: Story = {
+export const AIMessageNodeContextMenuCopyItemInvokeHandler: Story = {
   render: () => {
-    const datas = AIPromptNodeContextMenuCopyItemInvokeHandlerDatas;
+    const datas = AIMessageNodeContextMenuCopyItemInvokeHandlerDatas;
     const nodeTypes = {
-      AIPromptNode: AIPromptNode,
+      AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
-        type: "AIPromptNode",
+        type: "AIMessageNode",
         data: {
           nodeId: "1",
-          content: "AIPromptNode",
+          content: "AIMessageNode",
           recalculating: false,
           onContextMenuCopyItemClick: datas.handler,
           onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
@@ -216,9 +216,9 @@ export const AIPromptNodeContextMenuCopyItemInvokeHandler: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <AIPromptDetailWindow
+          <AIMessageDetailWindow
             nodeId="1"
-            content="AIPromptDetailWindow"
+            content="AIMessageDetailWindow"
             recalculating={false}
             onConfirmButtonClick={action("onConfirmButtonClick")}
             onRecalculateButtonClick={action("onRecalculateButtonClick")}
@@ -235,9 +235,9 @@ export const AIPromptNodeContextMenuCopyItemInvokeHandler: Story = {
     // AIプロンプトノードのコンテキストメニューのコピー項目をクリックすると、ハンドラーが呼ばれる。
     // Arrange
     const canvas = within(canvasElement);
-    const datas = AIPromptNodeContextMenuCopyItemInvokeHandlerDatas;
+    const datas = AIMessageNodeContextMenuCopyItemInvokeHandlerDatas;
     datas.handler.mockClear();
-    const node = canvas.getByText("AIPromptNode");
+    const node = canvas.getByText("AIMessageNode");
     node.dispatchEvent(
       new MouseEvent("contextmenu", {
         bubbles: true,
@@ -264,24 +264,24 @@ export const AIPromptNodeContextMenuCopyItemInvokeHandler: Story = {
   },
 };
 
-const AIPromptNodeContextMenuDeleteItemInvokeHandlerDatas = {
+const AIMessageNodeContextMenuDeleteItemInvokeHandlerDatas = {
   handler: fn(),
 };
 
-export const AIPromptNodeContextMenuDeleteItemInvokeHandler: Story = {
+export const AIMessageNodeContextMenuDeleteItemInvokeHandler: Story = {
   render: () => {
-    const datas = AIPromptNodeContextMenuDeleteItemInvokeHandlerDatas;
+    const datas = AIMessageNodeContextMenuDeleteItemInvokeHandlerDatas;
     const nodeTypes = {
-      AIPromptNode: AIPromptNode,
+      AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
-        type: "AIPromptNode",
+        type: "AIMessageNode",
         data: {
           nodeId: "1",
-          content: "AIPromptNode",
+          content: "AIMessageNode",
           recalculating: false,
           onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
           onContextMenuDeleteItemClick: datas.handler,
@@ -303,9 +303,9 @@ export const AIPromptNodeContextMenuDeleteItemInvokeHandler: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <AIPromptDetailWindow
+          <AIMessageDetailWindow
             nodeId="1"
-            content="AIPromptDetailWindow"
+            content="AIMessageDetailWindow"
             recalculating={false}
             onConfirmButtonClick={action("onConfirmButtonClick")}
             onRecalculateButtonClick={action("onRecalculateButtonClick")}
@@ -322,9 +322,9 @@ export const AIPromptNodeContextMenuDeleteItemInvokeHandler: Story = {
     // AIプロンプトノードのコンテキストメニューの削除項目をクリックすると、ハンドラーが呼ばれる。
     // Arrange
     const canvas = within(canvasElement);
-    const datas = AIPromptNodeContextMenuDeleteItemInvokeHandlerDatas;
+    const datas = AIMessageNodeContextMenuDeleteItemInvokeHandlerDatas;
     datas.handler.mockClear();
-    const node = canvas.getByText("AIPromptNode");
+    const node = canvas.getByText("AIMessageNode");
     node.dispatchEvent(
       new MouseEvent("contextmenu", {
         bubbles: true,
@@ -351,19 +351,19 @@ export const AIPromptNodeContextMenuDeleteItemInvokeHandler: Story = {
   },
 };
 
-export const AIPromptNodeContextMenuEditItemOpensDetailWindow: Story = {
+export const AIMessageNodeContextMenuEditItemOpensDetailWindow: Story = {
   render: () => {
     const nodeTypes = {
-      AIPromptNode: AIPromptNode,
+      AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
-        type: "AIPromptNode",
+        type: "AIMessageNode",
         data: {
           nodeId: "1",
-          content: "AIPromptNode",
+          content: "AIMessageNode",
           recalculating: false,
           onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
           onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
@@ -385,9 +385,9 @@ export const AIPromptNodeContextMenuEditItemOpensDetailWindow: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <AIPromptDetailWindow
+          <AIMessageDetailWindow
             nodeId="1"
-            content="AIPromptDetailWindow"
+            content="AIMessageDetailWindow"
             recalculating={false}
             onConfirmButtonClick={action("onConfirmButtonClick")}
             onRecalculateButtonClick={action("onRecalculateButtonClick")}
@@ -404,7 +404,7 @@ export const AIPromptNodeContextMenuEditItemOpensDetailWindow: Story = {
     // AIプロンプトノードのコンテキストメニューの編集項目をクリックすると、詳細ウィンドウが開く。
     // Arrange
     const canvas = within(canvasElement);
-    const node = canvas.getByText("AIPromptNode");
+    const node = canvas.getByText("AIMessageNode");
     node.dispatchEvent(
       new MouseEvent("contextmenu", {
         bubbles: true,
@@ -424,33 +424,33 @@ export const AIPromptNodeContextMenuEditItemOpensDetailWindow: Story = {
     await wait();
 
     // Assert
-    const window = canvas.getByText("AIPromptDetailWindow");
+    const window = canvas.getByText("AIMessageDetailWindow");
     expect(window).toBeInTheDocument();
   },
 };
 
-const AIPromptNodeRecalculatingChangesToTrueDatas = {
+const AIMessageNodeRecalculatingChangesToTrueDatas = {
   setIsRecalculating: (() => {
     return;
   }) as (isRecalculating: boolean) => void,
 };
 
-export const AIPromptNodeShowsRecalculatingBackgroundWhenRecalculatingChangesToTrue: Story =
+export const AIMessageNodeShowsRecalculatingBackgroundWhenRecalculatingChangesToTrue: Story =
   {
     render: () => {
-      const datas = AIPromptNodeRecalculatingChangesToTrueDatas;
+      const datas = AIMessageNodeRecalculatingChangesToTrueDatas;
       const nodeTypes = {
-        AIPromptNode: AIPromptNode,
+        AIMessageNode: AIMessageNode,
       };
       const windowRef = useRef<WindowElement>(null);
       const calcNodeState = (recalculating: boolean) => {
         return [
           {
             id: "1",
-            type: "AIPromptNode",
+            type: "AIMessageNode",
             data: {
               nodeId: "1",
-              content: "AIPromptNode",
+              content: "AIMessageNode",
               recalculating: recalculating,
               onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
               onContextMenuDeleteItemClick: action(
@@ -480,9 +480,9 @@ export const AIPromptNodeShowsRecalculatingBackgroundWhenRecalculatingChangesToT
             />
           </ReactFlowProvider>
           <WindowContext>
-            <AIPromptDetailWindow
+            <AIMessageDetailWindow
               nodeId="1"
-              content="AIPromptDetailWindow"
+              content="AIMessageDetailWindow"
               recalculating={false}
               onConfirmButtonClick={action("onConfirmButtonClick")}
               onRecalculateButtonClick={action("onRecalculateButtonClick")}
@@ -498,7 +498,7 @@ export const AIPromptNodeShowsRecalculatingBackgroundWhenRecalculatingChangesToT
     play: async ({ canvasElement }) => {
       // AIプロンプトノードのpropsのrecalculatingがfalseからtrueに更新されると、ノードに更新中背景(svg要素)が表示される。
       // Arrange
-      const datas = AIPromptNodeRecalculatingChangesToTrueDatas;
+      const datas = AIMessageNodeRecalculatingChangesToTrueDatas;
       // classNameに"lucide-hourglass"を含む、canvasElementの子孫のsvg要素を取得する
       const findLucideHourglassSVGElement = () => {
         const svgElements = canvasElement.querySelectorAll("svg");
@@ -521,24 +521,24 @@ export const AIPromptNodeShowsRecalculatingBackgroundWhenRecalculatingChangesToT
     },
   };
 
-const AIPromptDetailWindowRecalculateButtonInvokeHandlerDatas = {
+const AIMessageDetailWindowRecalculateButtonInvokeHandlerDatas = {
   handler: fn(),
 };
 
-export const AIPromptDetailWindowRecalculateButtonInvokeHandler: Story = {
+export const AIMessageDetailWindowRecalculateButtonInvokeHandler: Story = {
   render: () => {
-    const datas = AIPromptDetailWindowRecalculateButtonInvokeHandlerDatas;
+    const datas = AIMessageDetailWindowRecalculateButtonInvokeHandlerDatas;
     const nodeTypes = {
-      AIPromptNode: AIPromptNode,
+      AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
-        type: "AIPromptNode",
+        type: "AIMessageNode",
         data: {
           nodeId: "1",
-          content: "AIPromptNode",
+          content: "AIMessageNode",
           recalculating: false,
           onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
           onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
@@ -560,9 +560,9 @@ export const AIPromptDetailWindowRecalculateButtonInvokeHandler: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <AIPromptDetailWindow
+          <AIMessageDetailWindow
             nodeId="1"
-            content="AIPromptDetailWindow"
+            content="AIMessageDetailWindow"
             recalculating={false}
             onConfirmButtonClick={action("onConfirmButtonClick")}
             onRecalculateButtonClick={datas.handler}
@@ -579,9 +579,9 @@ export const AIPromptDetailWindowRecalculateButtonInvokeHandler: Story = {
     // AIプロンプト詳細ウィンドウの再計算ボタンを押すと対応するハンドラが呼び出される。ウィンドウは閉じない。
     // Arrange
     const canvas = within(canvasElement);
-    const datas = AIPromptDetailWindowRecalculateButtonInvokeHandlerDatas;
+    const datas = AIMessageDetailWindowRecalculateButtonInvokeHandlerDatas;
     datas.handler.mockClear();
-    const node = canvas.getByText("AIPromptNode");
+    const node = canvas.getByText("AIMessageNode");
     node.dispatchEvent(
       new MouseEvent("dblclick", {
         bubbles: true,
@@ -601,25 +601,25 @@ export const AIPromptDetailWindowRecalculateButtonInvokeHandler: Story = {
 
     // Assert
     expect(datas.handler).toHaveBeenCalledTimes(1);
-    const window = canvas.getByText("AIPromptDetailWindow");
+    const window = canvas.getByText("AIMessageDetailWindow");
     expect(window).toBeInTheDocument();
   },
 };
 
-export const AIPromptDetailWindowTextareaDisabledWhenRecalculatingIsTrue: Story =
+export const AIMessageDetailWindowTextareaDisabledWhenRecalculatingIsTrue: Story =
   {
     render: () => {
       const nodeTypes = {
-        AIPromptNode: AIPromptNode,
+        AIMessageNode: AIMessageNode,
       };
       const windowRef = useRef<WindowElement>(null);
       const nodesState = useNodesState([
         {
           id: "1",
-          type: "AIPromptNode",
+          type: "AIMessageNode",
           data: {
             nodeId: "1",
-            content: "AIPromptNode",
+            content: "AIMessageNode",
             recalculating: false,
             onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
             onContextMenuDeleteItemClick: action(
@@ -643,9 +643,9 @@ export const AIPromptDetailWindowTextareaDisabledWhenRecalculatingIsTrue: Story 
             />
           </ReactFlowProvider>
           <WindowContext>
-            <AIPromptDetailWindow
+            <AIMessageDetailWindow
               nodeId="1"
-              content="AIPromptDetailWindow"
+              content="AIMessageDetailWindow"
               recalculating={true}
               onConfirmButtonClick={action("onConfirmButtonClick")}
               onRecalculateButtonClick={action("onRecalculateButtonClick")}
@@ -662,7 +662,7 @@ export const AIPromptDetailWindowTextareaDisabledWhenRecalculatingIsTrue: Story 
       // AIプロンプト詳細ウィンドウのrecalculatingがtrueの場合、ウィンドウに1つだけ存在するtextareaがdisabledになる。
       // Arrange
       const canvas = within(canvasElement);
-      const node = canvas.getByText("AIPromptNode");
+      const node = canvas.getByText("AIMessageNode");
       node.dispatchEvent(
         new MouseEvent("dblclick", {
           bubbles: true,
@@ -677,24 +677,24 @@ export const AIPromptDetailWindowTextareaDisabledWhenRecalculatingIsTrue: Story 
     },
   };
 
-const AIPromptDetailWindowCancelButtonInvokeHandlerDatas = {
+const AIMessageDetailWindowCancelButtonInvokeHandlerDatas = {
   handler: fn(),
 };
 
-export const AIPromptDetailWindowCancelButtonInvokeHandler: Story = {
+export const AIMessageDetailWindowCancelButtonInvokeHandler: Story = {
   render: () => {
-    const datas = AIPromptDetailWindowCancelButtonInvokeHandlerDatas;
+    const datas = AIMessageDetailWindowCancelButtonInvokeHandlerDatas;
     const nodeTypes = {
-      AIPromptNode: AIPromptNode,
+      AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
-        type: "AIPromptNode",
+        type: "AIMessageNode",
         data: {
           nodeId: "1",
-          content: "AIPromptNode",
+          content: "AIMessageNode",
           recalculating: false,
           onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
           onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
@@ -716,9 +716,9 @@ export const AIPromptDetailWindowCancelButtonInvokeHandler: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <AIPromptDetailWindow
+          <AIMessageDetailWindow
             nodeId="1"
-            content="AIPromptDetailWindow"
+            content="AIMessageDetailWindow"
             recalculating={true}
             onConfirmButtonClick={action("onConfirmButtonClick")}
             onRecalculateButtonClick={action("onRecalculateButtonClick")}
@@ -733,9 +733,9 @@ export const AIPromptDetailWindowCancelButtonInvokeHandler: Story = {
     // AIプロンプト詳細ウィンドウのrecalculatingがtrueの場合、再計算ボタンはなくキャンセルボタンが配置される。キャンセルボタンを押すと対応するハンドラが呼び出され、ウィンドウは閉じない。
     // Arrange
     const canvas = within(canvasElement);
-    const datas = AIPromptDetailWindowCancelButtonInvokeHandlerDatas;
+    const datas = AIMessageDetailWindowCancelButtonInvokeHandlerDatas;
     datas.handler.mockClear();
-    const node = canvas.getByText("AIPromptNode");
+    const node = canvas.getByText("AIMessageNode");
     node.dispatchEvent(
       new MouseEvent("dblclick", {
         bubbles: true,
@@ -760,7 +760,7 @@ export const AIPromptDetailWindowCancelButtonInvokeHandler: Story = {
 
     // Assert
     expect(datas.handler).toHaveBeenCalledTimes(1);
-    const window = canvas.getByText("AIPromptDetailWindow");
+    const window = canvas.getByText("AIMessageDetailWindow");
     expect(window).toBeInTheDocument();
   },
 };

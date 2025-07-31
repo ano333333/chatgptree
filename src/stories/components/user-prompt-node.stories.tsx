@@ -1,5 +1,5 @@
-import UserPromptDetailWindow from "@/components/user-prompt-detail-window";
-import UserPromptNode from "@/components/user-prompt-node";
+import UserMessageDetailWindow from "@/components/user-message-detail-window";
+import UserMessageNode from "@/components/user-message-node";
 import { WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
@@ -12,9 +12,9 @@ import {
 import { useRef, type RefObject } from "react";
 import { action } from "storybook/actions";
 
-const meta: Meta<typeof UserPromptNode> = {
-  title: "Components/UserPromptNode",
-  component: UserPromptNode,
+const meta: Meta<typeof UserMessageNode> = {
+  title: "Components/UserMessageNode",
+  component: UserMessageNode,
   parameters: {
     layout: "fullscreen",
   },
@@ -27,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => {
     const nodeTypes: NodeTypes = {
-      UserPromptNode: UserPromptNode,
+      UserMessageNode: UserMessageNode,
     };
     const onContextMenuCopyItemClick = (id: string) =>
       action(`onContextMenuCopyItemClick(${id})`);
@@ -40,7 +40,7 @@ export const Default: Story = {
     const nodeState = useNodesState([
       {
         id: "1",
-        type: "UserPromptNode",
+        type: "UserMessageNode",
         data: {
           nodeId: "1",
           content: "Hello, world!1",
@@ -52,7 +52,7 @@ export const Default: Story = {
       },
       {
         id: "2",
-        type: "UserPromptNode",
+        type: "UserMessageNode",
         data: {
           nodeId: "2",
           content: "Hello, world!2",
@@ -82,13 +82,13 @@ export const Default: Story = {
           />
         </ReactFlowProvider>
         <WindowContext>
-          <UserPromptDetailWindow
+          <UserMessageDetailWindow
             nodeId="1"
             content="Hello, world!1"
             onConfirmButtonClick={onConfirmButtonClick("1")}
             ref={windowRefs.current["1"]}
           />
-          <UserPromptDetailWindow
+          <UserMessageDetailWindow
             nodeId="2"
             content="Hello, world!2"
             onConfirmButtonClick={onConfirmButtonClick("2")}

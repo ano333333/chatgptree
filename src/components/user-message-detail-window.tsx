@@ -1,19 +1,19 @@
 import { useState, type MouseEvent, type RefObject } from "react";
 import { Window, type WindowElement } from "./window";
 
-interface UserPromptDetailWindowProps {
+interface UserMessageDetailWindowProps {
   nodeId: string;
   content: string;
   onConfirmButtonClick: (nodeId: string, content: string) => void;
   ref: RefObject<WindowElement | null>;
 }
 
-export default function UserPromptDetailWindow({
+export default function UserMessageDetailWindow({
   content,
   nodeId,
   onConfirmButtonClick: onConfirmButtonClickProp,
   ref,
-}: UserPromptDetailWindowProps) {
+}: UserMessageDetailWindowProps) {
   const [currentContent, setCurrentContent] = useState(content);
   const onConfirmButtonOnClick = (e: MouseEvent<HTMLButtonElement>) => {
     // NOTE: stopPropergationを呼ばないとWindowが閉じない(何故?)
@@ -23,8 +23,8 @@ export default function UserPromptDetailWindow({
   };
   return (
     <Window
-      windowKey={`user-prompt-detail-window-${nodeId}`}
-      title="User Prompt Detail"
+      windowKey={`user-message-detail-window-${nodeId}`}
+      title="User Message Detail"
       ref={ref}
     >
       <div className="flex flex-col m-2">

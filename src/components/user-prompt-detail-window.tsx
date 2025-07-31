@@ -4,7 +4,7 @@ import { Window, type WindowElement } from "./window";
 interface UserPromptDetailWindowProps {
   nodeId: string;
   content: string;
-  onConfirmButtonClick: (content: string) => void;
+  onConfirmButtonClick: (nodeId: string, content: string) => void;
   ref: RefObject<WindowElement | null>;
 }
 
@@ -18,7 +18,7 @@ export default function UserPromptDetailWindow({
   const onConfirmButtonOnClick = (e: MouseEvent<HTMLButtonElement>) => {
     // NOTE: stopPropergationを呼ばないとWindowが閉じない(何故?)
     e.stopPropagation();
-    onConfirmButtonClickProp(currentContent);
+    onConfirmButtonClickProp(nodeId, currentContent);
     ref.current?.setWindowState({ open: false });
   };
   return (

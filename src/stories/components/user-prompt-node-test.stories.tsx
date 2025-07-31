@@ -491,7 +491,7 @@ export const UserPromptDetailWindowConfirmButtonInvokeHandler: Story = {
     await wait();
 
     // Assert
-    expect(datas.handler).toHaveBeenCalledWith("新しいテキスト");
+    expect(datas.handler).toHaveBeenCalledWith("1", "新しいテキスト");
     expect(datas.handler).toHaveBeenCalledTimes(1);
   },
 };

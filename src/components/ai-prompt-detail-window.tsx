@@ -46,14 +46,13 @@ export default function AIPromptDetailWindow({
           <button
             type="button"
             onClick={onRecalcOrCancelRecalcButtonOnClick}
-            disabled={recalculating}
             className={`px-3 py-1 text-sm rounded-md transition-colors ${
               recalculating
-                ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+                ? "bg-red-500 text-white hover:bg-red-600"
                 : "bg-green-500 text-white hover:bg-green-600"
             }`}
           >
-            {recalculating ? "再計算中" : "再計算"}
+            {recalculating ? "キャンセル" : "再計算"}
           </button>
         </div>
 
@@ -72,7 +71,6 @@ export default function AIPromptDetailWindow({
           <button
             type="button"
             onClick={onConfirmButtonClick}
-            disabled={recalculating}
             className={`px-4 py-2 text-sm rounded-md transition-colors ${
               recalculating
                 ? "bg-gray-200 text-gray-400 cursor-not-allowed"

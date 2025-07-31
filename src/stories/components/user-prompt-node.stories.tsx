@@ -1,0 +1,101 @@
+import UserPromptDetailWindow from "@/components/user-prompt-detail-window";
+import UserPromptNode from "@/components/user-prompt-node";
+import { WindowContext, type WindowElement } from "@/components/window";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import {
+  Background,
+  ReactFlow,
+  ReactFlowProvider,
+  useNodesState,
+  type NodeTypes,
+} from "@xyflow/react";
+import { useRef, type RefObject } from "react";
+import { action } from "storybook/actions";
+
+const meta: Meta<typeof UserPromptNode> = {
+  title: "Components/UserPromptNode",
+  component: UserPromptNode,
+  parameters: {
+    layout: "fullscreen",
+  },
+  tags: ["autodocs"],
+};
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  render: () => {
+    const nodeTypes: NodeTypes = {
+      UserPromptNode: UserPromptNode,
+    };
+    const onContextMenuCopyItemClick = (id: string) =>
+      action(`onContextMenuCopyItemClick(${id})`);
+    const onContextMenuDeleteItemClick = (id: string) =>
+      action(`onContextMenuDeleteItemClick(${id})`);
+    const windowRefs = useRef<Record<string, RefObject<WindowElement | null>>>({
+      "1": useRef(null),
+      "2": useRef(null),
+    });
+    const nodeState = useNodesState([
+      {
+        id: "1",
+        type: "UserPromptNode",
+        data: {
+          nodeId: "1",
+          content: "Hello, world!1",
+          onContextMenuCopyItemClick: onContextMenuCopyItemClick("1"),
+          onContextMenuDeleteItemClick: onContextMenuDeleteItemClick("1"),
+          windowElementRef: windowRefs.current["1"],
+        },
+        position: { x: 100, y: 100 },
+      },
+      {
+        id: "2",
+        type: "UserPromptNode",
+        data: {
+          nodeId: "2",
+          content: "Hello, world!2",
+          onContextMenuCopyItemClick: onContextMenuCopyItemClick("2"),
+          onContextMenuDeleteItemClick: onContextMenuDeleteItemClick("2"),
+          windowElementRef: windowRefs.current["2"],
+        },
+        position: { x: 100, y: 200 },
+      },
+    ]);
+    const nodes = nodeState[0];
+    const onNodesChange = nodeState[2];
+    const onConfirmButtonClick = (nodeId: string) =>
+      action(`onConfirmButtonClick(${nodeId})`);
+    return (
+      <div className="w-screen h-screen">
+        <ReactFlowProvider>
+          <Background gap={20} size={1} />
+          <ReactFlow
+            nodes={nodes}
+            edges={[]}
+            nodeTypes={nodeTypes}
+            onPaneContextMenu={(e) => {
+              e.preventDefault();
+            }}
+            onNodesChange={onNodesChange}
+          />
+        </ReactFlowProvider>
+        <WindowContext>
+          <UserPromptDetailWindow
+            nodeId="1"
+            content="Hello, world!1"
+            onConfirmButtonClick={onConfirmButtonClick("1")}
+            ref={windowRefs.current["1"]}
+          />
+          <UserPromptDetailWindow
+            nodeId="2"
+            content="Hello, world!2"
+            onConfirmButtonClick={onConfirmButtonClick("2")}
+            ref={windowRefs.current["2"]}
+          />
+        </WindowContext>
+      </div>
+    );
+  },
+};

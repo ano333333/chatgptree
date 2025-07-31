@@ -18,7 +18,7 @@ import { useRef, type RefObject } from "react";
 import { action } from "storybook/actions";
 
 const meta: Meta<typeof AIMessageNode> = {
-  title: "Components/AIPromptNode",
+  title: "Components/AIMessageNode",
   component: AIMessageNode,
   parameters: {
     layout: "fullscreen",

@@ -1,5 +1,10 @@
 import UserMessageDetailWindow from "@/components/user-message-detail-window";
 import UserMessageNode from "@/components/user-message-node";
+import UserMessageNodeContextMenu from "@/components/user-message-node-context-menu";
+import {
+  ContextMenuContext,
+  type ContextMenuElement,
+} from "@/components/context-menu";
 import { WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, within } from "@storybook/test";
@@ -31,6 +36,7 @@ export const UserMessageDetailWindowOpensOnUserMessageNodeDoubleClick: Story = {
       UserMessageNode: UserMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
+    const contextMenuRef = useRef<ContextMenuElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
@@ -38,9 +44,8 @@ export const UserMessageDetailWindowOpensOnUserMessageNodeDoubleClick: Story = {
         data: {
           nodeId: "1",
           content: "UserMessageNode",
-          onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-          onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
+          contextMenuRef: contextMenuRef,
         },
         position: { x: 100, y: 100 },
       },
@@ -68,6 +73,15 @@ export const UserMessageDetailWindowOpensOnUserMessageNodeDoubleClick: Story = {
             ref={windowRef}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <UserMessageNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={action("onCopyItemClick")}
+            onDeleteItemClick={action("onDeleteItemClick")}
+            windowElementRef={windowRef}
+            ref={contextMenuRef}
+          />
+        </ContextMenuContext>
       </div>
     );
   },
@@ -101,6 +115,7 @@ export const UserMessageNodeContextMenuOpensOnUserMessageNodeRightClick: Story =
         UserMessageNode: UserMessageNode,
       };
       const windowRef = useRef<WindowElement>(null);
+      const contextMenuRef = useRef<ContextMenuElement>(null);
       const nodesState = useNodesState([
         {
           id: "1",
@@ -108,11 +123,8 @@ export const UserMessageNodeContextMenuOpensOnUserMessageNodeRightClick: Story =
           data: {
             nodeId: "1",
             content: "UserMessageNode",
-            onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-            onContextMenuDeleteItemClick: action(
-              "onContextMenuDeleteItemClick",
-            ),
             windowElementRef: windowRef,
+            contextMenuRef: contextMenuRef,
           },
           position: { x: 100, y: 100 },
         },
@@ -140,6 +152,15 @@ export const UserMessageNodeContextMenuOpensOnUserMessageNodeRightClick: Story =
               ref={windowRef}
             />
           </WindowContext>
+          <ContextMenuContext>
+            <UserMessageNodeContextMenu
+              nodeId="1"
+              onCopyItemClick={action("onCopyItemClick")}
+              onDeleteItemClick={action("onDeleteItemClick")}
+              windowElementRef={windowRef}
+              ref={contextMenuRef}
+            />
+          </ContextMenuContext>
         </div>
       );
     },
@@ -179,6 +200,7 @@ export const UserMessageNodeContextMenuCopyItemInvokeHandler: Story = {
       UserMessageNode: UserMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
+    const contextMenuRef = useRef<ContextMenuElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
@@ -186,9 +208,8 @@ export const UserMessageNodeContextMenuCopyItemInvokeHandler: Story = {
         data: {
           nodeId: "1",
           content: "UserMessageNode",
-          onContextMenuCopyItemClick: datas.handler,
-          onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
+          contextMenuRef: contextMenuRef,
         },
         position: { x: 100, y: 100 },
       },
@@ -202,6 +223,9 @@ export const UserMessageNodeContextMenuCopyItemInvokeHandler: Story = {
           <ReactFlow
             nodes={nodes}
             nodeTypes={nodeTypes}
+            onPaneContextMenu={(e) => {
+              e.preventDefault();
+            }}
             onNodesChange={onNodesChange}
           />
         </ReactFlowProvider>
@@ -213,6 +237,15 @@ export const UserMessageNodeContextMenuCopyItemInvokeHandler: Story = {
             ref={windowRef}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <UserMessageNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={datas.handler}
+            onDeleteItemClick={action("onDeleteItemClick")}
+            windowElementRef={windowRef}
+            ref={contextMenuRef}
+          />
+        </ContextMenuContext>
       </div>
     );
   },
@@ -260,6 +293,7 @@ export const UserMessageNodeContextMenuDeleteItemInvokeHandler: Story = {
       UserMessageNode: UserMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
+    const contextMenuRef = useRef<ContextMenuElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
@@ -267,9 +301,8 @@ export const UserMessageNodeContextMenuDeleteItemInvokeHandler: Story = {
         data: {
           nodeId: "1",
           content: "UserMessageNode",
-          onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-          onContextMenuDeleteItemClick: datas.handler,
           windowElementRef: windowRef,
+          contextMenuRef: contextMenuRef,
         },
         position: { x: 100, y: 100 },
       },
@@ -283,6 +316,9 @@ export const UserMessageNodeContextMenuDeleteItemInvokeHandler: Story = {
           <ReactFlow
             nodes={nodes}
             nodeTypes={nodeTypes}
+            onPaneContextMenu={(e) => {
+              e.preventDefault();
+            }}
             onNodesChange={onNodesChange}
           />
         </ReactFlowProvider>
@@ -294,6 +330,15 @@ export const UserMessageNodeContextMenuDeleteItemInvokeHandler: Story = {
             ref={windowRef}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <UserMessageNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={action("onCopyItemClick")}
+            onDeleteItemClick={datas.handler}
+            windowElementRef={windowRef}
+            ref={contextMenuRef}
+          />
+        </ContextMenuContext>
       </div>
     );
   },
@@ -336,6 +381,7 @@ export const UserMessageNodeContextMenuEditItemOpensDetailWindow: Story = {
       UserMessageNode: UserMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
+    const contextMenuRef = useRef<ContextMenuElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
@@ -343,9 +389,8 @@ export const UserMessageNodeContextMenuEditItemOpensDetailWindow: Story = {
         data: {
           nodeId: "1",
           content: "UserMessageNode",
-          onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-          onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
+          contextMenuRef: contextMenuRef,
         },
         position: { x: 100, y: 100 },
       },
@@ -359,6 +404,9 @@ export const UserMessageNodeContextMenuEditItemOpensDetailWindow: Story = {
           <ReactFlow
             nodes={nodes}
             nodeTypes={nodeTypes}
+            onPaneContextMenu={(e) => {
+              e.preventDefault();
+            }}
             onNodesChange={onNodesChange}
           />
         </ReactFlowProvider>
@@ -370,6 +418,15 @@ export const UserMessageNodeContextMenuEditItemOpensDetailWindow: Story = {
             ref={windowRef}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <UserMessageNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={action("onCopyItemClick")}
+            onDeleteItemClick={action("onDeleteItemClick")}
+            windowElementRef={windowRef}
+            ref={contextMenuRef}
+          />
+        </ContextMenuContext>
       </div>
     );
   },
@@ -413,6 +470,7 @@ export const UserMessageDetailWindowConfirmButtonInvokeHandler: Story = {
       UserMessageNode: UserMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
+    const contextMenuRef = useRef<ContextMenuElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
@@ -420,9 +478,8 @@ export const UserMessageDetailWindowConfirmButtonInvokeHandler: Story = {
         data: {
           nodeId: "1",
           content: "UserMessageNode",
-          onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-          onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
+          contextMenuRef: contextMenuRef,
         },
         position: { x: 100, y: 100 },
       },
@@ -436,6 +493,9 @@ export const UserMessageDetailWindowConfirmButtonInvokeHandler: Story = {
           <ReactFlow
             nodes={nodes}
             nodeTypes={nodeTypes}
+            onPaneContextMenu={(e) => {
+              e.preventDefault();
+            }}
             onNodesChange={onNodesChange}
           />
         </ReactFlowProvider>
@@ -447,6 +507,15 @@ export const UserMessageDetailWindowConfirmButtonInvokeHandler: Story = {
             ref={windowRef}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <UserMessageNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={action("onCopyItemClick")}
+            onDeleteItemClick={action("onDeleteItemClick")}
+            windowElementRef={windowRef}
+            ref={contextMenuRef}
+          />
+        </ContextMenuContext>
       </div>
     );
   },

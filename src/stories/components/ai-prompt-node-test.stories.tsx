@@ -1,5 +1,10 @@
 import AIMessageDetailWindow from "@/components/ai-message-detail-window";
 import AIMessageNode from "@/components/ai-message-node";
+import AIPromptNodeContextMenu from "@/components/ai-message-node-context-menu";
+import {
+  ContextMenuContext,
+  type ContextMenuElement,
+} from "@/components/context-menu";
 import { WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, within } from "@storybook/test";
@@ -31,6 +36,7 @@ export const AIMessageDetailWindowOpensOnAIMessageNodeDoubleClick: Story = {
       AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
+    const contextMenuRef = useRef<ContextMenuElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
@@ -39,9 +45,8 @@ export const AIMessageDetailWindowOpensOnAIMessageNodeDoubleClick: Story = {
           nodeId: "1",
           content: "AIMessageNode",
           recalculating: false,
-          onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-          onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
+          contextMenuRef: contextMenuRef,
         },
         position: { x: 100, y: 100 },
       },
@@ -74,6 +79,15 @@ export const AIMessageDetailWindowOpensOnAIMessageNodeDoubleClick: Story = {
             ref={windowRef}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <AIPromptNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={action("onCopyItemClick")}
+            onDeleteItemClick={action("onDeleteItemClick")}
+            windowElementRef={windowRef}
+            ref={contextMenuRef}
+          />
+        </ContextMenuContext>
       </div>
     );
   },
@@ -106,6 +120,7 @@ export const AIMessageNodeContextMenuOpensOnAIMessageNodeRightClick: Story = {
       AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
+    const contextMenuRef = useRef<ContextMenuElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
@@ -114,9 +129,8 @@ export const AIMessageNodeContextMenuOpensOnAIMessageNodeRightClick: Story = {
           nodeId: "1",
           content: "AIMessageNode",
           recalculating: false,
-          onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-          onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
+          contextMenuRef: contextMenuRef,
         },
         position: { x: 100, y: 100 },
       },
@@ -149,6 +163,15 @@ export const AIMessageNodeContextMenuOpensOnAIMessageNodeRightClick: Story = {
             ref={windowRef}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <AIPromptNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={action("onCopyItemClick")}
+            onDeleteItemClick={action("onDeleteItemClick")}
+            windowElementRef={windowRef}
+            ref={contextMenuRef}
+          />
+        </ContextMenuContext>
       </div>
     );
   },
@@ -188,6 +211,7 @@ export const AIMessageNodeContextMenuCopyItemInvokeHandler: Story = {
       AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
+    const contextMenuRef = useRef<ContextMenuElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
@@ -196,9 +220,8 @@ export const AIMessageNodeContextMenuCopyItemInvokeHandler: Story = {
           nodeId: "1",
           content: "AIMessageNode",
           recalculating: false,
-          onContextMenuCopyItemClick: datas.handler,
-          onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
+          contextMenuRef: contextMenuRef,
         },
         position: { x: 100, y: 100 },
       },
@@ -212,6 +235,9 @@ export const AIMessageNodeContextMenuCopyItemInvokeHandler: Story = {
           <ReactFlow
             nodes={nodes}
             nodeTypes={nodeTypes}
+            onPaneContextMenu={(e) => {
+              e.preventDefault();
+            }}
             onNodesChange={onNodesChange}
           />
         </ReactFlowProvider>
@@ -228,6 +254,15 @@ export const AIMessageNodeContextMenuCopyItemInvokeHandler: Story = {
             ref={windowRef}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <AIPromptNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={datas.handler}
+            onDeleteItemClick={action("onDeleteItemClick")}
+            windowElementRef={windowRef}
+            ref={contextMenuRef}
+          />
+        </ContextMenuContext>
       </div>
     );
   },
@@ -275,6 +310,7 @@ export const AIMessageNodeContextMenuDeleteItemInvokeHandler: Story = {
       AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
+    const contextMenuRef = useRef<ContextMenuElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
@@ -283,9 +319,8 @@ export const AIMessageNodeContextMenuDeleteItemInvokeHandler: Story = {
           nodeId: "1",
           content: "AIMessageNode",
           recalculating: false,
-          onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-          onContextMenuDeleteItemClick: datas.handler,
           windowElementRef: windowRef,
+          contextMenuRef: contextMenuRef,
         },
         position: { x: 100, y: 100 },
       },
@@ -299,6 +334,9 @@ export const AIMessageNodeContextMenuDeleteItemInvokeHandler: Story = {
           <ReactFlow
             nodes={nodes}
             nodeTypes={nodeTypes}
+            onPaneContextMenu={(e) => {
+              e.preventDefault();
+            }}
             onNodesChange={onNodesChange}
           />
         </ReactFlowProvider>
@@ -315,6 +353,15 @@ export const AIMessageNodeContextMenuDeleteItemInvokeHandler: Story = {
             ref={windowRef}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <AIPromptNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={action("onCopyItemClick")}
+            onDeleteItemClick={datas.handler}
+            windowElementRef={windowRef}
+            ref={contextMenuRef}
+          />
+        </ContextMenuContext>
       </div>
     );
   },
@@ -357,6 +404,7 @@ export const AIMessageNodeContextMenuEditItemOpensDetailWindow: Story = {
       AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
+    const contextMenuRef = useRef<ContextMenuElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
@@ -365,9 +413,8 @@ export const AIMessageNodeContextMenuEditItemOpensDetailWindow: Story = {
           nodeId: "1",
           content: "AIMessageNode",
           recalculating: false,
-          onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-          onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
+          contextMenuRef: contextMenuRef,
         },
         position: { x: 100, y: 100 },
       },
@@ -381,6 +428,9 @@ export const AIMessageNodeContextMenuEditItemOpensDetailWindow: Story = {
           <ReactFlow
             nodes={nodes}
             nodeTypes={nodeTypes}
+            onPaneContextMenu={(e) => {
+              e.preventDefault();
+            }}
             onNodesChange={onNodesChange}
           />
         </ReactFlowProvider>
@@ -397,6 +447,15 @@ export const AIMessageNodeContextMenuEditItemOpensDetailWindow: Story = {
             ref={windowRef}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <AIPromptNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={action("onCopyItemClick")}
+            onDeleteItemClick={action("onDeleteItemClick")}
+            windowElementRef={windowRef}
+            ref={contextMenuRef}
+          />
+        </ContextMenuContext>
       </div>
     );
   },
@@ -443,6 +502,7 @@ export const AIMessageNodeShowsRecalculatingBackgroundWhenRecalculatingChangesTo
         AIMessageNode: AIMessageNode,
       };
       const windowRef = useRef<WindowElement>(null);
+      const contextMenuRef = useRef<ContextMenuElement>(null);
       const calcNodeState = (recalculating: boolean) => {
         return [
           {
@@ -452,11 +512,8 @@ export const AIMessageNodeShowsRecalculatingBackgroundWhenRecalculatingChangesTo
               nodeId: "1",
               content: "AIMessageNode",
               recalculating: recalculating,
-              onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-              onContextMenuDeleteItemClick: action(
-                "onContextMenuDeleteItemClick",
-              ),
               windowElementRef: windowRef,
+              contextMenuRef: contextMenuRef,
             },
             position: { x: 100, y: 100 },
           },
@@ -476,6 +533,9 @@ export const AIMessageNodeShowsRecalculatingBackgroundWhenRecalculatingChangesTo
             <ReactFlow
               nodes={nodes}
               nodeTypes={nodeTypes}
+              onPaneContextMenu={(e) => {
+                e.preventDefault();
+              }}
               onNodesChange={onNodesChange}
             />
           </ReactFlowProvider>
@@ -492,6 +552,15 @@ export const AIMessageNodeShowsRecalculatingBackgroundWhenRecalculatingChangesTo
               ref={windowRef}
             />
           </WindowContext>
+          <ContextMenuContext>
+            <AIPromptNodeContextMenu
+              nodeId="1"
+              onCopyItemClick={action("onCopyItemClick")}
+              onDeleteItemClick={action("onDeleteItemClick")}
+              windowElementRef={windowRef}
+              ref={contextMenuRef}
+            />
+          </ContextMenuContext>
         </div>
       );
     },
@@ -532,6 +601,7 @@ export const AIMessageDetailWindowRecalculateButtonInvokeHandler: Story = {
       AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
+    const contextMenuRef = useRef<ContextMenuElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
@@ -540,9 +610,8 @@ export const AIMessageDetailWindowRecalculateButtonInvokeHandler: Story = {
           nodeId: "1",
           content: "AIMessageNode",
           recalculating: false,
-          onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-          onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
+          contextMenuRef: contextMenuRef,
         },
         position: { x: 100, y: 100 },
       },
@@ -556,6 +625,9 @@ export const AIMessageDetailWindowRecalculateButtonInvokeHandler: Story = {
           <ReactFlow
             nodes={nodes}
             nodeTypes={nodeTypes}
+            onPaneContextMenu={(e) => {
+              e.preventDefault();
+            }}
             onNodesChange={onNodesChange}
           />
         </ReactFlowProvider>
@@ -572,6 +644,15 @@ export const AIMessageDetailWindowRecalculateButtonInvokeHandler: Story = {
             ref={windowRef}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <AIPromptNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={action("onCopyItemClick")}
+            onDeleteItemClick={action("onDeleteItemClick")}
+            windowElementRef={windowRef}
+            ref={contextMenuRef}
+          />
+        </ContextMenuContext>
       </div>
     );
   },
@@ -613,6 +694,7 @@ export const AIMessageDetailWindowTextareaDisabledWhenRecalculatingIsTrue: Story
         AIMessageNode: AIMessageNode,
       };
       const windowRef = useRef<WindowElement>(null);
+      const contextMenuRef = useRef<ContextMenuElement>(null);
       const nodesState = useNodesState([
         {
           id: "1",
@@ -621,11 +703,8 @@ export const AIMessageDetailWindowTextareaDisabledWhenRecalculatingIsTrue: Story
             nodeId: "1",
             content: "AIMessageNode",
             recalculating: false,
-            onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-            onContextMenuDeleteItemClick: action(
-              "onContextMenuDeleteItemClick",
-            ),
             windowElementRef: windowRef,
+            contextMenuRef: contextMenuRef,
           },
           position: { x: 100, y: 100 },
         },
@@ -639,6 +718,9 @@ export const AIMessageDetailWindowTextareaDisabledWhenRecalculatingIsTrue: Story
             <ReactFlow
               nodes={nodes}
               nodeTypes={nodeTypes}
+              onPaneContextMenu={(e) => {
+                e.preventDefault();
+              }}
               onNodesChange={onNodesChange}
             />
           </ReactFlowProvider>
@@ -655,6 +737,15 @@ export const AIMessageDetailWindowTextareaDisabledWhenRecalculatingIsTrue: Story
               ref={windowRef}
             />
           </WindowContext>
+          <ContextMenuContext>
+            <AIPromptNodeContextMenu
+              nodeId="1"
+              onCopyItemClick={action("onCopyItemClick")}
+              onDeleteItemClick={action("onDeleteItemClick")}
+              windowElementRef={windowRef}
+              ref={contextMenuRef}
+            />
+          </ContextMenuContext>
         </div>
       );
     },
@@ -688,6 +779,7 @@ export const AIMessageDetailWindowCancelButtonInvokeHandler: Story = {
       AIMessageNode: AIMessageNode,
     };
     const windowRef = useRef<WindowElement>(null);
+    const contextMenuRef = useRef<ContextMenuElement>(null);
     const nodesState = useNodesState([
       {
         id: "1",
@@ -696,9 +788,8 @@ export const AIMessageDetailWindowCancelButtonInvokeHandler: Story = {
           nodeId: "1",
           content: "AIMessageNode",
           recalculating: false,
-          onContextMenuCopyItemClick: action("onContextMenuCopyItemClick"),
-          onContextMenuDeleteItemClick: action("onContextMenuDeleteItemClick"),
           windowElementRef: windowRef,
+          contextMenuRef: contextMenuRef,
         },
         position: { x: 100, y: 100 },
       },
@@ -712,6 +803,9 @@ export const AIMessageDetailWindowCancelButtonInvokeHandler: Story = {
           <ReactFlow
             nodes={nodes}
             nodeTypes={nodeTypes}
+            onPaneContextMenu={(e) => {
+              e.preventDefault();
+            }}
             onNodesChange={onNodesChange}
           />
         </ReactFlowProvider>
@@ -726,6 +820,15 @@ export const AIMessageDetailWindowCancelButtonInvokeHandler: Story = {
             ref={windowRef}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <AIPromptNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={action("onCopyItemClick")}
+            onDeleteItemClick={action("onDeleteItemClick")}
+            windowElementRef={windowRef}
+            ref={contextMenuRef}
+          />
+        </ContextMenuContext>
       </div>
     );
   },

@@ -1,4 +1,4 @@
-import { useState, type RefObject } from "react";
+import { useState, type MouseEvent, type RefObject } from "react";
 import { Window, type WindowElement } from "./window";
 
 interface UserPromptDetailWindowProps {
@@ -11,10 +11,16 @@ interface UserPromptDetailWindowProps {
 export default function UserPromptDetailWindow({
   content,
   nodeId,
-  onConfirmButtonClick,
+  onConfirmButtonClick: onConfirmButtonClickProp,
   ref,
 }: UserPromptDetailWindowProps) {
   const [currentContent, setCurrentContent] = useState(content);
+  const onConfirmButtonOnClick = (e: MouseEvent<HTMLButtonElement>) => {
+    // NOTE: stopPropergationを呼ばないとWindowが閉じない(何故?)
+    e.stopPropagation();
+    onConfirmButtonClickProp(currentContent);
+    ref.current?.setWindowState({ open: false });
+  };
   return (
     <Window
       windowKey={`user-prompt-detail-window-${nodeId}`}
@@ -30,11 +36,7 @@ export default function UserPromptDetailWindow({
         <div className="flex justify-end mt-4">
           <button
             type="button"
-            onClick={() => {
-              onConfirmButtonClick(currentContent);
-              // FIXME: Window内部からref経由でsetWindowState({open: false})出来ていない
-              ref.current?.setWindowState({ open: false });
-            }}
+            onClick={onConfirmButtonOnClick}
             className="px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
           >
             確定

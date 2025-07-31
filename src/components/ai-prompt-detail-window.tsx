@@ -1,4 +1,4 @@
-import { useState, type RefObject } from "react";
+import { useState, type MouseEvent, type RefObject } from "react";
 import { Window, type WindowElement } from "./window";
 
 interface AIPromptDetailWindowProps {
@@ -15,12 +15,18 @@ export default function AIPromptDetailWindow({
   nodeId,
   content,
   recalculating,
-  onConfirmButtonClick,
+  onConfirmButtonClick: onConfirmButtonClickProp,
   onRecalculateButtonClick,
   onRecalculateCancelButtonClick,
   ref,
 }: AIPromptDetailWindowProps) {
   const [currentContent, setCurrentContent] = useState(content);
+  const onConfirmButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
+    // NOTE: stopPropergationを呼ばないとWindowが閉じない(何故?)
+    e.stopPropagation();
+    onConfirmButtonClickProp(nodeId, currentContent);
+    ref.current?.setWindowState({ open: false });
+  };
   const onRecalcOrCancelRecalcButtonOnClick = () => {
     if (recalculating) {
       onRecalculateCancelButtonClick(nodeId);
@@ -65,11 +71,7 @@ export default function AIPromptDetailWindow({
         <div className="flex justify-end space-x-2 mt-4">
           <button
             type="button"
-            onClick={() => {
-              onConfirmButtonClick(nodeId, currentContent);
-              // FIXME: Window内部からref経由でsetWindowState({open: false})出来ていない
-              ref.current?.setWindowState({ open: false });
-            }}
+            onClick={onConfirmButtonClick}
             disabled={recalculating}
             className={`px-4 py-2 text-sm rounded-md transition-colors ${
               recalculating

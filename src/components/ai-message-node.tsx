@@ -1,29 +1,20 @@
-import { useState, type MouseEvent, type RefObject } from "react";
+import type { MouseEvent, RefObject } from "react";
 import type { WindowElement } from "./window";
 import { Hourglass } from "lucide-react";
 import { Handle, Position } from "@xyflow/react";
-import {
-  ContextMenu,
-  ContextMenuItem,
-  ContextMenuSeparator,
-} from "./context-menu";
+import type { ContextMenuElement } from "./context-menu";
 
 interface AIMessageNodeProps {
   data: {
     nodeId: string;
     content: string;
     recalculating: boolean;
-    onContextMenuCopyItemClick: (nodeId: string) => void;
-    onContextMenuDeleteItemClick: (nodeId: string) => void;
+    contextMenuRef: RefObject<ContextMenuElement | null>;
     windowElementRef: RefObject<WindowElement | null>;
   };
 }
 
 export default function AIMessageNode({ data }: AIMessageNodeProps) {
-  const [contextMenuPosition, setContextMenuPosition] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
   const onNodeDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.preventDefault();
@@ -32,26 +23,13 @@ export default function AIMessageNode({ data }: AIMessageNodeProps) {
   const onNodeRightClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.preventDefault();
-    // FIXME: 現状のContextMenuの位置指定基準(親要素)に合わせる
-    // FIXME: ContextMenuをビューポート基準で設定可能になったら、e.clientX, e.clientYをそのまま使う
-    const targetPos = (e.target as HTMLElement).getBoundingClientRect();
-    setContextMenuPosition({
-      x: e.clientX - targetPos.left,
-      y: e.clientY - targetPos.top,
+    data.contextMenuRef.current?.setContextMenuState({
+      status: "open",
+      position: {
+        x: e.clientX,
+        y: e.clientY,
+      },
     });
-  };
-  const onContextMenuCopyItemClick = () => {
-    data.onContextMenuCopyItemClick(data.nodeId);
-    setContextMenuPosition(null);
-  };
-  const onContextMenuDeleteItemClick = () => {
-    data.onContextMenuDeleteItemClick(data.nodeId);
-    setContextMenuPosition(null);
-  };
-  const onContextMenuEditItemClick = () => {
-    // TODO: ノードの位置を取得して、ビューポート基準でポップアップウィンドウを開く
-    data.windowElementRef.current?.setWindowState({ open: true });
-    setContextMenuPosition(null);
   };
 
   return (
@@ -83,56 +61,7 @@ export default function AIMessageNode({ data }: AIMessageNodeProps) {
           {data.content}
         </div>
         <Handle type="source" position={Position.Bottom} />
-        {contextMenuPosition && (
-          <AIPromptNodeContextMenu
-            nodeId={data.nodeId}
-            screenPosition={contextMenuPosition}
-            onContextMenuCopyItemClick={onContextMenuCopyItemClick}
-            onContextMenuDeleteItemClick={onContextMenuDeleteItemClick}
-            onContextMenuEditItemClick={onContextMenuEditItemClick}
-          />
-        )}
       </div>
     </>
-  );
-}
-
-interface AIPromptNodeContextMenuProps {
-  nodeId: string;
-  screenPosition: { x: number; y: number };
-  onContextMenuCopyItemClick: () => void;
-  onContextMenuDeleteItemClick: () => void;
-  onContextMenuEditItemClick: () => void;
-}
-
-function AIPromptNodeContextMenu({
-  nodeId,
-  screenPosition,
-  onContextMenuCopyItemClick,
-  onContextMenuDeleteItemClick,
-  onContextMenuEditItemClick,
-}: AIPromptNodeContextMenuProps) {
-  return (
-    <ContextMenu initialPosition={screenPosition}>
-      <ContextMenuItem
-        key={`${nodeId}-contextmenu-copy`}
-        onClick={onContextMenuCopyItemClick}
-      >
-        コピー
-      </ContextMenuItem>
-      <ContextMenuItem
-        key={`${nodeId}-contextmenu-delete`}
-        onClick={onContextMenuDeleteItemClick}
-      >
-        削除
-      </ContextMenuItem>
-      <ContextMenuSeparator />
-      <ContextMenuItem
-        key={`${nodeId}-contextmenu-edit`}
-        onClick={onContextMenuEditItemClick}
-      >
-        編集
-      </ContextMenuItem>
-    </ContextMenu>
   );
 }

@@ -49,6 +49,7 @@ export default function UserPromptNode({ data }: UserPromptNodeProps) {
   const onContextMenuEditItemClick = () => {
     // TODO: ノードの位置を取得して、ビューポート基準でポップアップウィンドウを開く
     data.windowElementRef.current?.setWindowState({ open: true });
+    setContextMenuPosition(null);
   };
 
   return (

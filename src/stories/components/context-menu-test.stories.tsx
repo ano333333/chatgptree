@@ -275,6 +275,49 @@ const ContextMenuOpensWithElementRefDatas = {
   getContextMenuElement: (() => null) as () => ContextMenuElement | null,
 };
 
+const ContextMenuItemClickDoesNotTriggerBackgroundElementClickHandlerDatas = {
+  backgroundElementSpy: fn(),
+};
+
+export const ContextMenuItemClickDoesNotTriggerBackgroundElementClickHandler: Story =
+  {
+    render: () => {
+      const datas =
+        ContextMenuItemClickDoesNotTriggerBackgroundElementClickHandlerDatas;
+      return (
+        <>
+          <div
+            className="w-full h-full bg-red-500"
+            onClick={datas.backgroundElementSpy}
+            onKeyDown={datas.backgroundElementSpy}
+            id="background-element"
+          />
+          <ContextMenuContext>
+            <ContextMenu initialPosition={{ x: 0, y: 0 }}>
+              <ContextMenuItem>contextMenu</ContextMenuItem>
+            </ContextMenu>
+          </ContextMenuContext>
+        </>
+      );
+    },
+    play: async ({ canvasElement }) => {
+      // ContextMenuItemをクリックしても、その背後の要素(全面に張ったdiv要素)のonClickが呼ばれない
+      // Arrange
+      const user = await userEvent.setup();
+      const canvas = within(canvasElement);
+      const datas =
+        ContextMenuItemClickDoesNotTriggerBackgroundElementClickHandlerDatas;
+      datas.backgroundElementSpy.mockClear();
+
+      // Act
+      const contextMenuItem = canvas.getByText("contextMenu");
+      await user.click(contextMenuItem);
+
+      // Assert
+      await expect(datas.backgroundElementSpy).not.toHaveBeenCalled();
+    },
+  };
+
 export const ContextMenuOpensWithElementRef: Story = {
   render: () => {
     const datas = ContextMenuOpensWithElementRefDatas;

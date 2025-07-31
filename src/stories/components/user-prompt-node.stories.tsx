@@ -1,5 +1,10 @@
+import {
+  ContextMenuContext,
+  type ContextMenuElement,
+} from "@/components/context-menu";
 import UserMessageDetailWindow from "@/components/user-message-detail-window";
 import UserMessageNode from "@/components/user-message-node";
+import UserMessageNodeContextMenu from "@/components/user-message-node-context-menu";
 import { WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
@@ -37,6 +42,12 @@ export const Default: Story = {
       "1": useRef(null),
       "2": useRef(null),
     });
+    const contextMenuRefs = useRef<
+      Record<string, RefObject<ContextMenuElement | null>>
+    >({
+      "1": useRef(null),
+      "2": useRef(null),
+    });
     const nodeState = useNodesState([
       {
         id: "1",
@@ -44,9 +55,8 @@ export const Default: Story = {
         data: {
           nodeId: "1",
           content: "Hello, world!1",
-          onContextMenuCopyItemClick: onContextMenuCopyItemClick("1"),
-          onContextMenuDeleteItemClick: onContextMenuDeleteItemClick("1"),
           windowElementRef: windowRefs.current["1"],
+          contextMenuRef: contextMenuRefs.current["1"],
         },
         position: { x: 100, y: 100 },
       },
@@ -56,9 +66,8 @@ export const Default: Story = {
         data: {
           nodeId: "2",
           content: "Hello, world!2",
-          onContextMenuCopyItemClick: onContextMenuCopyItemClick("2"),
-          onContextMenuDeleteItemClick: onContextMenuDeleteItemClick("2"),
           windowElementRef: windowRefs.current["2"],
+          contextMenuRef: contextMenuRefs.current["2"],
         },
         position: { x: 100, y: 200 },
       },
@@ -95,6 +104,22 @@ export const Default: Story = {
             ref={windowRefs.current["2"]}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <UserMessageNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={onContextMenuCopyItemClick("1")}
+            onDeleteItemClick={onContextMenuDeleteItemClick("1")}
+            windowElementRef={windowRefs.current["1"]}
+            ref={contextMenuRefs.current["1"]}
+          />
+          <UserMessageNodeContextMenu
+            nodeId="2"
+            onCopyItemClick={onContextMenuCopyItemClick("2")}
+            onDeleteItemClick={onContextMenuDeleteItemClick("2")}
+            windowElementRef={windowRefs.current["2"]}
+            ref={contextMenuRefs.current["2"]}
+          />
+        </ContextMenuContext>
       </div>
     );
   },

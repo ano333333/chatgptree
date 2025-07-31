@@ -1,5 +1,10 @@
 import AIMessageDetailWindow from "@/components/ai-message-detail-window";
 import AIMessageNode from "@/components/ai-message-node";
+import AIPromptNodeContextMenu from "@/components/ai-message-node-context-menu";
+import {
+  ContextMenuContext,
+  type ContextMenuElement,
+} from "@/components/context-menu";
 import { WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
@@ -37,6 +42,12 @@ export const Default: Story = {
       "1": useRef(null),
       "2": useRef(null),
     });
+    const contextMenuRefs = useRef<
+      Record<string, RefObject<ContextMenuElement | null>>
+    >({
+      "1": useRef(null),
+      "2": useRef(null),
+    });
     const nodeState = useNodesState([
       {
         id: "1",
@@ -45,9 +56,8 @@ export const Default: Story = {
           nodeId: "1",
           content: "Hello, world!1",
           recalculating: false,
-          onContextMenuCopyItemClick: onContextMenuCopyItemClick("1"),
-          onContextMenuDeleteItemClick: onContextMenuDeleteItemClick("1"),
           windowElementRef: windowRefs.current["1"],
+          contextMenuRef: contextMenuRefs.current["1"],
         },
         position: { x: 100, y: 100 },
       },
@@ -58,9 +68,8 @@ export const Default: Story = {
           nodeId: "2",
           content: "Hello, world!2",
           recalculating: true,
-          onContextMenuCopyItemClick: onContextMenuCopyItemClick("2"),
-          onContextMenuDeleteItemClick: onContextMenuDeleteItemClick("2"),
           windowElementRef: windowRefs.current["2"],
+          contextMenuRef: contextMenuRefs.current["2"],
         },
         position: { x: 100, y: 200 },
       },
@@ -107,6 +116,22 @@ export const Default: Story = {
             ref={windowRefs.current["2"]}
           />
         </WindowContext>
+        <ContextMenuContext>
+          <AIPromptNodeContextMenu
+            nodeId="1"
+            onCopyItemClick={onContextMenuCopyItemClick("1")}
+            onDeleteItemClick={onContextMenuDeleteItemClick("1")}
+            windowElementRef={windowRefs.current["1"]}
+            ref={contextMenuRefs.current["1"]}
+          />
+          <AIPromptNodeContextMenu
+            nodeId="2"
+            onCopyItemClick={onContextMenuCopyItemClick("2")}
+            onDeleteItemClick={onContextMenuDeleteItemClick("2")}
+            windowElementRef={windowRefs.current["2"]}
+            ref={contextMenuRefs.current["2"]}
+          />
+        </ContextMenuContext>
       </div>
     );
   },

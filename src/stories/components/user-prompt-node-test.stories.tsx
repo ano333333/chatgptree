@@ -2,7 +2,7 @@ import UserPromptDetailWindow from "@/components/user-prompt-detail-window";
 import UserPromptNode from "@/components/user-prompt-node";
 import { WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, fn, userEvent, within } from "@storybook/test";
+import { expect, fn, within } from "@storybook/test";
 import {
   Background,
   ReactFlow,
@@ -78,7 +78,15 @@ export const UserPromptDetailWindowOpensOnUserPromptNodeDoubleClick: Story = {
 
     // Act
     const node = canvas.getByText("UserPromptNode");
-    await userEvent.dblClick(node);
+    // NOTE: userEvent.dblClick(node)では、documentがnullなのにアクセスしようとしてエラーが生じる
+    // NOTE: dispatchEventだとこのエラーが生じない。他のイベントも同様
+    node.dispatchEvent(
+      new MouseEvent("dblclick", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    await wait();
 
     // Assert
     const window = canvas.getByText("UserPromptDetailWindow");
@@ -222,7 +230,12 @@ export const UserPromptNodeContextMenuCopyItemInvokeHandler: Story = {
 
     // Act
     const copyItemElement = canvas.getByText("コピー");
-    await userEvent.click(copyItemElement);
+    copyItemElement.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
     await wait();
 
     // Assert
@@ -298,7 +311,12 @@ export const UserPromptNodeContextMenuDeleteItemInvokeHandler: Story = {
 
     // Act
     const deleteItemElement = canvas.getByText("削除");
-    await userEvent.click(deleteItemElement);
+    deleteItemElement.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
     await wait();
 
     // Assert
@@ -367,7 +385,12 @@ export const UserPromptNodeContextMenuEditItemOpensDetailWindow: Story = {
 
     // Act
     const editItemElement = canvas.getByText("編集");
-    await userEvent.click(editItemElement);
+    editItemElement.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
     await wait();
 
     // Assert
@@ -431,15 +454,41 @@ export const UserPromptDetailWindowConfirmButtonInvokeHandler: Story = {
     const datas = UserPromptDetailWindowConfirmButtonInvokeHandlerDatas;
     datas.handler.mockClear();
     const node = canvas.getByText("UserPromptNode");
-    await userEvent.dblClick(node);
+    node.dispatchEvent(
+      new MouseEvent("dblclick", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
     await wait();
 
     // Act
-    const textarea = canvas.getByRole("textbox");
-    await userEvent.clear(textarea);
-    await userEvent.type(textarea, "新しいテキスト");
+    const textarea = canvasElement.querySelector("textarea");
+    if (!textarea) {
+      throw new Error("textarea not found");
+    }
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLTextAreaElement.prototype,
+      "value",
+    )?.set;
+    if (!nativeInputValueSetter) {
+      throw new Error("nativeInputValueSetter not found");
+    }
+    // NOTE: ReactでtextareaのonChangeイベントを発火するには、nativeのセッターでvalueを設定しdispatchEventする必要がある
+    // NOTE: [ref](https://stackoverflow.com/questions/23892547/what-is-the-best-way-to-trigger-change-or-input-event-in-react-js)
+    nativeInputValueSetter.call(textarea, "新しいテキスト");
+    const inputEvent = new Event("input", { bubbles: true });
+    textarea.dispatchEvent(inputEvent);
+    await wait();
+
     const confirmButton = canvas.getByText("確定");
-    await userEvent.click(confirmButton);
+    confirmButton.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    await wait();
 
     // Assert
     expect(datas.handler).toHaveBeenCalledWith("新しいテキスト");

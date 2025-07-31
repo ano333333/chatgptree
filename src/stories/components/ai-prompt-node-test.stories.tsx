@@ -2,14 +2,14 @@ import AIPromptDetailWindow from "@/components/ai-prompt-detail-window";
 import AIPromptNode from "@/components/ai-prompt-node";
 import { WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, fn, userEvent, within } from "@storybook/test";
+import { expect, fn, within } from "@storybook/test";
 import {
   Background,
   ReactFlow,
   ReactFlowProvider,
   useNodesState,
 } from "@xyflow/react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { action } from "storybook/actions";
 import { wait } from "../utils/wait";
 
@@ -84,7 +84,15 @@ export const AIPromptDetailWindowOpensOnAIPromptNodeDoubleClick: Story = {
 
     // Act
     const node = canvas.getByText("AIPromptNode");
-    await userEvent.dblClick(node);
+    // NOTE: userEvent.dblClick(node)では、documentがnullなのにアクセスしようとしてエラーが生じる
+    // NOTE: dispatchEventだとこのエラーが生じない。他のイベントも同様
+    node.dispatchEvent(
+      new MouseEvent("dblclick", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    await wait();
 
     // Assert
     const window = canvas.getByText("AIPromptDetailWindow");
@@ -240,7 +248,13 @@ export const AIPromptNodeContextMenuCopyItemInvokeHandler: Story = {
 
     // Act
     const copyItemElement = canvas.getByText("コピー");
-    await userEvent.click(copyItemElement);
+    copyItemElement.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    await wait();
 
     // Assert
     expect(datas.handler).toHaveBeenCalledWith("1");
@@ -321,7 +335,13 @@ export const AIPromptNodeContextMenuDeleteItemInvokeHandler: Story = {
 
     // Act
     const deleteItemElement = canvas.getByText("削除");
-    await userEvent.click(deleteItemElement);
+    deleteItemElement.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    await wait();
 
     // Assert
     expect(datas.handler).toHaveBeenCalledWith("1");
@@ -395,7 +415,13 @@ export const AIPromptNodeContextMenuEditItemOpensDetailWindow: Story = {
 
     // Act
     const editItemElement = canvas.getByText("編集");
-    await userEvent.click(editItemElement);
+    editItemElement.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    await wait();
 
     // Assert
     const window = canvas.getByText("AIPromptDetailWindow");
@@ -472,10 +498,17 @@ export const AIPromptNodeShowsRecalculatingBackgroundWhenRecalculatingChangesToT
     play: async ({ canvasElement }) => {
       // AIプロンプトノードのpropsのrecalculatingがfalseからtrueに更新されると、ノードに更新中背景(svg要素)が表示される。
       // Arrange
-      const canvas = within(canvasElement);
       const datas = AIPromptNodeRecalculatingChangesToTrueDatas;
-      const node = canvas.getByText("AIPromptNode");
-      const svgElementBeforeUpdate = node.querySelector("svg");
+      // classNameに"lucide-hourglass"を含む、canvasElementの子孫のsvg要素を取得する
+      const findLucideHourglassSVGElement = () => {
+        const svgElements = canvasElement.querySelectorAll("svg");
+        return (
+          Array.from(svgElements).find((svgElement) =>
+            svgElement.classList.contains("lucide-hourglass"),
+          ) ?? null
+        );
+      };
+      const svgElementBeforeUpdate = findLucideHourglassSVGElement();
       expect(svgElementBeforeUpdate).not.toBeInTheDocument();
 
       // Act
@@ -483,7 +516,7 @@ export const AIPromptNodeShowsRecalculatingBackgroundWhenRecalculatingChangesToT
       await wait();
 
       // Assert
-      const svgElement = node.querySelector("svg");
+      const svgElement = findLucideHourglassSVGElement();
       expect(svgElement).toBeInTheDocument();
     },
   };
@@ -549,12 +582,22 @@ export const AIPromptDetailWindowRecalculateButtonInvokeHandler: Story = {
     const datas = AIPromptDetailWindowRecalculateButtonInvokeHandlerDatas;
     datas.handler.mockClear();
     const node = canvas.getByText("AIPromptNode");
-    await userEvent.dblClick(node);
+    node.dispatchEvent(
+      new MouseEvent("dblclick", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
     await wait();
 
     // Act
     const recalculateButton = canvas.getByText("再計算");
-    await userEvent.click(recalculateButton);
+    recalculateButton.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
 
     // Assert
     expect(datas.handler).toHaveBeenCalledTimes(1);
@@ -620,7 +663,12 @@ export const AIPromptDetailWindowTextareaDisabledWhenRecalculatingIsTrue: Story 
       // Arrange
       const canvas = within(canvasElement);
       const node = canvas.getByText("AIPromptNode");
-      await userEvent.dblClick(node);
+      node.dispatchEvent(
+        new MouseEvent("dblclick", {
+          bubbles: true,
+          cancelable: true,
+        }),
+      );
       await wait();
 
       // Assert
@@ -688,7 +736,12 @@ export const AIPromptDetailWindowCancelButtonInvokeHandler: Story = {
     const datas = AIPromptDetailWindowCancelButtonInvokeHandlerDatas;
     datas.handler.mockClear();
     const node = canvas.getByText("AIPromptNode");
-    await userEvent.dblClick(node);
+    node.dispatchEvent(
+      new MouseEvent("dblclick", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
     await wait();
 
     // Assert - 再計算ボタンが存在せずキャンセルボタンが配置されていることを確認
@@ -698,7 +751,12 @@ export const AIPromptDetailWindowCancelButtonInvokeHandler: Story = {
     expect(cancelButton).toBeInTheDocument();
 
     // Act
-    await userEvent.click(cancelButton);
+    cancelButton.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
 
     // Assert
     expect(datas.handler).toHaveBeenCalledTimes(1);

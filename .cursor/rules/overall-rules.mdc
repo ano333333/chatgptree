@@ -1,0 +1,122 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# chatgptree プロジェクト全体概要
+
+## アプリ概要
+ChatGPTreeはツリー構造型のLLMチャットアプリです。LLMとのやりとりを木構造のフローチャートで管理し、コンテキストの最適化を実現します。
+
+## 技術スタック詳細
+
+### フレームワーク・ライブラリ
+- **React**: 19.1.0 (最新版)
+- **TypeScript**: 5.8.3
+- **Vite**: 6.3.5 (ビルドツール)
+
+### テストフレームワーク
+- **Vitest**: 3.2.3 (単体テスト)
+- **Storybook**: 9.0.12 (コンポーネントテスト)
+- **Testing Library**: コンポーネントテスト用
+
+### UI・スタイリング
+- **Tailwind CSS**: 4.1.10
+- **Radix UI**: アクセシブルなUIコンポーネント
+- **Lucide React**: アイコンライブラリ
+
+### 状態管理
+- **use-context-selector**: `useContext`のパフォーマンス改善
+
+### コード品質
+- **ESLint**
+- **Biome**
+- **Prettier**
+
+### 開発環境
+- **Node.js**: 24.3.0
+- **pnpm**: 10.12.4 (パッケージマネージャー)
+
+## 設計クラス図
+
+### オニオンアーキテクチャ（依存方向）
+```mermaid
+graph TD
+    subgraph "UI/Infrastructure層"
+        A[React Components<br/>Vite Build<br/>Storybook Testing]
+    end
+    
+    subgraph "アプリケーションサービス層"
+        B[Use Cases<br/>Controllers<br/>Handlers]
+    end
+    
+    subgraph "ドメインサービス層"
+        C[Business Logic<br/>Domain Services<br/>External Services]
+    end
+    
+    subgraph "ドメインモデル層"
+        D[Entities<br/>Value Objects<br/>Domain Events]
+    end
+    
+    A --> B
+    B --> C
+    B --> D
+    C --> D
+```
+
+**依存方向**: 外側の層から内側の層への依存のみ許可。内側の層は外側の層に依存しない。
+
+## ディレクトリ構造
+```
+chatgptree/
+├── src/
+│   ├── components/         # Reactコンポーネント
+│   ├── layouts/            # レイアウトコンポーネント
+│   ├── hooks/              # カスタムフック
+│   ├── lib/                # ユーティリティ・ライブラリ
+│   ├── domain-models/      # ドメインモデル（エンティティ、値オブジェクト）
+│   ├── domain-services/    # ドメインサービス
+│   ├── app-services/       # アプリケーションサービス
+│   ├── App.tsx             # メインアプリケーション
+│   └── main.tsx            # エントリーポイント
+├── tests/                  # テストファイル
+│   ├── logics/         # Node.js上で動作するテスト(*.test.ts)
+│   ├── stories/         # Storybook上で動作するテスト(*.stories.ts)
+├── .storybook/             # Storybook設定
+├── docs/                   # ドキュメント
+├── public/                 # 静的ファイル
+└── dist/                   # ビルド出力
+```
+
+## 実装手順
+1. **ドキュメントの作成**:
+   - a.の場合、docsディレクトリのmarkdownファイルを更新する
+   - b.の場合、docsディレクトリのStorybookに、そのコンポーネントの想定使用法をStoryとして記述する。
+2. **テスト用仮実装の作成**: テスト対象の関数やコンポーネントの仮実装を行い、テストのlintエラーを防止する
+3. **テストの作成**: 詳細なルールは [test-rules.mdc](mdc:.cursor/rules/test-rules.mdc)を確認すること。
+4. **本実装**
+
+## git操作について
+- **ブランチ名**: 実装対象issueのidを使用する(#27の実装ならばissues/27ブランチ、など)
+- **commit prefix**: 適切なプレフィックスを使用する
+- **修正作業**: 実装手順の遂行中に現段階以前の作業を修正する場合、修正対象のcommitのfixupを行い、着手中の段階が終わったらsquashする。 
+
+## 実装時のマクロ・ミクロな注意点
+
+### マクロレベル（アーキテクチャ）
+- **レイヤー分離**: 書籍「クリーンアーキテクチャ」で導入されるポイントを意識し、各層の責務を明確に分離し、依存方向を遵守し、テスト容易性を維持する。
+- **依存性注入**: 外部依存は適切に抽象化し、テスト可能にする
+- **型安全性**: TypeScriptの型システムを最大限活用する
+
+### ミクロレベル（実装詳細）
+- **コンポーネント設計**: 単一責任原則に従い、再利用可能なコンポーネントを作成
+- **状態管理**: 適切なスコープで状態を管理し、不要な再レンダリングを避ける
+- **エラーハンドリング**: 適切なエラーバウンダリとエラー状態の管理
+- **パフォーマンス**: React.memo、useMemo、useCallbackの適切な使用
+- **命名**: 簡潔かつ曖昧さを避ける、「リーダブルコード」を意識する
+
+## コーディング規約
+- **命名規則**: camelCase（変数・関数）、PascalCase（コンポーネント・クラス）
+- **ファイル命名**: kebab-case（ディレクトリ）、PascalCase（コンポーネントファイル）
+- **コメント**: 複雑なロジックにはhowとwhyを意識した適切なコメントを記述、NOTEやTODOなどのマーカーを活用する

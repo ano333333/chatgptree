@@ -1,54 +1,106 @@
-# chatgptree
+# ChatGPTree
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ChatGPTreeはツリー構造型のLLMチャットアプリです。LLMとのやりとりを木構造のフローチャートで管理し、コンテキストの最適化を実現します。
 
-Currently, two official plugins are available:
+## 📔特徴
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **ツリー構造チャット**: 会話を木構造で管理し、複数の分岐を同時に追跡
+- **コンテキスト最適化**: 効率的なコンテキスト管理によるLLM応答の向上
+- **モダンUI**: Tailwind CSSとRadix UIによる美しくアクセシブルなインターフェース
+- **型安全性**: TypeScriptによる堅牢な開発環境
+- **包括的テスト**: 単体テスト、コンポーネントテスト、E2Eテストの充実
 
-## Expanding the ESLint configuration
+## 🚀 セットアップ
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### インストール
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+# リポジトリをクローン
+git clone https://github.com/your-username/chatgptree.git
+cd chatgptree
+
+# 依存関係をインストール
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 開発サーバー起動
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+# 開発サーバーを起動
+pnpm dev
 ```
+
+ブラウザで `http://localhost:5173` を開いてアプリケーションを確認できます。
+
+### その他のコマンド
+
+```bash
+# ビルド
+pnpm build
+
+# プレビュー
+pnpm preview
+
+# テスト実行
+pnpm test
+
+# テスト（ウォッチモード）
+pnpm test:watch
+
+# Storybook起動
+pnpm storybook
+
+# Storybookビルド
+pnpm build-storybook
+
+# Storybookテスト(`pnpm storybook`の起動中に実行する)
+pnpm test:storybook
+
+# リンター実行
+pnpm lint
+```
+
+## 🛠 技術スタック
+
+### フレームワーク・ライブラリ
+
+- **React**: 19.1.0 (最新版)
+- **TypeScript**: 5.8.3
+- **Vite**: 6.3.5 (ビルドツール)
+- **@xyflow/react**: 12.8.1 (フローチャート描画)
+
+### UI・スタイリング
+
+- **Tailwind CSS**
+- **Radix UI**
+- **Lucide React**
+
+### テストフレームワーク
+
+- **Vitest**
+- **Storybook**
+- **Testing Library**
+- **Playwright**(vitest browser mode)
+
+### 状態管理
+
+- **use-context-selector**
+
+### コード品質
+
+- **ESLint**
+- **Biome**
+- **Prettier**
+
+### 開発環境
+
+- **pnpm**: 10.12.4
+- **Node.js**: 24.3.0(pnpmで管理)
+
+## 🤝 コントリビューション
+
+プロジェクトへの貢献を歓迎します！詳細なガイドラインは [CONTRIBUTING.md](./CONTRIBUTING.md) を参照してください。
+
+## 📄 ライセンス
+
+このプロジェクトはMITライセンスの下で公開されています。

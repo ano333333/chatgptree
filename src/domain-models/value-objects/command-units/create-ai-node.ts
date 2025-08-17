@@ -1,6 +1,6 @@
 import type { CommandUnit } from "../command-unit";
-import type { NodeId } from "../node-id";
-import type { ProjectId } from "../project-id";
+import type { NodeId } from "../id-value-objects/node-id";
+import type { ProjectId } from "../id-value-objects/project-id";
 import type { NodeRenderingProperty } from "../node-rendering-property";
 import type { AINodeProperty } from "../ai-node-property";
 

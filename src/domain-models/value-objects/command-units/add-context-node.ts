@@ -1,6 +1,6 @@
 import type { CommandUnit } from "../command-unit";
-import type { ContextId } from "../context-id";
-import type { NodeId } from "../node-id";
+import type { ContextId } from "../id-value-objects/context-id";
+import type { NodeId } from "../id-value-objects/node-id";
 
 export class AddContextNode implements CommandUnit {
   public readonly type = "addContextNode";

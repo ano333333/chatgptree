@@ -1,5 +1,5 @@
 import type { CommandUnit } from "../command-unit";
-import type { NodeId } from "../node-id";
+import type { NodeId } from "../id-value-objects/node-id";
 import type { NodeRenderingProperty } from "../node-rendering-property";
 
 export class UpdateNodeRenderingProperty implements CommandUnit {

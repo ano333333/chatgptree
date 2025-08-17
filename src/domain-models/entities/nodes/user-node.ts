@@ -1,7 +1,7 @@
 import type { NodeRenderingProperty } from "@/domain-models/value-objects/node-rendering-property";
 import { Node } from "../node";
-import type { ProjectId } from "@/domain-models/value-objects/project-id";
-import type { NodeId } from "@/domain-models/value-objects/node-id";
+import type { ProjectId } from "@/domain-models/value-objects/id-value-objects/project-id";
+import type { NodeId } from "@/domain-models/value-objects/id-value-objects/node-id";
 
 export class UserNode extends Node {
   constructor(

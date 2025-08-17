@@ -1,4 +1,4 @@
-import type { ProjectId } from "../value-objects/project-id";
+import type { ProjectId } from "../value-objects/id-value-objects/project-id";
 import type { Command } from "../value-objects/command";
 
 export class CommandHistory {

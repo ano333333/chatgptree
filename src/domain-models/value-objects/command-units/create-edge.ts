@@ -1,7 +1,7 @@
 import type { CommandUnit } from "../command-unit";
-import type { EdgeId } from "../edge-id";
-import type { ProjectId } from "../project-id";
-import type { NodeId } from "../node-id";
+import type { EdgeId } from "../id-value-objects/edge-id";
+import type { ProjectId } from "../id-value-objects/project-id";
+import type { NodeId } from "../id-value-objects/node-id";
 
 export class CreateEdge implements CommandUnit {
   public readonly type = "createEdge";

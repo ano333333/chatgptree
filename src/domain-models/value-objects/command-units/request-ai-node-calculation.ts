@@ -1,5 +1,5 @@
 import type { CommandUnit } from "../command-unit";
-import type { NodeId } from "../node-id";
+import type { NodeId } from "../id-value-objects/node-id";
 
 export class RequestAINodeCalculation implements CommandUnit {
   public readonly type = "requestAINodeCalculation";

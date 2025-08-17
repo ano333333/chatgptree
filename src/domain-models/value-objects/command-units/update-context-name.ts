@@ -1,5 +1,5 @@
 import type { CommandUnit } from "../command-unit";
-import type { ContextId } from "../context-id";
+import type { ContextId } from "../id-value-objects/context-id";
 
 export class UpdateContextName implements CommandUnit {
   public readonly type = "updateContextName";

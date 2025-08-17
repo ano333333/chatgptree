@@ -1,5 +1,5 @@
 import type { CommandUnit } from "../command-unit";
-import type { ContextId } from "../context-id";
+import type { ContextId } from "../id-value-objects/context-id";
 import type { NodeRenderingProperty } from "../node-rendering-property";
 
 export class UpdateContextRenderingProperty implements CommandUnit {

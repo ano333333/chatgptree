@@ -204,13 +204,10 @@ erDiagram
 
 ---
 
-### DomainEvent
-
 #### Command
 
 | name      | type          | description                          |
 |-----------|---------------|--------------------------------------|
-| id        | string        | コマンド識別子                       |
 | units     | CommandUnit[] | コマンドを構成するユニットの集合      |
 | timestamp | Date          | コマンド発生日時                     |
 
@@ -220,154 +217,37 @@ erDiagram
 
 | name      | type   | description                                                     |
 |-----------|--------|-----------------------------------------------------------------|
-| id        | string | コマンドユニット識別子                                          |
-| type      | 'nodeCreated' \| 'nodeDeleted' \| 'edgeCreated' \| ...   | 種別 |
+| type      | 'createNode' \| 'deleteNode' \| 'createEdge' \| ...   | 種別 |
 
-#### NodeCreated extends CommandUnit
+以下のValueObjectはCommandUnitを継承する。
 
-| name            | type  | description                        |
-|-----------------|-------|------------------------------------|
-| type            | 'nodeCreated' | 種別 |
-| node            | Node  | 作成されたノード                   |
+- CreateSystemNode
+- CreateUserNode
+- CreateAINode
+- DeleteSystemNode
+- DeleteUserNode
+- DeleteAINode
+- CreateEdge
+- DeleteEdge
+- UpdateNodeContent
+- UpdateNodeRenderingProperty
+- UpdateAINodeProperty
+- RequestAINodeCalculation
+- StartAINodeCalculation
+- CompleteAINodeCalculation
+- ErrorAINodeCalculation
+- RetryAINodeCalculation
+- CreateContext
+- DeleteContext
+- AddContextNode
+- RemoveContextNode
+- AppendContextEdge
+- PopContextEdge
+- UpdateContextRenderingProperty
+- UpdateContextName
 
-#### NodeDeleted extends CommandUnit
+---
 
-| name                | type   | description                                 |
-|---------------------|--------|---------------------------------------------|
-| type                | 'nodeDeleted' | 種別 |
-| node                | Node   | 削除されたノード                            |
+### DomainEvent
 
-#### EdgeCreated extends CommandUnit
-
-| name   | type | description            |
-|--------|------|------------------------|
-| type   | 'edgeCreated' | 種別 |
-| edge   | Edge | 作成されたエッジ        |
-
-#### EdgeDeleted extends CommandUnit
-
-| name   | type | description            |
-|--------|------|------------------------|
-| type   | 'edgeDeleted' | 種別 |
-| edge   | Edge | 削除されたエッジ        |
-
-#### NodeRenderingPropertyUpdated extends CommandUnit
-
-| name   | type                 | description               |
-|--------|----------------------|---------------------------|
-| type   | 'nodeRenderingPropertyUpdated' | 種別 |
-| node   | Node                 | 対象ノード                |
-| before | NodeRenderingProperty| 更新前の描画プロパティ    |
-| after  | NodeRenderingProperty| 更新後の描画プロパティ    |
-
-#### NodeContentUpdated extends CommandUnit
-
-| name   | type   | description         |
-|--------|--------|---------------------|
-| type   | 'nodeContentUpdated' | 種別 |
-| node   | Node   | 対象ノード          |
-| before | string | 更新前の内容        |
-| after  | string | 更新後の内容        |
-
-#### AINodePropertyUpdated extends CommandUnit
-
-| name   | type           | description          |
-|--------|----------------|----------------------|
-| type   | 'aiNodePropertyUpdated' | 種別 |
-| node   | AINode         | 対象ノード           |
-| before | AINodeProperty | 更新前のプロパティ   |
-| after  | AINodeProperty | 更新後のプロパティ   |
-
-#### AINodeCalculationRequested extends CommandUnit
-
-| name | type  | description   |
-|------|-------|---------------|
-| type   | 'aiNodeCalculationRequested' | 種別 |
-| node | AINode| 通常状態から計算待ち状態に遷移したノード|
-
-#### AINodeCalculationStarted extends CommandUnit
-
-| name | type  | description   |
-|------|-------|---------------|
-| type   | 'aiNodeCalculationStarted' | 種別 |
-| node | AINode| 計算待ち状態から計算中状態に遷移したノード|
-
-#### AINodeCalculationCompleted extends CommandUnit
-
-| name | type  | description   |
-|------|-------|---------------|
-| type   | 'aiNodeCalculationCompleted' | 種別 |
-| node | AINode| 計算中状態から通常状態に遷移したノード|
-
-#### AINodeCalculationErrored extends CommandUnit
-
-| name  | type  | description           |
-|-------|-------|-----------------------|
-| type   | 'aiNodeCalculationErrored' | 種別 |
-| node  | AINode| エラーとなったノード  |
-| error | string| エラーメッセージ       |
-
-#### AINodeCalculationRetried extends CommandUnit
-
-| name | type  | description   |
-|------|-------|---------------|
-| type   | 'aiNodeCalculationRetried' | 種別 |
-| node | AINode| リトライ対象(エラー状態から計算待ち状態に遷移したノード)   |
-
-#### ContextCreated extends CommandUnit
-
-| name   | type    | description        |
-|--------|---------|--------------------|
-| type   | 'contextCreated' | 種別 |
-| context| Context | 作成されたコンテキスト|
-| project | Project | コンテキストが属するプロジェクト|
-
-#### ContextDeleted extends CommandUnit
-
-| name   | type    | description        |
-|--------|---------|--------------------|
-| type   | 'contextDeleted' | 種別 |
-| context| Context | 削除されたコンテキスト|
-| project | Project | コンテキストが属するプロジェクト|
-
-#### ContextNodeAdded extends CommandUnit
-
-| name   | type    | description        |
-|--------|---------|--------------------|
-| type   | 'contextNodeAdded' | 種別 |
-| context| Context | ノードが追加されたコンテキスト|
-| node   | Node | 追加されたノード|
-
-#### ContextNodeRemoved extends CommandUnit
-
-| name   | type    | description        |
-|--------|---------|--------------------|
-| type   | 'contextNodeRemoved' | 種別 |
-| context| Context | ノードが削除されたコンテキスト|
-| node   | Node | 削除されたノード|
-
-#### ContextEdgeAppended extends CommandUnit
-
-| name   | type    | description        |
-|--------|---------|--------------------|
-| type   | 'contextEdgeAppended' | 種別 |
-| context| Context | エッジが追加されたコンテキスト|
-| edge   | Edge | 追加されたエッジ|
-| node   | Node | 追加されたノード|
-
-#### ContextEdgePopped extends CommandUnit
-
-| name   | type    | description        |
-|--------|---------|--------------------|
-| type   | 'contextEdgePopped' | 種別 |
-| context| Context | エッジが削除されたコンテキスト|
-| edge   | Edge | 削除されたエッジ|
-
-#### ContextRenderingPropertyUpdated extends CommandUnit
-
-| name   | type                     | description                 |
-|--------|--------------------------|-----------------------------|
-| type   | 'contextRenderingPropertyUpdated' | 種別 |
-| context| Context                  | 対象コンテキスト            |
-| before | ContextRenderingProperty | 更新前の描画プロパティ      |
-| after  | ContextRenderingProperty | 更新後の描画プロパティ      |
+(なし)

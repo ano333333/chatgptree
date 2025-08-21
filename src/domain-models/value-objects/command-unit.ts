@@ -1,0 +1,27 @@
+export interface CommandUnit {
+  readonly type:
+    | "createSystemNode"
+    | "createUserNode"
+    | "createAINode"
+    | "deleteSystemNode"
+    | "deleteUserNode"
+    | "deleteAINode"
+    | "createEdge"
+    | "deleteEdge"
+    | "updateNodeContent"
+    | "updateNodeRenderingProperty"
+    | "updateAINodeProperty"
+    | "requestAINodeCalculation"
+    | "startAINodeCalculation"
+    | "completeAINodeCalculation"
+    | "errorAINodeCalculation"
+    | "retryAINodeCalculation"
+    | "createContext"
+    | "deleteContext"
+    | "addContextNode"
+    | "removeContextNode"
+    | "appendContextEdge"
+    | "popContextEdge"
+    | "updateContextRenderingProperty"
+    | "updateContextName";
+}

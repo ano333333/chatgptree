@@ -43,8 +43,6 @@ erDiagram
     %% Aggregates / Roots
     %% =======================
     Project ||--o{ Node : contains
-    Project ||--o{ Edge : contains
-    Project ||--o{ Context : contains
     Project ||--|| CommandHistory : has
 
     %% CommandHistory 集約として Command を保持
@@ -56,16 +54,6 @@ erDiagram
     %% Node の種類は role フィールドで区別（継承関係は classDiagram で表現）
     Node ||--|| NodeRenderingProperty : "1:1"
     Node ||--|| AINodeProperty : "1:1 (AINodeの場合のみ)"
-
-    %% 親子を Edge で表現
-    Node ||--o{ Edge : as_parent
-    Node ||--o| Edge : as_child
-
-    %% =======================
-    %% Context（m:n）
-    Context }|--|{ Node : "m:n"
-    Context }|--o{ Edge : "m:n"
-    Context ||--|| ContextRenderingProperty : "1:1"
 
     %% =======================
     %% Undo/Redo（Command / CommandUnit）
@@ -83,8 +71,6 @@ erDiagram
 | id              | ProjectId        | プロジェクトの識別子                          |
 | name            | string           | プロジェクト名                                |
 | nodes           | Node[]           | プロジェクト内のノード群                      |
-| edges           | Edge[]           | プロジェクト内のエッジ群                      |
-| contexts        | Context[]        | プロジェクト内のコンテキスト群                |
 | commandHistory  | CommandHistory   | プロジェクトに対応する単一のコマンド履歴集約  |
 
 ---
@@ -97,8 +83,8 @@ erDiagram
 | project         | Project              | 所属するプロジェクト                             |
 | role            | NodeRole             | ノードの役割 (system / user / assistant)         |
 | content         | string               | ノード本文                                       |
-| parentEdge      | Edge \| null         | 親エッジ。ルートの場合は null                    |
-| childEdges      | Edge[]               | 子エッジ群                                       |
+| parentNodeId    | NodeId \| null       | 親ノードの識別子。ルートの場合は null            |
+| childNodeIds    | NodeId[]             | 子ノードの識別子群                               |
 | renderingProperty | NodeRenderingProperty | ノード描画用プロパティ (アプリ層で継承して使用) |
 
 #### SystemNode extends Node
@@ -123,31 +109,6 @@ erDiagram
 
 ---
 
-#### Edge
-
-| name    | type     | description                              |
-|---------|----------|------------------------------------------|
-| id      | EdgeId   | エッジの識別子                           |
-| project | Project  | 所属するプロジェクト                     |
-| contexts | Context[] | エッジが属するコンテキスト群 |
-| source  | Node     | エッジの始点ノード（親側）               |
-| target  | Node     | エッジの終点ノード（子側）               |
-
----
-
-#### Context
-
-| name             | type                    | description                                |
-|------------------|-------------------------|--------------------------------------------|
-| id               | ContextId               | コンテキストの識別子                       |
-| project          | Project                 | 所属するプロジェクト                       |
-| nodes            | Node[]                  | コンテキストに属するノード群                 |
-| edges            | Edge[]                  | 根から対象ノードまでのパス順エッジ群         |
-| name             | string \| null          | 任意のコンテキスト名 (非ユニーク)           |
-| renderingProperty| ContextRenderingProperty| コンテキスト描画用プロパティ (詳細は空)    |
-
----
-
 #### CommandHistory
 
 | name   | type       | description                                      |
@@ -168,8 +129,6 @@ erDiagram
 |-----------|--------|------------------------------|
 | ProjectId | string | プロジェクト識別子           |
 | NodeId    | string | ノード識別子                 |
-| EdgeId    | string | エッジ識別子                 |
-| ContextId | string | コンテキスト識別子           |
 
 ---
 
@@ -217,7 +176,7 @@ erDiagram
 
 | name      | type   | description                                                     |
 |-----------|--------|-----------------------------------------------------------------|
-| type      | 'createNode' \| 'deleteNode' \| 'createEdge' \| ...   | 種別 |
+| type      | 'createNode' \| 'deleteNode' \|  ...   | 種別 |
 
 以下のValueObjectはCommandUnitを継承する。
 
@@ -227,8 +186,6 @@ erDiagram
 - DeleteSystemNode
 - DeleteUserNode
 - DeleteAINode
-- CreateEdge
-- DeleteEdge
 - UpdateNodeContent
 - UpdateNodeRenderingProperty
 - UpdateAINodeProperty
@@ -237,14 +194,6 @@ erDiagram
 - CompleteAINodeCalculation
 - ErrorAINodeCalculation
 - RetryAINodeCalculation
-- CreateContext
-- DeleteContext
-- AddContextNode
-- RemoveContextNode
-- AppendContextEdge
-- PopContextEdge
-- UpdateContextRenderingProperty
-- UpdateContextName
 
 ---
 

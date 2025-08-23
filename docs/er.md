@@ -142,6 +142,17 @@ erDiagram
 
 ---
 
+#### NodeRenderingProperty
+
+| name | type | description |
+|------|------|-------------|
+| left | number | ノードの左端位置 |
+| top | number | ノードの上端位置 |
+| width | number | ノードの幅 |
+| height | number | ノードの高さ |
+
+---
+
 #### AINodeState
 
 | type | description |

@@ -187,7 +187,7 @@ erDiagram
 
 | name      | type   | description                                                     |
 |-----------|--------|-----------------------------------------------------------------|
-| type      | 'createNode' \| 'deleteNode' \|  ...   | 種別 |
+| type      | 'createSystemNode' \| 'createUserNode' \|  ...   | 種別 |
 
 以下のValueObjectはCommandUnitを継承する。
 

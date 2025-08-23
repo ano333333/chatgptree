@@ -188,6 +188,9 @@ erDiagram
 - DeleteAINode
 - UpdateNodeContent
 - UpdateNodeRenderingProperty
+- UpdateParentNode
+- AppendChildNode
+- RemoveChildNode
 - UpdateAINodeProperty
 - RequestAINodeCalculation
 - StartAINodeCalculation

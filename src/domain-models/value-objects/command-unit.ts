@@ -6,8 +6,6 @@ export interface CommandUnit {
     | "deleteSystemNode"
     | "deleteUserNode"
     | "deleteAINode"
-    | "createEdge"
-    | "deleteEdge"
     | "updateNodeContent"
     | "updateNodeRenderingProperty"
     | "updateAINodeProperty"
@@ -15,13 +13,5 @@ export interface CommandUnit {
     | "startAINodeCalculation"
     | "completeAINodeCalculation"
     | "errorAINodeCalculation"
-    | "retryAINodeCalculation"
-    | "createContext"
-    | "deleteContext"
-    | "addContextNode"
-    | "removeContextNode"
-    | "appendContextEdge"
-    | "popContextEdge"
-    | "updateContextRenderingProperty"
-    | "updateContextName";
+    | "retryAINodeCalculation";
 }

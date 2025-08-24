@@ -6,15 +6,43 @@ import { Node } from "../node";
 import type { NodeId } from "../../value-objects/id-value-objects/node-id";
 
 export class AINode extends Node {
-  private _property: AINodeProperty;
-  private _state: AINodeState = "normal";
+  protected _property: AINodeProperty;
+  protected _state: AINodeState = "normal";
   constructor(
     id: NodeId,
     projectId: ProjectId,
     renderingProperty: NodeRenderingProperty,
     property: AINodeProperty,
+    content = "",
+    parentNodeId: NodeId | null = null,
+    childNodeIds: NodeId[] = [],
+    state: AINodeState = "normal",
   ) {
-    super(id, projectId, "assistant", renderingProperty);
+    super(
+      id,
+      projectId,
+      "assistant",
+      renderingProperty,
+      content,
+      parentNodeId,
+      childNodeIds,
+    );
     this._property = property;
+    this._state = state;
+  }
+
+  public get property(): AINodeProperty {
+    return this._property;
+  }
+
+  public get state(): AINodeState {
+    return this._state;
+  }
+
+  public get content(): string {
+    if (this._state === "normal") {
+      return this._content;
+    }
+    return "";
   }
 }

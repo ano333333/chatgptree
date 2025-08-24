@@ -16,14 +16,15 @@ export type ILLMPortEventOnStreamArrived = {
 export type ILLMPortEventOnRequestCompleted = {
   readonly type: "request-completed";
   readonly requestId: NodeId;
-  readonly result: string;
+  // ストリームレスポンスでない場合のみ、結果全体が入る
+  readonly result: string | null;
 };
 
 /**
  * リクエストが失敗した際に搬出されるイベント
  */
 export type ILLMPortEventOnRequestFailed = {
-  type: "request-failed";
+  readonly type: "request-failed";
   readonly requestId: NodeId;
   readonly status: number;
   readonly error: string;

@@ -25,7 +25,7 @@ jobs:
           node-version: 24.3.0
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run test:unit
+      - run: pnpm run test
   storybook-test:
     runs-on: ubuntu-24.04
     container:

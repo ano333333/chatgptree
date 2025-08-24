@@ -1,5 +1,5 @@
 import type { ProjectId } from "../value-objects/id-value-objects/project-id";
-import type { Command } from "../value-objects/command";
+import type { Command } from "./command";
 
 export class CommandHistory {
   public readonly projectId: ProjectId;

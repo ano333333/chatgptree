@@ -20,6 +20,7 @@ export default defineConfig({
           include: ["tests/**/*.test.ts"],
           name: "unit",
           environment: "node",
+          setupFiles: ["fake-indexeddb/auto"],
         },
       },
       {

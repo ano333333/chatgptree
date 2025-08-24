@@ -1,5 +1,6 @@
-import type { NodeId } from "../domain-models/value-objects/id-value-objects/node-id";
 import type { Node } from "../domain-models/entities/node";
+import type { NodeId } from "../domain-models/value-objects/id-value-objects/node-id";
+import type { CommandId } from "../domain-models/value-objects/id-value-objects/command-id";
 
 /**
  * ストリームレスポンスでチャット増分が到着した際に搬出されるイベント
@@ -7,6 +8,7 @@ import type { Node } from "../domain-models/entities/node";
 export type ILLMPortEventOnStreamArrived = {
   readonly type: "stream-arrived";
   readonly requestId: NodeId;
+  readonly commandId: CommandId;
   readonly delta: string;
 };
 
@@ -16,6 +18,7 @@ export type ILLMPortEventOnStreamArrived = {
 export type ILLMPortEventOnRequestCompleted = {
   readonly type: "request-completed";
   readonly requestId: NodeId;
+  readonly commandId: CommandId;
   // ストリームレスポンスでない場合のみ、結果全体が入る
   readonly result: string | null;
 };
@@ -26,6 +29,7 @@ export type ILLMPortEventOnRequestCompleted = {
 export type ILLMPortEventOnRequestFailed = {
   readonly type: "request-failed";
   readonly requestId: NodeId;
+  readonly commandId: CommandId;
   readonly status: number;
   readonly error: string;
 };
@@ -52,12 +56,13 @@ export interface ILLMPort {
   /**
    * リクエストを送信する
    * @param requestId リクエストID
+   * @param commandId コマンドID
    * @param nodes リクエストに含めるノード(先頭から順にcontentを結合する)
    */
-  request(requestId: NodeId, nodes: Node[]): void;
+  request(requestId: NodeId, commandId: CommandId, nodes: Node[]): void;
   /**
    * リクエストをキャンセルする。以降このリクエストに関するイベントは搬出されない。
    * @param requestId リクエストID
    */
-  cancel(requestId: NodeId): void;
+  cancel(requestId: NodeId, commandId: CommandId): void;
 }

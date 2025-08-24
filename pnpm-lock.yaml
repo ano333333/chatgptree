@@ -35,6 +35,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      dexie:
+        specifier: ^4.2.0
+        version: 4.2.0
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -129,6 +132,9 @@ importers:
       eslint-plugin-storybook:
         specifier: ^9.0.12
         version: 9.0.12(eslint@9.28.0(jiti@2.4.2))(storybook@9.0.12(@testing-library/dom@10.4.0))(typescript@5.8.3)
+      fake-indexeddb:
+        specifier: ^6.1.0
+        version: 6.1.0
       globals:
         specifier: ^16.0.0
         version: 16.2.0
@@ -2239,6 +2245,9 @@ packages:
   detect-node-es@1.1.0:
     resolution: {integrity: sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ==}
 
+  dexie@4.2.0:
+    resolution: {integrity: sha512-OSeyyWOUetDy9oFWeddJgi83OnRA3hSFh3RrbltmPgqHszE9f24eUCVLI4mPg0ifsWk0lQTdnS+jyGNrPMvhDA==}
+
   diff-sequences@29.6.3:
     resolution: {integrity: sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -2451,6 +2460,10 @@ packages:
   expect@29.7.0:
     resolution: {integrity: sha512-2Zks0hf1VLFYI1kbh0I5jP3KHHyCHpkfyHBzsSXRFgl/Bg9mWYfMW8oD+PdMPlEwy5HNsR9JutYy6pMeOh61nw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+
+  fake-indexeddb@6.1.0:
+    resolution: {integrity: sha512-gOzajWIhEug/CQHUIxigKT9Zilh5/I6WvUBez6/UdUtT/YVEHM9r572Os8wfvhp7TkmgBtRNdqSM7YoCXWMzZg==}
+    engines: {node: '>=18'}
 
   fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
@@ -6540,6 +6553,8 @@ snapshots:
 
   detect-node-es@1.1.0: {}
 
+  dexie@4.2.0: {}
+
   diff-sequences@29.6.3: {}
 
   diffable-html@4.1.0:
@@ -6800,6 +6815,8 @@ snapshots:
       jest-matcher-utils: 29.7.0
       jest-message-util: 29.7.0
       jest-util: 29.7.0
+
+  fake-indexeddb@6.1.0: {}
 
   fast-deep-equal@3.1.3: {}
 

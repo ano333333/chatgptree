@@ -8,7 +8,18 @@ export class UserNode extends Node {
     id: NodeId,
     projectId: ProjectId,
     renderingProperty: NodeRenderingProperty,
+    content = "",
+    parentNodeId: NodeId | null = null,
+    childNodeIds: NodeId[] = [],
   ) {
-    super(id, projectId, "user", renderingProperty);
+    super(
+      id,
+      projectId,
+      "user",
+      renderingProperty,
+      content,
+      parentNodeId,
+      childNodeIds,
+    );
   }
 }

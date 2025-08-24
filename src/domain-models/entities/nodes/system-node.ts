@@ -8,7 +8,18 @@ export class SystemNode extends Node {
     id: NodeId,
     projectId: ProjectId,
     renderingProperty: NodeRenderingProperty,
+    content = "",
+    parentNodeId: NodeId | null = null,
+    childNodeIds: NodeId[] = [],
   ) {
-    super(id, projectId, "system", renderingProperty);
+    super(
+      id,
+      projectId,
+      "system",
+      renderingProperty,
+      content,
+      parentNodeId,
+      childNodeIds,
+    );
   }
 }

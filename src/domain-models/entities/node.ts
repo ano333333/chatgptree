@@ -7,19 +7,41 @@ export class Node {
   public readonly id: NodeId;
   public readonly projectId: ProjectId;
   public readonly role: NodeRole;
-  private _content = "";
-  private _parentNodeId: NodeId | null = null;
-  private _childNodeIds: NodeId[] = [];
-  private _renderingProperty: NodeRenderingProperty;
+  protected _content = "";
+  protected _parentNodeId: NodeId | null = null;
+  protected _childNodeIds: NodeId[] = [];
+  protected _renderingProperty: NodeRenderingProperty;
   constructor(
     id: NodeId,
     projectId: ProjectId,
     role: NodeRole,
     renderingProperty: NodeRenderingProperty,
+    content = "",
+    parentNodeId: NodeId | null = null,
+    childNodeIds: NodeId[] = [],
   ) {
     this.id = id;
     this.projectId = projectId;
     this.role = role;
     this._renderingProperty = renderingProperty;
+    this._content = content;
+    this._parentNodeId = parentNodeId;
+    this._childNodeIds = [...childNodeIds];
+  }
+
+  public get renderingProperty(): NodeRenderingProperty {
+    return this._renderingProperty;
+  }
+
+  public get content(): string {
+    return this._content;
+  }
+
+  public get parentNodeId(): NodeId | null {
+    return this._parentNodeId;
+  }
+
+  public get childNodeIds(): NodeId[] {
+    return [...this._childNodeIds];
   }
 }

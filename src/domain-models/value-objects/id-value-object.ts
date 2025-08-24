@@ -18,5 +18,8 @@ export abstract class IDValueObject {
   public equals(other: IDValueObject): boolean {
     return this._brand === other._brand && this._value === other._value;
   }
+  public toString(): string {
+    return this._value;
+  }
   protected readonly _brand: string = "IDValueObject";
 }

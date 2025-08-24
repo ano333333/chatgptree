@@ -213,4 +213,29 @@ erDiagram
 
 ### DomainEvent
 
-(なし)
+#### NodeAdded
+
+ノードがプロジェクトに追加されたことを示すイベント。
+
+| name      | type           | description                  |
+|-----------|----------------|------------------------------|
+| type      | 'node-added'   | イベントの種別               |
+| nodeId    | NodeId         | 追加されたノードの識別子     |
+
+#### NodeUpdated
+
+プロジェクト内のノードが更新されたことを示すイベント。
+
+| name      | type             | description                  |
+|-----------|------------------|------------------------------|
+| type      | 'node-updated'   | イベントの種別               |
+| nodeId    | NodeId           | 更新されたノードの識別子     |
+
+#### NodeDeleted
+
+ノードがプロジェクトから削除されたことを示すイベント。
+
+| name      | type             | description                  |
+|-----------|------------------|------------------------------|
+| type      | 'node-deleted'   | イベントの種別               |
+| nodeId    | NodeId           | 削除されたノードの識別子     |

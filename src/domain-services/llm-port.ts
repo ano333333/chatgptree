@@ -5,18 +5,18 @@ import type { Node } from "../domain-models/entities/node";
  * ストリームレスポンスでチャット増分が到着した際に搬出されるイベント
  */
 export type ILLMPortEventOnStreamArrived = {
-  type: "stream-arrived";
-  requestId: NodeId;
-  delta: string;
+  readonly type: "stream-arrived";
+  readonly requestId: NodeId;
+  readonly delta: string;
 };
 
 /**
  * リクエストが完了した際に搬出されるイベント
  */
 export type ILLMPortEventOnRequestCompleted = {
-  type: "request-completed";
-  requestId: NodeId;
-  result: string;
+  readonly type: "request-completed";
+  readonly requestId: NodeId;
+  readonly result: string;
 };
 
 /**
@@ -24,9 +24,9 @@ export type ILLMPortEventOnRequestCompleted = {
  */
 export type ILLMPortEventOnRequestFailed = {
   type: "request-failed";
-  requestId: NodeId;
-  status: number;
-  error: string;
+  readonly requestId: NodeId;
+  readonly status: number;
+  readonly error: string;
 };
 
 /**

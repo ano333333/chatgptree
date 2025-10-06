@@ -19,15 +19,17 @@ function WindowButton({
   message,
   onClick,
   disabled,
-}: { message: string; onClick: () => void; disabled: boolean }) {
+}: {
+  message: string;
+  onClick: () => void;
+  disabled: boolean;
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`border border-gray-300 rounded-md p-2 ${
-        disabled ? "bg-gray-400" : "bg-white"
-      }`}
+      className={`border border-gray-300 rounded-md p-2 ${disabled ? "bg-gray-400" : "bg-white"}`}
     >
       {message}
     </button>

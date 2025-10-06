@@ -9,16 +9,24 @@
   }:
   let
     system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
+    pkgs = import nixpkgs {
+      inherit system;
+    };
   in
   {
     devShells.${system}.default = pkgs.mkShell {
       packages = with pkgs; [
         nodejs_24
         nodePackages.pnpm
+        playwright-driver.browsers
       ];
       shellHook = ''
         echo "entered devShell"
+
+        # playwrightにNixのパスを渡す
+        export PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers}
+        export PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true
+        export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true
       '';
     };
   };

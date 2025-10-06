@@ -10,30 +10,39 @@
     treefmt-nix,
   }:
   let
-    system = "x86_64-linux";
-    pkgs = import nixpkgs {
-      inherit system;
-    };
+    systems = [ "x86_64-linux" "aarch64-darwin" ];
+    gen = nixpkgs.lib.genAttrs;
   in
   {
-    devShells.${system}.default = pkgs.mkShell {
-      packages = with pkgs; [
-        nodejs_24
-        nodePackages.pnpm
-        playwright-driver.browsers
-      ];
-      shellHook = ''
-        echo "entered devShell"
+    devShells = gen systems (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+      in {
+        default = pkgs.mkShell {
+          packages = with pkgs; [
+            nodejs_24
+            nodePackages.pnpm
+            playwright-driver.browsers
+          ];
+          shellHook = ''
+            echo "entered devShell"
 
-        export PATH="node_modules/.bin:$PATH"
+            export PATH="node_modules/.bin:$PATH"
 
-        # playwrightにNixのパスを渡す
-        export PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers}
-        export PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true
-        export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true
-      '';
-    };
+            # playwrightにNixのパスを渡す
+            export PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers}
+            export PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true
+            export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true
+          '';
+        };
+      }
+    );
 
-    formatter.${system} = (treefmt-nix.lib.evalModule pkgs ./treefmt-nix/treefmt.nix).config.build.wrapper;
+    formatter = gen systems (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+      in
+      (treefmt-nix.lib.evalModule pkgs ./treefmt-nix/treefmt.nix).config.build.wrapper
+    );
   };
 }

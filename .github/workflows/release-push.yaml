@@ -3,7 +3,7 @@ name: github actions on release push
 on:
   push:
     branches:
-      - release
+      - issues/43
 
 permissions:
   contents: read

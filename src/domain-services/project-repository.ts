@@ -1,6 +1,6 @@
+import type { Node } from "../domain-models/entities/node";
 import type { Project } from "../domain-models/entities/project";
 import type { NodeId } from "../domain-models/value-objects/id-value-objects/node-id";
-import type { Node } from "../domain-models/entities/node";
 
 export interface IProjectRepository {
   /**

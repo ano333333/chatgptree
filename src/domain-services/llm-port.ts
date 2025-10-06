@@ -1,6 +1,6 @@
 import type { Node } from "../domain-models/entities/node";
-import type { NodeId } from "../domain-models/value-objects/id-value-objects/node-id";
 import type { CommandId } from "../domain-models/value-objects/id-value-objects/command-id";
+import type { NodeId } from "../domain-models/value-objects/id-value-objects/node-id";
 
 /**
  * ストリームレスポンスでチャット増分が到着した際に搬出されるイベント

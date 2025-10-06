@@ -1,20 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Window, WindowContext, type WindowElement } from "@/components/window";
-import { within } from "@storybook/test";
-import { expect } from "@storybook/test";
+import { expect, within } from "@storybook/test";
 import { useEffect, useRef, useState } from "react";
+import { Window, WindowContext, type WindowElement } from "@/components/window";
 import { simulateDrag } from "../utils/drag";
-import { wait } from "../utils/wait";
 import { simulateDragStartAndCancelWithEscape } from "../utils/escape-cancel";
+import {
+  expectPositionToBeCloseTo,
+  expectSizeToBeCloseTo,
+} from "../utils/expect-utils";
+import { wait } from "../utils/wait";
 import {
   getWindowPosition,
   getWindowSize,
   getWindowZIndex,
 } from "../utils/window-utils";
-import {
-  expectPositionToBeCloseTo,
-  expectSizeToBeCloseTo,
-} from "../utils/expect-utils";
 
 const meta: Meta<typeof Window> = {
   title: "Components/Window/Test",

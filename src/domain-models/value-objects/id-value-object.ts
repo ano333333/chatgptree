@@ -1,7 +1,7 @@
 import {
-  v7 as uuidv7,
   validate as uuidValidate,
   version as uuidVersion,
+  v7 as uuidv7,
 } from "uuid";
 
 export abstract class IDValueObject {

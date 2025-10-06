@@ -1,10 +1,10 @@
 import Dexie, { type EntityTable } from "dexie";
-import { indexedDB, IDBKeyRange } from "fake-indexeddb";
-import type {
-  ProjectObject,
-  NodeObject,
-} from "../../../src/ui-infrastructures/project-repositories/indexeddb-project-repository-schemas";
+import { IDBKeyRange, indexedDB } from "fake-indexeddb";
 import { IndexedDBProjectRepository } from "../../../src/ui-infrastructures/project-repositories/indexeddb-project-repository";
+import type {
+  NodeObject,
+  ProjectObject,
+} from "../../../src/ui-infrastructures/project-repositories/indexeddb-project-repository-schemas";
 
 type ProjectIdObject = {
   id: string;

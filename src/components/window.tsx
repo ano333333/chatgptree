@@ -1,25 +1,25 @@
 import {
-  useRef,
   type MouseEvent,
   type ReactNode,
-  useMemo,
-  useCallback,
   type RefObject,
+  useCallback,
   useImperativeHandle,
+  useMemo,
+  useRef,
   useState,
 } from "react";
 import { createContext, useContextSelector } from "use-context-selector";
 import {
-  WINDOW_HEADER_HEIGHT,
-  RESIZE_HANDLE_HEIGHT,
-  DEFAULT_WINDOW_WIDTH_MIN,
   DEFAULT_WINDOW_HEIGHT_MIN,
+  DEFAULT_WINDOW_WIDTH_MIN,
+  RESIZE_HANDLE_HEIGHT,
+  WINDOW_HEADER_HEIGHT,
 } from "./window/constants";
-import type { SetWindowStateArgsType, WindowState } from "./window/types";
 import { getWindowStateLogic } from "./window/logics/get-window-state-logic";
 import { setWindowStateLogic } from "./window/logics/set-window-state-logic";
 import { Header } from "./window/subcomponents/header";
 import { ResizeHandle } from "./window/subcomponents/resize-handle";
+import type { SetWindowStateArgsType, WindowState } from "./window/types";
 
 export type WindowElement = {
   style: CSSStyleDeclaration | undefined;

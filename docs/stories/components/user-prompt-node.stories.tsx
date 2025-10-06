@@ -1,3 +1,13 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import {
+  Background,
+  type NodeTypes,
+  ReactFlow,
+  ReactFlowProvider,
+  useNodesState,
+} from "@xyflow/react";
+import { type RefObject, useRef } from "react";
+import { action } from "storybook/actions";
 import {
   ContextMenuContext,
   type ContextMenuElement,
@@ -6,16 +16,6 @@ import UserMessageDetailWindow from "@/components/user-message-detail-window";
 import UserMessageNode from "@/components/user-message-node";
 import UserMessageNodeContextMenu from "@/components/user-message-node-context-menu";
 import { WindowContext, type WindowElement } from "@/components/window";
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Background,
-  ReactFlow,
-  ReactFlowProvider,
-  useNodesState,
-  type NodeTypes,
-} from "@xyflow/react";
-import { useRef, type RefObject } from "react";
-import { action } from "storybook/actions";
 
 const meta: Meta<typeof UserMessageNode> = {
   title: "Components/UserMessageNode",

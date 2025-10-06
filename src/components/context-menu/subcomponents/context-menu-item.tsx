@@ -1,4 +1,4 @@
-import type { ReactNode, RefObject, MouseEvent, KeyboardEvent } from "react";
+import type { KeyboardEvent, MouseEvent, ReactNode, RefObject } from "react";
 
 interface ContextMenuItemProps {
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;

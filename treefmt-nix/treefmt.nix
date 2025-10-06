@@ -39,11 +39,5 @@
       "dist/**"
       "node_modules/**"
     ];
-
-    formatter = {
-      biome = {
-        options = [ "check" "--apply" "--no-errors-on-unmatched" ];
-      };
-    };
   };
 }

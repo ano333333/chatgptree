@@ -1,5 +1,5 @@
-import { useRef, useState, type FC, type ReactNode } from "react";
 import { Info } from "lucide-react";
+import { type FC, type ReactNode, useRef, useState } from "react";
 
 interface ElementAnnotationProps {
   className?: string;

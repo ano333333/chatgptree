@@ -1,7 +1,7 @@
-import type { DeepReadonly } from "ts-essentials";
 import _ from "lodash";
-import type { CommandUnit } from "../command-unit";
+import type { DeepReadonly } from "ts-essentials";
 import type { SystemNode } from "../../entities/nodes/system-node";
+import type { CommandUnit } from "../command-unit";
 
 export class DeleteSystemNode implements CommandUnit {
   public readonly type = "deleteSystemNode";

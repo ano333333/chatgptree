@@ -4,8 +4,8 @@ import type {
 } from "@/components/window/types";
 import {
   constructZIndexWindowKeyPairs,
-  unshiftToZIndexWindowKeyPairs,
   removeFromZIndexWindowKeyPairs,
+  unshiftToZIndexWindowKeyPairs,
   updateWindowStatesWithZIndexWindowKeyPairs,
 } from "./zindex-window-key-pairs";
 

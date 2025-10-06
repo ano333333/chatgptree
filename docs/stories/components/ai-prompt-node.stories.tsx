@@ -1,3 +1,13 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import {
+  Background,
+  type NodeTypes,
+  ReactFlow,
+  ReactFlowProvider,
+  useNodesState,
+} from "@xyflow/react";
+import { type RefObject, useRef } from "react";
+import { action } from "storybook/actions";
 import AIMessageDetailWindow from "@/components/ai-message-detail-window";
 import AIMessageNode from "@/components/ai-message-node";
 import AIPromptNodeContextMenu from "@/components/ai-message-node-context-menu";
@@ -6,16 +16,6 @@ import {
   type ContextMenuElement,
 } from "@/components/context-menu";
 import { WindowContext, type WindowElement } from "@/components/window";
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Background,
-  ReactFlow,
-  ReactFlowProvider,
-  useNodesState,
-  type NodeTypes,
-} from "@xyflow/react";
-import { useRef, type RefObject } from "react";
-import { action } from "storybook/actions";
 
 const meta: Meta<typeof AIMessageNode> = {
   title: "Components/AIMessageNode",

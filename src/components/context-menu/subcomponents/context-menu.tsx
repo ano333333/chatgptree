@@ -1,18 +1,18 @@
+import type { KeyboardEvent, MouseEvent, ReactNode, RefObject } from "react";
 import {
   useContext,
   useEffect,
+  useId,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
-  useId,
 } from "react";
-import type { MouseEvent, KeyboardEvent, ReactNode, RefObject } from "react";
-import type {
-  ContextMenuState,
-  ContextMenuElement,
-} from "./context-menu-context";
 import { contextMenuContext } from "../contexts/context-menu-context";
+import type {
+  ContextMenuElement,
+  ContextMenuState,
+} from "./context-menu-context";
 
 interface ContextMenuProps {
   ref?: RefObject<ContextMenuElement | null>;

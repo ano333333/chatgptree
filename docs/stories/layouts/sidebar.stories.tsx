@@ -1,7 +1,7 @@
-import { Sidebar } from "@/layouts/sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { action } from "storybook/actions";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Sidebar } from "@/layouts/sidebar";
 
 const meta: Meta<typeof Sidebar> = {
   title: "Layouts/Sidebar",

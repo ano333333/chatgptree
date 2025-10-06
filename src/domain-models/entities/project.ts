@@ -1,5 +1,5 @@
-import type { ProjectId } from "../value-objects/id-value-objects/project-id";
 import type { NodeId } from "../value-objects/id-value-objects/node-id";
+import type { ProjectId } from "../value-objects/id-value-objects/project-id";
 
 export class Project {
   public readonly id: ProjectId;

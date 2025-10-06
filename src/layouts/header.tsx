@@ -1,4 +1,5 @@
-import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { Menu, PanelLeft } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,8 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, PanelLeft } from "lucide-react";
-import { useState } from "react";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 
 interface HeaderProps {
   onClickLoad?: () => void;

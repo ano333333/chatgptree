@@ -1,8 +1,10 @@
-import type { WindowState } from "@/components/window/types";
-import type { SetWindowStateArgsType } from "@/components/window/types";
-import { useRef, type DragEvent } from "react";
-import { RESIZE_HANDLE_HEIGHT } from "../constants";
 import { ListFilter } from "lucide-react";
+import { type DragEvent, useRef } from "react";
+import type {
+  SetWindowStateArgsType,
+  WindowState,
+} from "@/components/window/types";
+import { RESIZE_HANDLE_HEIGHT } from "../constants";
 
 interface ResizeHandleProps {
   windowState: WindowState;

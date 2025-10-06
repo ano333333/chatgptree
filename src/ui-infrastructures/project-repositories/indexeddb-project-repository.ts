@@ -1,14 +1,14 @@
 import Dexie, { type EntityTable } from "dexie";
-import { ProjectId } from "../../domain-models/value-objects/id-value-objects/project-id";
-import type { NodeId } from "../../domain-models/value-objects/id-value-objects/node-id";
-import type { IProjectRepository } from "../../domain-services/project-repository";
-import { Project } from "../../domain-models/entities/project";
 import type { Node } from "../../domain-models/entities/node";
+import { Project } from "../../domain-models/entities/project";
+import type { NodeId } from "../../domain-models/value-objects/id-value-objects/node-id";
+import { ProjectId } from "../../domain-models/value-objects/id-value-objects/project-id";
+import type { IProjectRepository } from "../../domain-services/project-repository";
 import {
   convertToNodeEntity,
   convertToNodeObject,
-  type ProjectObject,
   type NodeObject,
+  type ProjectObject,
 } from "./indexeddb-project-repository-schemas";
 
 export class IndexedDBProjectRepository implements IProjectRepository {

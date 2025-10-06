@@ -1,6 +1,6 @@
-import { useContext } from "react";
 import { ChevronRight } from "lucide-react";
 import type { ReactNode, RefObject } from "react";
+import { useContext } from "react";
 import {
   submenuStateContext,
   submenuStateSetterContext,

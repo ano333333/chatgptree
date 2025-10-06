@@ -1,7 +1,7 @@
-import type { MouseEvent, RefObject } from "react";
-import type { WindowElement } from "./window";
 import { Handle, Position } from "@xyflow/react";
+import type { MouseEvent, RefObject } from "react";
 import type { ContextMenuElement } from "./context-menu";
+import type { WindowElement } from "./window";
 
 interface UserMessageNodeProps {
   data: {

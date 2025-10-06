@@ -1,7 +1,7 @@
-import { Window, WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useRef, type RefObject } from "react";
+import { type RefObject, useRef } from "react";
 import { action } from "storybook/actions";
+import { Window, WindowContext, type WindowElement } from "@/components/window";
 
 const meta: Meta<typeof Window> = {
   title: "Components/Window",

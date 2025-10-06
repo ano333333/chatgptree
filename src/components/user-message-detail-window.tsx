@@ -1,4 +1,4 @@
-import { useState, type MouseEvent, type RefObject } from "react";
+import { type MouseEvent, type RefObject, useState } from "react";
 import { Window, type WindowElement } from "./window";
 
 interface UserMessageDetailWindowProps {

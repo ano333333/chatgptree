@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Window, WindowContext } from "@/components/window";
 import { expect } from "@storybook/test";
+import { useEffect, useRef } from "react";
+import type { WindowElement } from "@/components/window";
+import { Window, WindowContext } from "@/components/window";
 import { wait } from "../utils/wait";
 import {
   getWindowPosition,
   getWindowSize,
   getWindowZIndex,
 } from "../utils/window-utils";
-import { useEffect, useRef } from "react";
-import type { WindowElement } from "@/components/window";
 
 const meta: Meta<typeof Window> = {
   title: "Components/Window/Test",

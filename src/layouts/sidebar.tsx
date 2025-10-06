@@ -1,4 +1,5 @@
 import { MessageSquarePlus } from "lucide-react";
+import type { KeyboardEvent } from "react";
 import {
   Sidebar as SidebarComponent,
   SidebarContent,
@@ -11,7 +12,6 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import type { KeyboardEvent } from "react";
 
 interface SidebarProps {
   chats: {

@@ -1,11 +1,3 @@
-import AIMessageDetailWindow from "@/components/ai-message-detail-window";
-import AIMessageNode from "@/components/ai-message-node";
-import AIPromptNodeContextMenu from "@/components/ai-message-node-context-menu";
-import {
-  ContextMenuContext,
-  type ContextMenuElement,
-} from "@/components/context-menu";
-import { WindowContext, type WindowElement } from "@/components/window";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, within } from "@storybook/test";
 import {
@@ -16,6 +8,14 @@ import {
 } from "@xyflow/react";
 import { useRef } from "react";
 import { action } from "storybook/actions";
+import AIMessageDetailWindow from "@/components/ai-message-detail-window";
+import AIMessageNode from "@/components/ai-message-node";
+import AIPromptNodeContextMenu from "@/components/ai-message-node-context-menu";
+import {
+  ContextMenuContext,
+  type ContextMenuElement,
+} from "@/components/context-menu";
+import { WindowContext, type WindowElement } from "@/components/window";
 import { wait } from "../utils/wait";
 
 const meta: Meta<typeof AIMessageNode> = {

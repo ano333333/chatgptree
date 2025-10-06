@@ -1,9 +1,9 @@
 import type { RefObject } from "react";
 import {
   ContextMenu,
+  type ContextMenuElement,
   ContextMenuItem,
   ContextMenuSeparator,
-  type ContextMenuElement,
 } from "./context-menu";
 import type { WindowElement } from "./window";
 

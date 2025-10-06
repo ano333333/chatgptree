@@ -1,3 +1,6 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useEffect, useState } from "react";
+import { action } from "storybook/actions";
 import { ElementAnnotation } from "@/components/elementAnnotation";
 import {
   Sidebar,
@@ -5,9 +8,6 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import Header from "@/layouts/header";
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useEffect, useState } from "react";
-import { action } from "storybook/actions";
 
 const useElementAnnotation = (query: string) => {
   const [element, setElement] = useState<HTMLElement | null>(null);

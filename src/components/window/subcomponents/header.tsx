@@ -1,10 +1,10 @@
+import { Layers } from "lucide-react";
+import { type DragEvent, useRef } from "react";
 import type {
   SetWindowStateArgsType,
   WindowState,
 } from "@/components/window/types";
-import { useRef, type DragEvent } from "react";
 import { WINDOW_HEADER_HEIGHT } from "../constants";
-import { Layers } from "lucide-react";
 import { CloseButton } from "./close-button";
 
 interface HeaderProps {

@@ -1,8 +1,8 @@
+import type { AINodeProperty } from "../ai-node-property";
 import type { CommandUnit } from "../command-unit";
 import type { NodeId } from "../id-value-objects/node-id";
 import type { ProjectId } from "../id-value-objects/project-id";
 import type { NodeRenderingProperty } from "../node-rendering-property";
-import type { AINodeProperty } from "../ai-node-property";
 
 export class CreateAINode implements CommandUnit {
   public readonly type = "createAINode";

@@ -1,8 +1,8 @@
-import type { MouseEvent, RefObject } from "react";
-import type { WindowElement } from "./window";
-import { Hourglass } from "lucide-react";
 import { Handle, Position } from "@xyflow/react";
+import { Hourglass } from "lucide-react";
+import type { MouseEvent, RefObject } from "react";
 import type { ContextMenuElement } from "./context-menu";
+import type { WindowElement } from "./window";
 
 interface AIMessageNodeProps {
   data: {

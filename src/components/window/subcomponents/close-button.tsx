@@ -1,6 +1,6 @@
-import type { SetWindowStateArgsType } from "@/components/window/types";
 import { X } from "lucide-react";
 import type { MouseEvent } from "react";
+import type { SetWindowStateArgsType } from "@/components/window/types";
 
 interface CloseButtonProps {
   setWindowState: (state: SetWindowStateArgsType) => void;

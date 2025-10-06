@@ -1,11 +1,11 @@
+import { AINodeProperty } from "@/domain-models/value-objects/ai-node-property";
+import { NodeRenderingProperty } from "@/domain-models/value-objects/node-rendering-property";
+import type { Node } from "../../domain-models/entities/node";
 import { AINode } from "../../domain-models/entities/nodes/ai-node";
 import { SystemNode } from "../../domain-models/entities/nodes/system-node";
 import { UserNode } from "../../domain-models/entities/nodes/user-node";
 import { NodeId } from "../../domain-models/value-objects/id-value-objects/node-id";
 import { ProjectId } from "../../domain-models/value-objects/id-value-objects/project-id";
-import type { Node } from "../../domain-models/entities/node";
-import { AINodeProperty } from "@/domain-models/value-objects/ai-node-property";
-import { NodeRenderingProperty } from "@/domain-models/value-objects/node-rendering-property";
 
 export type ProjectObject = {
   id: string;

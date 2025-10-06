@@ -1,5 +1,5 @@
-import type { DeepReadonly } from "ts-essentials";
 import _ from "lodash";
+import type { DeepReadonly } from "ts-essentials";
 import type { UserNode } from "../../entities/nodes/user-node";
 import type { CommandUnit } from "../command-unit";
 

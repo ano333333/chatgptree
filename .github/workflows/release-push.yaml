@@ -15,11 +15,12 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - uses: cachix/install-nix-action@v27
         with:
-          node-version: 24.3.0
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.12.4
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run build
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Build and publish
+        run: |
+          nix develop -c sh -lc 'pnpm install --frozen-lockfile && pnpm run build'

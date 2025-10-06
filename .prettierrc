@@ -10,13 +10,7 @@
   "endOfLine": "lf",
   "overrides": [
     {
-      "files": ["*.css", "*.scss", "*.sass", "*.less"],
-      "options": {
-        "printWidth": 80
-      }
-    },
-    {
-      "files": ["*.json", "*.md"],
+      "files": ["*.md"],
       "options": {
         "printWidth": 100
       }

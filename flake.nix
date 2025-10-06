@@ -1,11 +1,13 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 
   outputs = {
     self,
     nixpkgs,
+    treefmt-nix,
   }:
   let
     system = "x86_64-linux";
@@ -29,5 +31,7 @@
         export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true
       '';
     };
+
+    formatter.${system} = (treefmt-nix.lib.evalModule pkgs ./treefmt.nix).config.build.wrapper;
   };
 }

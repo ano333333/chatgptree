@@ -21,6 +21,12 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
 
-      - name: Build and publish
+      - name: Build
         run: |
           nix develop -c sh -lc 'pnpm install --frozen-lockfile && pnpm run build'
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - uses: actions/deploy-pages@v4

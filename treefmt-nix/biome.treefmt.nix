@@ -1,0 +1,156 @@
+{
+  "$schema" = "https://biomejs.dev/schemas/2.1.2/schema.json";
+  vcs = {
+    enabled = true;
+    clientKind = "git";
+    # /nix/storeフォルダでignoreファイルが見つからないエラーが出るのでuseIgnoreFileはfalseに
+    useIgnoreFile = false;
+    defaultBranch = "main";
+  };
+  files = {
+    ignoreUnknown = false;
+    includes = [
+      "**/src/**/*.ts"
+      "**/src/**/*.tsx"
+      "**/src/**/*.css"
+      "**/src/**/*.json"
+      "**/tests/**/*.ts"
+      "**/tests/**/*.tsx"
+      "**/docs/**/*.ts"
+      "**/docs/**/*.tsx"
+      "**/vite.config.ts"
+      "!**/node_modules/**"
+      "!**/dist/**"
+      "!**/build/**"
+      "!**/.vite/**"
+      "!**/coverage/**"
+    ];
+  };
+  formatter = {
+    enabled = true;
+    indentStyle = "space";
+    indentWidth = 2;
+    lineWidth = 80;
+    lineEnding = "lf";
+    attributePosition = "auto";
+    formatWithErrors = true;
+  };
+  assist = { actions = { source = { organizeImports = "on"; }; }; };
+  linter = {
+    enabled = true;
+    rules = {
+      recommended = true;
+      complexity = {
+        noExtraBooleanCast = "error";
+        noUselessCatch = "error";
+        noUselessTypeConstraint = "error";
+        noAdjacentSpacesInRegex = "error";
+        noCommaOperator = "error";
+        useNumericLiterals = "error";
+      };
+      correctness = {
+        noConstAssign = "error";
+        noConstantCondition = "error";
+        noEmptyCharacterClassInRegex = "error";
+        noEmptyPattern = "error";
+        noGlobalObjectCalls = "error";
+        noInvalidConstructorSuper = "error";
+        noNonoctalDecimalEscape = "error";
+        noPrecisionLoss = "error";
+        noSelfAssign = "error";
+        noSetterReturn = "error";
+        noSwitchDeclarations = "error";
+        noUndeclaredVariables = "error";
+        noUnreachable = "error";
+        noUnreachableSuper = "error";
+        useValidForDirection = "error";
+        useYield = "error";
+        noInvalidBuiltinInstantiation = "error";
+        useValidTypeof = "error";
+      };
+      security = {
+        noDangerouslySetInnerHtml = "error";
+        noDangerouslySetInnerHtmlWithChildren = "error";
+      };
+      style = {
+        noDefaultExport = "off";
+        noImplicitBoolean = "error";
+        noNegationElse = "error";
+        noParameterAssign = "error";
+        noRestrictedGlobals = "error";
+        noUnusedTemplateLiteral = "error";
+        useBlockStatements = "error";
+        useCollapsedElseIf = "error";
+        useConsistentArrayType = "error";
+        useConst = "error";
+        useDefaultParameterLast = "error";
+        useExponentiationOperator = "error";
+        useFragmentSyntax = "error";
+        useSelfClosingElements = "error";
+        useShorthandAssign = "error";
+        useSingleVarDeclarator = "error";
+        useTemplate = "error";
+      };
+      suspicious = {
+        noArrayIndexKey = "error";
+        noAssignInExpressions = "error";
+        noAsyncPromiseExecutor = "error";
+        noCatchAssign = "error";
+        noClassAssign = "error";
+        noCommentText = "error";
+        noCompareNegZero = "error";
+        noConstEnum = "error";
+        noControlCharactersInRegex = "error";
+        noDebugger = "error";
+        noDoubleEquals = "error";
+        noDuplicateCase = "error";
+        noDuplicateClassMembers = "error";
+        noDuplicateJsxProps = "error";
+        noDuplicateObjectKeys = "error";
+        noDuplicateParameters = "error";
+        noEmptyBlockStatements = "error";
+        noExplicitAny = "warn";
+        noFallthroughSwitchClause = "error";
+        noFunctionAssign = "error";
+        noGlobalAssign = "error";
+        noImportAssign = "error";
+        noLabelVar = "error";
+        noMisleadingCharacterClass = "error";
+        noPrototypeBuiltins = "error";
+        noRedeclare = "error";
+        noShadowRestrictedNames = "error";
+        noUnsafeDeclarationMerging = "error";
+        noUnsafeNegation = "error";
+        useGetterReturn = "error";
+        noVar = "error";
+        noConsole = { level = "warn"; options = { allow = [ "log" ]; }; };
+      };
+    };
+  };
+  javascript = {
+    formatter = {
+      quoteStyle = "double";
+      jsxQuoteStyle = "double";
+      quoteProperties = "asNeeded";
+      trailingCommas = "all";
+      semicolons = "always";
+      arrowParentheses = "always";
+      bracketSpacing = true;
+      bracketSameLine = false;
+    };
+    globals = [ ];
+  };
+  json = {
+    formatter = {
+      trailingCommas = "none";
+    };
+  };
+  css = {
+    formatter = {
+      enabled = true;
+      indentStyle = "space";
+      indentWidth = 2;
+      lineWidth = 80;
+    };
+  };
+}

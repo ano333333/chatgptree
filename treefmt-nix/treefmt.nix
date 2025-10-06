@@ -17,6 +17,7 @@
         "tests/**/*.tsx"
         "vite.config.ts"
       ];
+      settings = import ./biome.treefmt.nix;
     };
 
     prettier = {
@@ -25,6 +26,7 @@
         "**/*.{js,jsx,ts,tsx,json,css}"
         "vite.config.ts"
       ];
+      settings = import ./prettier.treefmt.nix;
     };
   };
 

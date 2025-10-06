@@ -57,19 +57,19 @@ graph TD
     subgraph "UI/Infrastructure層"
         A[React Components<br/>Vite Build<br/>Storybook Testing]
     end
-    
+
     subgraph "アプリケーションサービス層"
         B[Use Cases<br/>Controllers<br/>Handlers]
     end
-    
+
     subgraph "ドメインサービス層"
         C[Business Logic<br/>Domain Services<br/>External Services]
     end
-    
+
     subgraph "ドメインモデル層"
         D[Entities<br/>Value Objects<br/>Domain Events]
     end
-    
+
     A --> B
     B --> C
     B --> D

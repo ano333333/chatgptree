@@ -25,6 +25,8 @@
       shellHook = ''
         echo "entered devShell"
 
+        export PATH="node_modules/.bin:$PATH"
+
         # playwrightにNixのパスを渡す
         export PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers}
         export PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true
@@ -32,6 +34,6 @@
       '';
     };
 
-    formatter.${system} = (treefmt-nix.lib.evalModule pkgs ./treefmt.nix).config.build.wrapper;
+    formatter.${system} = (treefmt-nix.lib.evalModule pkgs ./treefmt-nix/treefmt.nix).config.build.wrapper;
   };
 }

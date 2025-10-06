@@ -2,14 +2,20 @@
   pkgs,
   ...
 }: {
-  projectRootFile = "flake.nix";
+  projectRootFile = "./flake.nix";
 
   programs = {
     biome = {
       enable = true;
       package = pkgs.biome;
       includes = [
-        "**/*.{js,jsx,ts,tsx,json,css}"
+        "src/**/*.ts"
+        "src/**/*.tsx"
+        "src/**/*.css"
+        "src/**/*.json"
+        "tests/**/*.ts"
+        "tests/**/*.tsx"
+        "vite.config.ts"
       ];
     };
 
